@@ -3,12 +3,14 @@ import { Dialog } from 'primereact/dialog';
 import { withRouter } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
+import { Tree } from 'primereact/tree';
 import "../css/style.scss"
 import 'primeflex/primeflex.css';
 import {Checkbox} from 'primereact/checkbox';
 const Add = (props) => {
     const { visible, onHide, datachucnangct } = props;
     const [cities, setCities] = useState([]);
+    const [selectedKeys3, setSelectedKeys3] = useState(null);
     const renderFooter = (name) => {
         return (
             <div>
@@ -41,7 +43,7 @@ const Add = (props) => {
             </div>
 
             <div className="bg-gr">
-                    <div className="card">
+                    {/* <div className="card">
                         <div >
                             {
                                 datachucnangct.map(item =>
@@ -51,7 +53,7 @@ const Add = (props) => {
                                         </div>
                                         {item.lstCnCt.map(e =>(
                                             <div className="p-col">
-                                            <Checkbox inputId="cb1" value={e.tenCnct} onChange={onCityChange} checked={cities.includes('{e.tenCnct}')}></Checkbox>
+                                            <Checkbox inputId="cb1" value={e.id} onChange={onCityChange} checked={cities.includes(e.id)}></Checkbox>
                                             <label htmlFor="cb1" className="p-checkbox-label">{e.tenCnct}</label>
                                         </div>
                                         )
@@ -61,7 +63,8 @@ const Add = (props) => {
                                 )
                             }
                         </div>
-                    </div>
+                    </div> */}
+                    <Tree value={datachucnangct} selectionMode="checkbox" selectionKeys={selectedKeys3} onSelectionChange={e => setSelectedKeys3(e.value)} />
             </div>
         </Dialog>
     )
