@@ -1,6 +1,6 @@
 import FetchAPI from "./FetchAPI";
 import { TypeMethodConstantEnum } from "../helper/MethodAPIConstant";
-const PREFIX_URL = "nguoi-dung";
+const PREFIX_URL = "taxsearch/api/cybertax/nguoi-dung";
 class UserServices extends FetchAPI {
     public async getDataUser(dataSearch : any) {
         let url = `${PREFIX_URL}/search-all`;
