@@ -1,7 +1,6 @@
 import React from 'react';
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
-// import Role from "./pages/Role";
 import User from "./pages/User";
 import Role from './pages/vaitro/Role';
 

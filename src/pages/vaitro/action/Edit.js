@@ -1,18 +1,12 @@
-import "primeflex/primeflex.css";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Tree } from "primereact/tree";
-import React, { useRef, useState } from "react";
-import { withRouter } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useState, useRef } from "react";
 import RoleService from "../../../service/RoleService";
-import "../css/style.scss";
-import "./action.css";
 
-const Add = (props) => {
-  // console.log("props", props);
-  const { visible, onHide, datachucnangct } = props;
+export const Edit = (props) => {
+  const { visible, onHide, listNhomQuyenView } = props;
 
   const roleService = new RoleService();
 
@@ -106,22 +100,22 @@ const Add = (props) => {
     );
   };
 
-  function handleSelectionChange(e) {
-    let arrayKey = getKeyParent(map);
-    let x = e.value;
-    setSelectedKeys(x);
-    let arr = [];
-    if (x) {
-      arr = Object.keys(x);
-    }
-    let returnArray = [];
-    for (const v of arr) {
-      if (!arrayKey.includes(v)) {
-        returnArray.push(v);
-      }
-    }
-    setListUUIDChitiet(returnArray);
-  }
+//   function handleSelectionChange(e) {
+//     let arrayKey = getKeyParent(map);
+//     let x = e.value;
+//     setSelectedKeys(x);
+//     let arr = [];
+//     if (x) {
+//       arr = Object.keys(x);
+//     }
+//     let returnArray = [];
+//     for (const v of arr) {
+//       if (!arrayKey.includes(v)) {
+//         returnArray.push(v);
+//       }
+//     }
+//     setListUUIDChitiet(returnArray);
+//   }
 
   function getKeyParent(map) {
     let arrayReturnKey = [];
@@ -133,26 +127,26 @@ const Add = (props) => {
     return arrayReturnKey;
   }
 
-  function setDataForMap() {
-    let map = new Map();
-    datachucnangct.forEach((element) => {
-      let key = Object.values(element)[0];
-      let objCheck = Object.values(element)[3];
-      let arrayValue = [];
-      if (objCheck.length > 0) {
-        // console.log("key", key);
-        objCheck.forEach(function (x) {
-          // console.log("keyChild: ", x.key);
-          arrayValue.push(x.key);
-        });
-        map.set(key, arrayValue);
-      }
-    });
+//   function setDataForMap() {
+//     let map = new Map();
+//     listNhomQuyenView.forEach((element) => {
+//       let key = Object.values(element)[0];
+//       let objCheck = Object.values(element)[3];
+//       let arrayValue = [];
+//       if (objCheck.length > 0) {
+//         // console.log("key", key);
+//         objCheck.forEach(function (x) {
+//           // console.log("keyChild: ", x.key);
+//           arrayValue.push(x.key);
+//         });
+//         map.set(key, arrayValue);
+//       }
+//     });
 
-    return map;
-  }
+//     return map;
+//   }
 
-  let map = setDataForMap();
+//   let map = setDataForMap();
 
   function handleOnChangeTenNhomQuyen(e) {
     // console.log("e", e.target.value);
@@ -168,7 +162,7 @@ const Add = (props) => {
   return (
     <div>
       <Dialog
-        header="Thêm mới nhóm quyền"
+        header="Sửa mới nhóm quyền"
         visible={visible}
         style={{ width: "50vw" }}
         onHide={onHide}
@@ -199,15 +193,14 @@ const Add = (props) => {
 
         <div className="bg-gr">
           <Tree
-            value={datachucnangct}
+            value={listNhomQuyenView}
             selectionMode="checkbox"
             selectionKeys={selectedKeys}
             //   onSelectionChange={(e) => setSelectedKeys3(e.value)}
-            onSelectionChange={handleSelectionChange}
+            // onSelectionChange={handleSelectionChange}
           />
         </div>
       </Dialog>
     </div>
   );
 };
-export default withRouter(Add);

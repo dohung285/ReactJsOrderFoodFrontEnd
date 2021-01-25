@@ -1,294 +1,460 @@
-import React, {useState, useEffect} from 'react';
-import { Toolbar } from 'primereact/toolbar';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
-import { Dropdown } from 'primereact/dropdown';
-import { Calendar } from 'primereact/calendar';
-import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import UserServices from '../../service/UserService';
-import { Tag } from 'primereact/tag';
-import Moment from 'react-moment';
+import { DataTable } from 'primereact/datatable';
+import { InputText } from 'primereact/inputtext';
 import { Paginator } from 'primereact/paginator';
-import {convertJsonToQueryString, queryStringToJSON} from '../../helper/CyberTaxHelper';
-import { withRouter } from "react-router-dom";
-import { confirmPopup } from 'primereact/confirmpopup';
-import Add from './action/Add';
+import { Toolbar } from 'primereact/toolbar';
+import Moment from 'react-moment';
+import { useHistory, useLocation, withRouter } from "react-router-dom";
+import { convertJsonToQueryString, queryStringToJSON } from '../../helper/CyberTaxHelper';
+import useFullPageLoader from '../../hooks/useFullPageLoader';
 import NhomQuyenService from '../../service/NhomQuyenService';
+import RoleService from '../../service/RoleService';
+import Add from './action/Add';
+import { ViewRole } from './ViewRole';
+import { confirmPopup } from 'primereact/confirmdialog';
+import { Toast } from 'primereact/toast';
+import { Dialog } from 'primereact/dialog';
+import { Edit } from './action/Edit';
+
+
+
+
 const Role = (props) => {
-    const service = new UserServices();
-    const [search, setSearch] = useState({
-        trangthai:"",
-    });
-    const [paginate, setPaginate] = useState({
-        page:0,
-        size:10,
-    });
+
+
+
+    const [loader, showLoader, hideLoader] = useFullPageLoader();
+
+    const toast = useRef(null);
+
+    const showInfo = (message) => {
+        toast.current.show({ severity: 'info', summary: 'Info Message', detail: message, life: 3000 });
+    }
+
+    const showError = (message) => {
+        toast.current.show({ severity: 'error', summary: 'Error Message', detail: message, life: 3000 });
+    }
+
+    // const service = new UserServices();
+    const service = new RoleService();
+    const history = useHistory();
+    const location = useLocation();
+
+
+
+    const [search, setSearch] = useState(
+        {
+            search: "",
+        }
+    );
+    const [paginate, setPaginate] = useState(
+        {
+            page: 0,
+            size: 10,
+        }
+    );
+
+    const [inputSearch, setInputSearch] = useState('')
+
+
     const [viewDialog, setViewDialog] = useState(false);
-    const [dataUser,setDataUser] = useState();
+
+    const [viewRole, setViewRole] = useState(false);
+    const [dataUser, setDataUser] = useState();
     const [selectionRecord, setSelectionRecord] = useState();
     const [first, setFirst] = useState(0);
     const [totalRecord, setTotalRecord] = useState();
     const [selectedStatus, setSelectedStatus] = useState("");
 
-    const [datachucnangct,setDatachucnangct] = useState([]);
+    const [datachucnangct, setDatachucnangct] = useState([]);
+    const [listNhomQuyenView, setlistNhomQuyenView] = useState([]); // lưu trữ danh sách nhóm quyền của user
+
+    const [viewEditNhomQuyen, setViewEditNhomQuyen] = useState(false);
+
+
     const nhomQuyenService = new NhomQuyenService();
+    const roleService = new RoleService();
+
+    const [idCNCT, setIdCNCT] = useState('');
+
+
+
 
     const fetDataUser = async () => {
-        const result = await service.getDataUser({...paginate,...search});
-        if (result && result.status === 1000){
+        //  debugger
+
+        showLoader();
+        const dataBody = { ...paginate, ...search }
+        // console.log('dataBody', dataBody)
+
+        const result = await service.getAllRoleWithPaging(dataBody);
+        if (result && result.status === 1000) {
+
+            hideLoader();
+
+            //  console.log(result);
+            // console.log('result - LOADING - totalItem: ', result.totalItem);
+
             setDataUser(result.object);
             setTotalRecord(result.totalItem);
         }
-    };
+
+
+    }
+    const searchRoleWithPaging = async (varSearch) => {
+        // console.log('{ ...paginate, ...varSearch }', { ...paginate, ...varSearch })
+        const result = await service.getAllRoleWithPaging({ ...paginate, ...varSearch });
+        if (result && result.status === 1000) {
+            setDataUser(result.object);
+            // setTotalRecord(result.totalItem);
+            // console.log('result searchRoleWithPaging: ', result)
+        }
+    }
+
+
 
     useEffect(() => {
         fetDataUser();
         // eslint-disable-next-line
-    }, [props.location.search]);
+    }, [props.location.search]); //props.location.search
+
     const onHandleChangeSearch = (e) => {
-        setSearch({...search, [e.target.name]:e.target.value});
+        // console.log(e.target.value);
+        // console.log('search', search)
+        // console.log('onHandleChangeSearch: ', { ...search, search: e.target.value })
+        setInputSearch(e.target.value)
+        setSearch({ ...search, search: e.target.value });
+
     };
+
     const onChangeStatus = (e) => {
-        console.log(e);
         setSelectedStatus(e.value);
-        setSearch({...search, trangthai:e.value ? e.value.code : ""});
+        setSearch({ ...search, trangthai: e.value ? e.value.code : "" });
     };
+
+    const onHandleRefresh = () => {
+
+        // console.log('search.text', search.text)
+
+        // console.log('location', location)
+        // console.log('history before', history)
+        history.replace({ location: { search: '' } })
+        // console.log('history after', history)
+        // history.push('/vai-tro')
+        setSearch({
+            search: "",
+        })
+
+        setPaginate(
+            {
+                page: 0,
+                size: 10,
+            }
+        )
+
+        //clear text ô search
+
+
+        fetDataUser();
+
+
+    }
+
 
     const leftContents = (
         <React.Fragment>
             <InputText
                 className={"p-mr-3"}
                 value={search.text}
+                // value={inputSearch}
                 onChange={onHandleChangeSearch}
-                tooltip={"Mã, Tên, Tên đăng nhập"}
+                tooltip={"Tên"}
                 name={"text"}
-                placeholder={"Mã, tên, tên đăng nhập"}
+                placeholder={"Tên"}
             />
-            <Dropdown
-                className={"p-mr-3"}
-                style={{height:"39px"}}
-                optionLabel="name"
-                value={selectedStatus}
-                options={[
-                    {name:"Hoạt động",code:"0"},
-                    {name:"Khóa",code:"1"}
-                ]}
-                onChange={onChangeStatus}
-                placeholder="Trạng thái"
-                tooltip={"Trạng thái"}
-                name={"trangthai"}
-                showClear
-            />
-            <Calendar
-                dateFormat="dd/mm/yy"
-                value={search.created_at}
-                onChange={onHandleChangeSearch}
-                name={"created_at"}
-                showIcon
-                placeholder={"Ngày tạo"}
-                tooltip={"Ngày tạo"}
-            />
+            <Button icon="pi pi-search" className="p-mr-2" onClick={onHandleSearchClick} />
+            <Button icon="pi pi-refresh" className="p-mr-2 p-button-help" onClick={onHandleRefresh} />
         </React.Fragment>
     );
-    const onHandleSearchClick = () => {
+    function onHandleSearchClick() {
+        // console.log('props.location.search', props.location.search)
         const dataSearch = queryStringToJSON(props.location.search);
-        const dataSearchQueryString = convertJsonToQueryString({...dataSearch, ...search});
+        // console.log('dataSearch', dataSearch)
+        const dataSearchQueryString = convertJsonToQueryString({ ...dataSearch, ...search });
+        // console.log('dataSearchQueryString', dataSearchQueryString)
         props.history.push({
-            search:dataSearchQueryString,
+            search: dataSearchQueryString,
         })
+
+        searchRoleWithPaging();
+
     };
     const onPageChange = (event) => {
         setFirst(event.first);
-        setPaginate({...paginate, size:event.rows, page:event.page});
+        setPaginate({ ...paginate, size: event.rows, page: event.page });
         let dataSearch = { size: event.rows, page: event.page };
-        let queryString = convertJsonToQueryString({...dataSearch, ...search});
+        let queryString = convertJsonToQueryString({ ...dataSearch, ...search });
         props.history.push({
             search: queryString
         });
     };
-    const onHandleDelete = (event) => {
-        console.log(event);
-        confirmPopup({
-            target: event.currentTarget,
-            message: 'Do you want to delete this record?',
-            icon: 'pi pi-info-circle',
-            acceptClassName: 'p-button-danger',
-            // accept,
-            // reject
-        });
-    };
+
+    const onHandleDelete = async (name) => {
+        const result = await roleService.deleteNhomQuyenCtById(idCNCT);
+        if (result && result.status === 1000) {
+            console.log('result', result)
+            showInfo(result.message)
+            setTimeout(fetDataUser, 1000);
+            onHide(name)
+        }
+        if (result && result.status === 1001) {
+            console.log('result', result)
+            showError(result.message)
+            onHide(name)
+        }
+    }
+
+    const handleDeleteNhomQuyen = (id) => {
+        console.log('id', id)
+        setIdCNCT(id)
+        // onClick('displayBasic')
+        let name = 'displayBasic'
+        dialogFuncMap[`${name}`](true);
+
+        if (position) {
+            setPosition(position);
+        }
+    }
+
+    const handleEditNhomQuyen = (id) => {
+        console.log('id', id)
+        getNhomQuyenById(id);
+        setViewEditNhomQuyen(true)
+
+        //setIdCNCT(id)
+        // onClick('displayBasic')
+        // let name = 'displayBasic'
+        // dialogFuncMap[`${name}`](true);
+
+        // if (position) {
+        //     setPosition(position);
+        // }
+    }
+
+
     const showDialog = () => {
         getListChucNangCt();
         setViewDialog(true);
     };
+
     const hidenDialog = () => {
         setViewDialog(false);
     };
 
+
+    const showViewRole = (id) => {
+        getNhomQuyenById(id);
+        setViewRole(true)
+    }
+
+    const hidenViewRole = () => {
+        setViewRole(false);
+    };
+
+    const hidenViewEditNhomQuyen = () => {
+        setViewEditNhomQuyen(false);
+    };
+
+
+
+
     const rightContents = (
         <React.Fragment>
-            <Button icon="pi pi-search" className="p-mr-2" onClick={onHandleSearchClick}/>
+            {/* <Button icon="pi pi-search" className="p-mr-2" onClick={onHandleSearchClick} /> */}
             <Button icon="pi pi-plus" className="p-mr-2 p-button-success" onClick={showDialog} />
-            <Button icon="pi pi-trash" className="p-mr-2 p-button-danger" />
+            {/* <Button icon="pi pi-trash" className="p-mr-2 p-button-danger" /> */}
+
         </React.Fragment>
     );
-    const renderRowIndex = (rowData, column) => {
-        return column.rowIndex + 1 + first;
-    };
+
     const renderRowCreatedAt = (rowData) => {
         return <Moment format="DD/MM/YYYY H:m:s">{rowData.ngaytao}</Moment>
     };
-    const renderRowType = (rowData) => {
-        const type = rowData.loai === 0 ? "Loại 1" : "Loại 2";
-        return <Tag severity="success" value={type}/>;
-    };
-    const renderRowStatus = (rowData) => {
-        const status = rowData.trangthai === 0 ? "Hoạt động" : "Khóa";
-        return <Tag severity="info" value={status}/>;
+    const renderBodyChucNang = (rowData) => {
+        // console.log('rowData', rowData.id)
+        return (
+            <React.Fragment>
+                <i className="pi pi-eye p-mr-2 icon-medium" title={"Xem"} style={{ color: "blue", cursor: "pointer" }} onClick={() => showViewRole(rowData.id)} />
+            </React.Fragment>
+        );
     };
     const actionBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
-                <i className="pi pi-pencil p-mr-2 icon-medium" title={"Sửa"} style={{color:"blue",cursor:"pointer"}} onClick={() => {props.history.push('/vai-tro')}}/>
-                <i className="pi pi-trash icon-medium" style={{color:"red",cursor:"pointer"}} title={"Xóa"} onClick={onHandleDelete}/>
+                <i className="pi pi-pencil p-mr-2 icon-medium" title={"Sửa"} style={{ color: "blue", cursor: "pointer" }} onClick={() => handleEditNhomQuyen(rowData.id)} />
+                <i className="pi pi-trash icon-medium" style={{ color: "red", cursor: "pointer" }} title={"Xóa"} onClick={() => handleDeleteNhomQuyen(rowData.id)} />
             </React.Fragment>
         );
     };
 
+
     const getListChucNangCt = async () => {
-        const result = await nhomQuyenService.getDataNhomQuenCt({...paginate,...search});
-        console.log(result);
-        if (result && result.status === 1000){
-            console.log(1)
-            const data = [
-                {
-                   "key":"0",
-                   "label":"Documents",
-                   "icon":"pi pi-fw pi-inbox",
-                   "children":[
-                      {
-                         "key":"0-0",
-                         "label":"Work",
-                         "data":"Work Folder",
-                         "icon":"pi pi-fw pi-cog"
-                      },
-                      {
-                         "key":"0-1",
-                         "label":"Home",
-                         "data":"Home Folder",
-                         "icon":"pi pi-fw pi-home",
-                         
-                      }
-                   ]
-                },
-                {
-                   "key":"1",
-                   "label":"Events",
-                   "icon":"pi pi-fw pi-calendar",
-                   "children":[
-                      {
-                         "key":"1-0",
-                         "label":"Meeting",
-                         "icon":"pi pi-fw pi-calendar-plus",
-                         "data":"Meeting"
-                      },
-                      {
-                         "key":"1-1",
-                         "label":"Product Launch",
-                         "icon":"pi pi-fw pi-calendar-plus",
-                         "data":"Product Launch"
-                      },
-                      {
-                         "key":"1-2",
-                         "label":"Report Review",
-                         "icon":"pi pi-fw pi-calendar-plus",
-                         "data":"Report Review"
-                      }
-                   ]
-                },
-                {
-                   "key":"2",
-                   "label":"Movies",
-                   "icon":"pi pi-fw pi-star",
-                   "children":[
-                      {
-                         "key":"2-0",
-                         "icon":"pi pi-fw pi-star",
-                         "label":"Al Pacino",
-                         "data":"Pacino Movies"
-                        
-                      },
-                      {
-                         "key":"2-1",
-                         "label":"Robert De Niro",
-                         "icon":"pi pi-fw pi-star",
-                         "data":"De Niro Movies"
-                         
-                      }
-                   ]
-                }
-             ]
-        ;
+        showLoader();
+        const result = await nhomQuyenService.getDataNhomQuenCt({ ...paginate, ...search }); //getNhomQuyenCtByI
+        if (result && result.status === 1000) {
+            hideLoader();
             // setDatachucnangct(result.list);
-            //console.log(result.list)
+            console.log('result.list', result.list)
             setDatachucnangct(result.list);
-            
-           
+
+
         }
     };
-    
+
+
+    const getNhomQuyenById = async (id) => {
+        showLoader();
+        // const result = await nhomQuyenService.getDataNhomQuenCt({ ...paginate, ...search }); //getNhomQuyenCtById
+        const result = await roleService.getNhomQuyenCtById(id);
+        if (result && result.status === 1000) {
+            hideLoader();
+            // setDatachucnangct(result.list);
+            // console.log('result.list', result.list)
+            setlistNhomQuyenView(result.list);
+        }
+    };
+
+
+    const [displayBasic, setDisplayBasic] = useState(false);
+    const [position, setPosition] = useState('center');
+
+    const dialogFuncMap = {
+        'displayBasic': setDisplayBasic,
+
+    }
+
+    const onClick = (name, position) => {
+        dialogFuncMap[`${name}`](true);
+
+        if (position) {
+            setPosition(position);
+        }
+    }
+
+    const onHide = (name) => {
+        dialogFuncMap[`${name}`](false);
+    }
+
+
+    const renderFooterDelete = (name) => {
+        return (
+            <div>
+                <Button label="No" icon="pi pi-times" onClick={() => onHide(name)} className="p-button-text" />
+                <Button label="Yes" icon="pi pi-check" onClick={() => onHandleDelete(name)} autoFocus />
+            </div>
+        );
+    }
+
+    // const renderFooterUpdate = (name) => {
+    //     return (
+    //         <div>
+    //             <Button label="No" icon="pi pi-times" onClick={() => onHide(name)} className="p-button-text" />
+    //             <Button label="Yes" icon="pi pi-check" onClick={() => onHide(name)} autoFocus />
+    //         </div>
+    //     );
+    // }
+
+
     return (
         <React.Fragment>
-        <div className={"card"}>
-            <div className={"card-header"}>
-                <h1>Quản lý vai trò</h1>
-                <Toolbar left={leftContents} right={rightContents} />
-            </div>
-            <div className={"card-body"}>
-            <DataTable
-                value={dataUser}
-                selection={selectionRecord}
-                className="p-datatable-responsive-demo"
-                emptyMessage="Không có data"
-                onSelectionChange={(e) => setSelectionRecord(e.value)}
-                rowHover >
-                <Column selectionMode="multiple" headerStyle={{ width: '3.3rem' }} className="p-text-center"/>
-                <Column body={renderRowIndex} header="STT" headerStyle={{ width: '4rem' }}
-                        className="p-text-center" />
-                <Column field="tendangnhap" header="Tên đăng nhập" sortable />
-                <Column field="hoten" header="Họ tên" sortable />
-                <Column field="sodienthoai" header="Số điện thoại" sortable />
-                <Column field="thuedientu" header="Thuế điện tử" sortable />
-                <Column field="diachi" header="Địa chỉ" sortable />
-                <Column field="ngaytao" header="Ngày tạo" body={renderRowCreatedAt} sortable />
-                <Column field="loai" header="Loại" body={renderRowType} sortable />
-                <Column field="trangthai" header="Trạng thái" body={renderRowStatus} sortable />
-                <Column
-                    header="Tác vụ"
-                    body={actionBodyTemplate}
-                    className="p-text-center"
-                    headerStyle={{ width: '6rem' }}
-                />
-            </DataTable>
-            <div className="p-d-flex p-mt-2">
-                <div className="p-mt-3">
-                    <span>Tổng số <b>{totalRecord}</b> bản ghi</span>
+            <Toast ref={toast} position="top-right" />
+
+            <Dialog header="Thông báo xác nhận" visible={displayBasic} style={{ width: '25vw' }} footer={renderFooterDelete('displayBasic')} onHide={() => onHide('displayBasic')}>
+                <p>Bạn có chắc chắn muốn xóa không?</p>
+            </Dialog>
+
+            {/* <Dialog header="Thông báo xác nhận" visible={displayBasic} style={{ width: '25vw' }} footer={renderFooterDelete('displayBasic')} onHide={() => onHide('displayBasic')}>
+                <p>Bạn có chắc chắn muốn cập nhập không?</p>
+            </Dialog> */}
+
+
+
+
+            <div className={"card"}>
+                <div className={"card-header"}>
+                    <h1>Quản lý vai trò</h1>
+                    <Toolbar left={leftContents} right={rightContents} />
                 </div>
-                <div className="p-ml-auto">
-                    <Paginator
-                        first={first}
-                        rows={paginate.size}
-                        totalRecords={totalRecord}
-                        rowsPerPageOptions={[10, 20, 50, 100]}
-                        onPageChange={(event) => onPageChange(event)}
-                        template=" RowsPerPageDropdown FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink "/>
+                <div className={"card-body"}>
+                    <DataTable
+                        value={dataUser}
+                        selection={selectionRecord}
+                        className="p-datatable-responsive-demo"
+                        emptyMessage="Không có data"
+                        onSelectionChange={(e) => setSelectionRecord(e.value)}
+                        rowHover >
+
+                        <Column selectionMode="multiple" headerStyle={{ width: '3.3rem' }} className="p-text-center" />
+
+                        <Column
+                            field="ten"
+                            header="Tên"
+                            className="p-text-center"
+                            sortable
+                            headerStyle={{ width: '20rem' }}
+                        />
+                        <Column
+                            field="mota"
+                            header="Mô tả"
+                            className="p-text-center"
+                            headerStyle={{ width: '25rem' }}
+                            sortable />
+                        <Column field="ngaytao"
+                            header="Ngày tạo"
+                            body={renderRowCreatedAt}
+                            className="p-text-center"
+                            sortable
+                            headerStyle={{ width: '15rem' }} />
+                        <Column
+                            header="Chức năng"
+                            body={renderBodyChucNang}
+                            className="p-text-center"
+                            headerStyle={{ width: '6rem' }}
+                        />
+                        <Column
+                            header="Tác vụ"
+                            body={actionBodyTemplate}
+                            className="p-text-center"
+                            headerStyle={{ width: '6rem' }}
+                        />
+                    </DataTable>
+                    <div className="p-d-flex p-mt-2">
+                        <div className="p-mt-3">
+                            <span>Tổng số <b>{totalRecord}</b> bản ghi</span>
+                        </div>
+                        <div className="p-ml-auto">
+                            <Paginator
+                                first={first}
+                                rows={paginate.size}
+                                totalRecords={totalRecord}
+                                rowsPerPageOptions={[10, 20, 50, 100]}
+                                onPageChange={(event) => onPageChange(event)}
+                                template=" RowsPerPageDropdown FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink " />
+                        </div>
+                    </div>
                 </div>
+                {viewDialog ?
+                    <Add visible={viewDialog} onHide={hidenDialog} datachucnangct={datachucnangct} fetDataUser={fetDataUser} /> : ""}
+
+
+                <ViewRole visible={viewRole} onHide={hidenViewRole} listNhomQuyenView={listNhomQuyenView} />
+                <Edit visible={viewEditNhomQuyen} onHide={hidenViewEditNhomQuyen} listNhomQuyenView={listNhomQuyenView} />
             </div>
-            </div>
-            <Add visible={viewDialog} onHide={hidenDialog} datachucnangct={datachucnangct} />
-        </div>
-    </React.Fragment>
+            {loader}
+        </React.Fragment>
+
     )
 }
 export default withRouter(Role);

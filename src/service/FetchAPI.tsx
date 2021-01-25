@@ -37,7 +37,7 @@ class FetchAPI extends Component {
     } finally {
     }
   }
-  public handleResponse(error:any) {
+  public handleResponse(error: any) {
     // const { keycloak } = useKeycloak();
     const [keycloak] = useKeycloak();
     const response = error.response;

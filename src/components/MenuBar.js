@@ -4,11 +4,13 @@ import { useKeycloak } from "@react-keycloak/web";
 import logo from "../asset/images/cybertax_logo2.png";
 import { Link, useHistory } from "react-router-dom";
 export const MenuBar = () => {
+
   let history = useHistory();
   function handleLogout() {
     history.push("/");
     return keycloak.logout();
   }
+  
   const [active, setActive] = useState(false);
   const items = [
     {

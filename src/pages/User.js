@@ -43,13 +43,16 @@ const User = (props) => {
         setSearch({...search, [e.target.name]:e.target.value});
     };
     const onChangeStatus = (e) => {
-        console.log(e);
+        console.log(e.value);
         setSelectedStatus(e.value);
+        console.log('search', search)
+        console.log('onChangeStatus: ', {...search, trangthai:e.value ? e.value.code : ""})
         setSearch({...search, trangthai:e.value ? e.value.code : ""});
     };
 
     const leftContents = (
         <React.Fragment>
+
             <InputText
                 className={"p-mr-3"}
                 value={search.text}
@@ -58,6 +61,7 @@ const User = (props) => {
                 name={"text"}
                 placeholder={"Mã, tên, tên đăng nhập"}
             />
+
             <Dropdown
                 className={"p-mr-3"}
                 style={{height:"39px"}}
@@ -73,6 +77,7 @@ const User = (props) => {
                 name={"trangthai"}
                 showClear
             />
+
             <Calendar
                 dateFormat="dd/mm/yy"
                 value={search.created_at}
