@@ -6,7 +6,47 @@ import React, { useState, useRef, useEffect } from "react";
 import RoleService from "../../../service/RoleService";
 
 export const Edit = (props) => {
-  const { visible, onHide, listNhomQuyenView } = props;
+  const { visible, onHide, listNhomQuyenView, datachucnangct } = props;
+
+  // console.log('datachucnangct', datachucnangct);
+
+
+  function getValueFromDataToMap() {
+    // console.log('datachucnangct.length', datachucnangct.length)
+    let map = new Map();
+    datachucnangct.forEach(element => {
+      // console.log('key', Object.values(element)[0])
+      // console.log('children', Object.values(element)[3])
+      let key = Object.values(element)[0];
+      let arryChildren = Object.values(element)[3];
+      // console.log('arryChildren', arryChildren)
+      let arrayValue = [];
+      if (arryChildren.length > 0) {
+        for (const x of arryChildren) {
+          // console.log('keyChildren', x.key)
+          arrayValue.push(x.key);
+        }
+      }
+      map.set(key, arryChildren);
+    });
+    return map;
+  }
+
+  let mapResult = getValueFromDataToMap();
+  // console.log('getValueFromDataToMap', getValueFromDataToMap())
+  // console.log('size', mapResult.size)
+
+  for (var [key, value] of mapResult) {
+    // console.log(key + ' = ' + Object.values(value));
+    var result = value.filter(obj => {
+      console.log('obj', obj)
+    })
+  }
+
+  // mapResult.forEach((value, key) => {
+  //   console.log('key', key);
+  //   console.log('value', Object.values(value))
+  // })
 
   const roleService = new RoleService();
 
@@ -162,9 +202,9 @@ export const Edit = (props) => {
   useEffect(() => {
     const obj = {
       "e32ea907-60eb-4999-939f-3dd6cdb86d3a": { checked: true },
-    //   "8f1ec869-abf4-42d1-bba2-33bd2604e86c": { checked: true },
-      "9f0fb98b-7766-41fb-8a1f-9d1ad5aa66ea": {partialChecked: true},
-    
+      //   "8f1ec869-abf4-42d1-bba2-33bd2604e86c": { checked: true },
+      "9f0fb98b-7766-41fb-8a1f-9d1ad5aa66ea": { partialChecked: true },
+
     };
     setSelectedKeys(obj);
   }, []);
@@ -207,7 +247,7 @@ export const Edit = (props) => {
             selectionMode="checkbox"
             selectionKeys={selectedKeys}
             onSelectionChange={(e) => setSelectedKeys(e.value)}
-            // onSelectionChange={handleSelectionChange}
+          // onSelectionChange={handleSelectionChange}
           />
         </div>
       </Dialog>

@@ -231,6 +231,7 @@ const Role = (props) => {
     const handleEditNhomQuyen = (id) => {
         console.log('id', id)
         getNhomQuyenById(id);
+        getListChucNangCt();
         setViewEditNhomQuyen(true)
 
         //setIdCNCT(id)
@@ -450,7 +451,7 @@ const Role = (props) => {
 
 
                 <ViewRole visible={viewRole} onHide={hidenViewRole} listNhomQuyenView={listNhomQuyenView} />
-                <Edit visible={viewEditNhomQuyen} onHide={hidenViewEditNhomQuyen} listNhomQuyenView={listNhomQuyenView} />
+                <Edit visible={viewEditNhomQuyen} onHide={hidenViewEditNhomQuyen} listNhomQuyenView={listNhomQuyenView} datachucnangct={datachucnangct} />
             </div>
             {loader}
         </React.Fragment>
