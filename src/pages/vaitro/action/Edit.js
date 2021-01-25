@@ -2,7 +2,7 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Tree } from "primereact/tree";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import RoleService from "../../../service/RoleService";
 
 export const Edit = (props) => {
@@ -100,22 +100,22 @@ export const Edit = (props) => {
     );
   };
 
-//   function handleSelectionChange(e) {
-//     let arrayKey = getKeyParent(map);
-//     let x = e.value;
-//     setSelectedKeys(x);
-//     let arr = [];
-//     if (x) {
-//       arr = Object.keys(x);
-//     }
-//     let returnArray = [];
-//     for (const v of arr) {
-//       if (!arrayKey.includes(v)) {
-//         returnArray.push(v);
-//       }
-//     }
-//     setListUUIDChitiet(returnArray);
-//   }
+  //   function handleSelectionChange(e) {
+  //     let arrayKey = getKeyParent(map);
+  //     let x = e.value;
+  //     setSelectedKeys(x);
+  //     let arr = [];
+  //     if (x) {
+  //       arr = Object.keys(x);
+  //     }
+  //     let returnArray = [];
+  //     for (const v of arr) {
+  //       if (!arrayKey.includes(v)) {
+  //         returnArray.push(v);
+  //       }
+  //     }
+  //     setListUUIDChitiet(returnArray);
+  //   }
 
   function getKeyParent(map) {
     let arrayReturnKey = [];
@@ -127,26 +127,26 @@ export const Edit = (props) => {
     return arrayReturnKey;
   }
 
-//   function setDataForMap() {
-//     let map = new Map();
-//     listNhomQuyenView.forEach((element) => {
-//       let key = Object.values(element)[0];
-//       let objCheck = Object.values(element)[3];
-//       let arrayValue = [];
-//       if (objCheck.length > 0) {
-//         // console.log("key", key);
-//         objCheck.forEach(function (x) {
-//           // console.log("keyChild: ", x.key);
-//           arrayValue.push(x.key);
-//         });
-//         map.set(key, arrayValue);
-//       }
-//     });
+  //   function setDataForMap() {
+  //     let map = new Map();
+  //     listNhomQuyenView.forEach((element) => {
+  //       let key = Object.values(element)[0];
+  //       let objCheck = Object.values(element)[3];
+  //       let arrayValue = [];
+  //       if (objCheck.length > 0) {
+  //         // console.log("key", key);
+  //         objCheck.forEach(function (x) {
+  //           // console.log("keyChild: ", x.key);
+  //           arrayValue.push(x.key);
+  //         });
+  //         map.set(key, arrayValue);
+  //       }
+  //     });
 
-//     return map;
-//   }
+  //     return map;
+  //   }
 
-//   let map = setDataForMap();
+  //   let map = setDataForMap();
 
   function handleOnChangeTenNhomQuyen(e) {
     // console.log("e", e.target.value);
@@ -158,6 +158,16 @@ export const Edit = (props) => {
     let value = e.target.value;
     setMota(value);
   }
+
+  useEffect(() => {
+    const obj = {
+      "e32ea907-60eb-4999-939f-3dd6cdb86d3a": { checked: true },
+    //   "8f1ec869-abf4-42d1-bba2-33bd2604e86c": { checked: true },
+      "9f0fb98b-7766-41fb-8a1f-9d1ad5aa66ea": {partialChecked: true},
+    
+    };
+    setSelectedKeys(obj);
+  }, []);
 
   return (
     <div>
@@ -196,7 +206,7 @@ export const Edit = (props) => {
             value={listNhomQuyenView}
             selectionMode="checkbox"
             selectionKeys={selectedKeys}
-            //   onSelectionChange={(e) => setSelectedKeys3(e.value)}
+            onSelectionChange={(e) => setSelectedKeys(e.value)}
             // onSelectionChange={handleSelectionChange}
           />
         </div>

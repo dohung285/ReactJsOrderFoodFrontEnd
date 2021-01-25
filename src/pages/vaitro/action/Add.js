@@ -109,6 +109,8 @@ const Add = (props) => {
   function handleSelectionChange(e) {
     let arrayKey = getKeyParent(map);
     let x = e.value;
+    console.log("x: ", x);
+    console.log("setSelectedKeys: ", Object.values(x));
     setSelectedKeys(x);
     let arr = [];
     if (x) {
@@ -135,6 +137,7 @@ const Add = (props) => {
 
   function setDataForMap() {
     let map = new Map();
+    console.log("datachucnangct", datachucnangct);
     datachucnangct.forEach((element) => {
       let key = Object.values(element)[0];
       let objCheck = Object.values(element)[3];
