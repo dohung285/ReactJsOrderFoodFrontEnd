@@ -91,7 +91,9 @@ const User = (props) => {
     );
     const onHandleSearchClick = () => {
         const dataSearch = queryStringToJSON(props.location.search);
+        console.log('dataSearch', dataSearch)
         const dataSearchQueryString = convertJsonToQueryString({...dataSearch, ...search});
+        console.log('dataSearchQueryString', dataSearchQueryString)
         props.history.push({
             search:dataSearchQueryString,
         })

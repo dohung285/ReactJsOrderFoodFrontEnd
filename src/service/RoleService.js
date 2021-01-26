@@ -25,6 +25,18 @@ class RoleService extends FetchAPI {
     let url = `${PREFIX_URL_NHOMQUYEN}/nhomquyen/delete/${id}`;   ///taxsearch/cybertax/search-service//nhomquyen/search-all
     return await this.request(url, null, TypeMethodConstantEnum.POST);
   }
+
+
+  async updateNhomQuyen(id,dataBody) {
+    let url = `${PREFIX_URL_NHOMQUYEN}/nhomquyen/update/${id}`;   ///taxsearch/cybertax/search-service//nhomquyen/search-all
+    return await this.request(url, dataBody, TypeMethodConstantEnum.POST);
+  }
+
+
+
+
+
+
 //   public async getDataUser(dataSearch : any) {
 //     let url = `${PREFIX_URL_USER}/search-all`;
 //     return await this.request(

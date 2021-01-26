@@ -1,4 +1,5 @@
 import React from 'react';
+import RegisterTVAN from './pages/dang-ky-su-dung-tvan/RegisterTVAN';
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import User from "./pages/User";
@@ -30,6 +31,12 @@ const routes=[
         path: '/vai-tro',
         exact: true,
         main: () => <Role />
+
+    },
+    {
+        path: '/qldk',
+        exact: true,
+        main: () => <RegisterTVAN />
 
     },
     {
