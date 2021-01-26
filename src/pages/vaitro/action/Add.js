@@ -110,7 +110,7 @@ const Add = (props) => {
     let arrayKey = getKeyParent(map);
     let x = e.value;
    
-    // console.log("setSelectedKeys: ", x);
+    console.log("setSelectedKeys: ", x);
     setSelectedKeys(x);
     let arr = [];
     if (x) {

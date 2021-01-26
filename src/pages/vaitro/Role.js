@@ -231,13 +231,13 @@ const Role = (props) => {
     const [arraySelectedKey, setArraySelectedKey] = useState()
 
     const handleEditNhomQuyen = (rowData) => {
-        console.log('rowData', rowData)
+        // console.log('rowData', rowData)
         let { id, mota, ten } = rowData;
        
         let objRoleTranfer = {
             id,ten, mota
         }
-       console.log('objRoleTranfer', objRoleTranfer)
+    //    console.log('objRoleTranfer', objRoleTranfer)
        setObjRoleTranfer(objRoleTranfer)
         getNhomQuyenById(id);
         getListChucNangCt();

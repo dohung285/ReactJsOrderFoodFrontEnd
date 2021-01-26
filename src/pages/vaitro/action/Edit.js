@@ -137,14 +137,23 @@ export const Edit = (props) => {
         }
       }
     }
-    // console.log("arrayReturnSelectKey",  arrayReturnSelectKey);
+    console.log("arrayReturnSelectKey",  arrayReturnSelectKey);
     // // const obj = Object.assign({}, arrayReturnSelectKey);
     // console.log('obj', {...arrayReturnSelectKey})
     return arrayReturnSelectKey;
   }
 
-  let objSelected = process();
 
+
+  const obj = {
+    "9f0fb98b-7766-41fb-8a1f-9d1ad5aa66ea": { checked: true },
+    "e32ea907-60eb-4999-939f-3dd6cdb86d3a": { checked: true },
+    "8f1ec869-abf4-42d1-bba2-33bd2604e86c": { checked: true },
+    "1e3b0b15-4fe0-4d03-8f34-e595a9f37f4c": { checked: true },
+    "fe3e8926-c8d5-45cf-8d2c-dd0b949c52f3": { checked: true },
+  };
+
+  // console.log(obj);
   // console.log('datachucnangct', datachucnangct);
   //  console.log('listNhomQuyenView', listNhomQuyenView)
 
@@ -167,15 +176,33 @@ export const Edit = (props) => {
     setTenNhomQuyen(objRoleTranfer.ten);
     setMota(objRoleTranfer.mota);
 
-    const obj = {
-      "9f0fb98b-7766-41fb-8a1f-9d1ad5aa66ea": { checked: true },
-      "e32ea907-60eb-4999-939f-3dd6cdb86d3a": { checked: true },
-      "8f1ec869-abf4-42d1-bba2-33bd2604e86c": { checked: true },
-      "1e3b0b15-4fe0-4d03-8f34-e595a9f37f4c": { checked: true },
-      "fe3e8926-c8d5-45cf-8d2c-dd0b949c52f3": { checked: true },
-    };
 
-    setSelectedKeys(obj);
+   
+    //getStateNodeSelectedKey();
+
+    // let objSelected = process();
+    // console.log('objSelected', objSelected)
+    // var dumpObj = [];
+    // objSelected.forEach(el => {
+    //   Object.keys(el).forEach(function (key) {
+    //     dumpObj[key] = el[key];
+    //     // dumpObj = dumpObj.push({[key]: el[key]});
+    //     // console.log({[key]: el[key]});
+    //   });
+    // });
+    // console.log(dumpObj)
+    // setSelectedKeys(dumpObj);
+
+
+    // const obj = {
+    //   "9f0fb98b-7766-41fb-8a1f-9d1ad5aa66ea": { checked: true },
+    //   "e32ea907-60eb-4999-939f-3dd6cdb86d3a": { checked: true },
+    //   "8f1ec869-abf4-42d1-bba2-33bd2604e86c": { checked: true },
+    //   "1e3b0b15-4fe0-4d03-8f34-e595a9f37f4c": { checked: true },
+    //   "fe3e8926-c8d5-45cf-8d2c-dd0b949c52f3": { checked: true },
+    // };
+
+    // setSelectedKeys(obj);
     // process();
     // setSelectedKeys(arraySelected);
   }, []);
@@ -222,9 +249,24 @@ export const Edit = (props) => {
     });
   };
 
+  var dumpObj = [];
+  function getStateNodeSelectedKey() {
+    let objSelected = process();
+    // var dumpObj = [];
+    objSelected.forEach(el => {
+      Object.keys(el).forEach(function (key) {
+        dumpObj[key] = el[key];
+      });
+    });
+    console.log(dumpObj)
+    setSelectedKeys(dumpObj);
+  }
+
   function handleOnCloseDialog(params) {
-    setSelectedKeys(null);
-    onHide();
+    // setSelectedKeys(null);
+    // onHide();
+    getStateNodeSelectedKey();
+
   }
 
   // Xử lý nút đồng ý thêm nhóm quyền
@@ -374,8 +416,8 @@ export const Edit = (props) => {
               onChange={handleOnChangeTenNhomQuyen}
               value={
                 tenNhomQuyen === null ||
-                tenNhomQuyen === "" ||
-                tenNhomQuyen === undefined
+                  tenNhomQuyen === "" ||
+                  tenNhomQuyen === undefined
                   ? objRoleTranfer.ten
                   : tenNhomQuyen
               }
@@ -401,9 +443,12 @@ export const Edit = (props) => {
           <Tree
             value={datachucnangct}
             selectionMode="checkbox"
-            selectionKeys={selectedKeys}
-            onSelectionChange={(e) => setSelectedKeys(e.value)}
-            // onSelectionChange={handleSelectionChange}
+            selectionKeys={dumpObj}
+            onSelectionChange={(e) => {
+              setSelectedKeys(e.value);
+              console.log(e);
+            }}
+          // onSelectionChange={handleSelectionChange}
           />
         </div>
       </Dialog>
