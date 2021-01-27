@@ -19,6 +19,7 @@ export const AppRouter = () => {
       <PrivateRoute path="/nguoi-dung" component={User} />
       <PrivateRoute path="/vai-tro" component={Role} />
       <PrivateRoute path="/home" component={HomePage} />
+      
     </Router>
   )
 };

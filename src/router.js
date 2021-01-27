@@ -1,4 +1,5 @@
 import React from 'react';
+import ChungThuSo from './pages/chungthuso/ChungThuSo';
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import User from "./pages/User";
@@ -30,6 +31,12 @@ const routes=[
         path: '/vai-tro',
         exact: true,
         main: () => <Role />
+
+    },
+    {
+        path: '/chung-thu-so',
+        exact: true,
+        main: () => <ChungThuSo />
 
     },
     {

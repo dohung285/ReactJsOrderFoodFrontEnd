@@ -31,6 +31,13 @@ export const MenuBar = () => {
           permission: "",
           command:()=> history.push('/vai-tro')
         },
+        {
+          label: "Chứng thư số",
+          icon: "pi pi-fw pi-user-plus",
+          
+          permission: "",
+          command:()=> history.push('/chung-thu-so')
+        },
       ],
     },
   ];
