@@ -4,6 +4,7 @@ import { InputText } from "primereact/inputtext";
 import { Tree } from "primereact/tree";
 import React, { useState, useRef, useEffect } from "react";
 import RoleService from "../../../service/RoleService";
+import { Accordion, AccordionTab } from "primereact/accordion";
 
 export const Edit = (props) => {
   const {
@@ -137,13 +138,11 @@ export const Edit = (props) => {
         }
       }
     }
-    console.log("arrayReturnSelectKey",  arrayReturnSelectKey);
+    // console.log("arrayReturnSelectKey", arrayReturnSelectKey);
     // // const obj = Object.assign({}, arrayReturnSelectKey);
     // console.log('obj', {...arrayReturnSelectKey})
     return arrayReturnSelectKey;
   }
-
-
 
   const obj = {
     "9f0fb98b-7766-41fb-8a1f-9d1ad5aa66ea": { checked: true },
@@ -176,8 +175,6 @@ export const Edit = (props) => {
     setTenNhomQuyen(objRoleTranfer.ten);
     setMota(objRoleTranfer.mota);
 
-
-   
     //getStateNodeSelectedKey();
 
     // let objSelected = process();
@@ -192,7 +189,6 @@ export const Edit = (props) => {
     // });
     // console.log(dumpObj)
     // setSelectedKeys(dumpObj);
-
 
     // const obj = {
     //   "9f0fb98b-7766-41fb-8a1f-9d1ad5aa66ea": { checked: true },
@@ -249,24 +245,25 @@ export const Edit = (props) => {
     });
   };
 
-  var dumpObj = [];
   function getStateNodeSelectedKey() {
     let objSelected = process();
-    // var dumpObj = [];
-    objSelected.forEach(el => {
+    // console.log('objobjSelectedect', objSelected)
+    var dumpObj = [];
+    objSelected.forEach((el) => {
       Object.keys(el).forEach(function (key) {
         dumpObj[key] = el[key];
+        // console.log('dumpObj', dumpObj)
       });
     });
-    console.log(dumpObj)
+    // console.log(dumpObj);
+    // console.log('typeof', typeof dumpObj)
     setSelectedKeys(dumpObj);
   }
 
   function handleOnCloseDialog(params) {
-    // setSelectedKeys(null);
-    // onHide();
-    getStateNodeSelectedKey();
-
+    setSelectedKeys(null);
+    onHide();
+    // getStateNodeSelectedKey();
   }
 
   // Xử lý nút đồng ý thêm nhóm quyền
@@ -397,6 +394,60 @@ export const Edit = (props) => {
     setMota(value);
   }
 
+  const [activeIndex, setActiveIndex] = useState(null);
+  function handleOnChangeAccordion(e) {
+    getStateNodeSelectedKey();
+    setActiveIndex(e.index);
+  }
+
+  function handleOnChangeSelectedKey(e) {
+    // console.log("e", e.value);
+    // console.log('selectedKeys', selectedKeys)
+    // setSelectedKeys(e.value)
+  }
+  function handOnSelected(params) {
+    console.log("handOnSelected", params);
+  }
+
+  function handOnUnSelected(params) {
+   
+    console.log("handOnUnSelected", params.node);
+
+    // console.log("key", params.node.key);
+    // console.log("children", params.node.children);
+
+    // lay ra danh sach keyParent va keyChildren de xoa khoa selectedKeys
+    let arrayKeys = []; // khai bao bien arrayKey de chua danh sach cac key can xoa khi unselected
+    let keyParent = params.node.key;
+    arrayKeys.push(keyParent);
+    let listChildren = Array.isArray(params.node.children)
+      ? params.node.children
+      : [];
+    if (listChildren.length > 0) {
+      listChildren.map((x) => {
+        arrayKeys.push(x.key);
+      });
+      console.log("Day la node Cha - co danh sach con");
+    } 
+    // console.log('arrayKeys', arrayKeys)
+    // console.log("selectedKeys", selectedKeys);
+    // console.log('length', Object.keys(selectedKeys))
+
+
+    arrayKeys.findIndex((element,index,array) => {
+      console.log('element', element)
+      console.log('index', index)
+      console.log('array before delete', array)
+      let remove =  array.slice(index,1)
+      console.log('array after delete', remove)
+    })
+
+
+
+
+
+  }
+
   return (
     <div>
       <Dialog
@@ -416,8 +467,8 @@ export const Edit = (props) => {
               onChange={handleOnChangeTenNhomQuyen}
               value={
                 tenNhomQuyen === null ||
-                  tenNhomQuyen === "" ||
-                  tenNhomQuyen === undefined
+                tenNhomQuyen === "" ||
+                tenNhomQuyen === undefined
                   ? objRoleTranfer.ten
                   : tenNhomQuyen
               }
@@ -440,16 +491,21 @@ export const Edit = (props) => {
         </div>
 
         <div className="bg-gr">
-          <Tree
-            value={datachucnangct}
-            selectionMode="checkbox"
-            selectionKeys={dumpObj}
-            onSelectionChange={(e) => {
-              setSelectedKeys(e.value);
-              console.log(e);
-            }}
-          // onSelectionChange={handleSelectionChange}
-          />
+          <Accordion
+            onTabChange={handleOnChangeAccordion}
+            activeIndex={activeIndex}
+          >
+            <AccordionTab header="Danh sách quyền">
+              <Tree
+                value={datachucnangct}
+                selectionMode="checkbox"
+                selectionKeys={selectedKeys}
+                // onSelectionChange={handleOnChangeSelectedKey}
+                onSelect={handOnSelected}
+                onUnselect={handOnUnSelected}
+              />
+            </AccordionTab>
+          </Accordion>
         </div>
       </Dialog>
     </div>
