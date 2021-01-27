@@ -109,8 +109,8 @@ const Add = (props) => {
   function handleSelectionChange(e) {
     let arrayKey = getKeyParent(map);
     let x = e.value;
-    console.log("x: ", x);
-    console.log("setSelectedKeys: ", Object.values(x));
+   
+    console.log("setSelectedKeys: ", x);
     setSelectedKeys(x);
     let arr = [];
     if (x) {
@@ -122,6 +122,7 @@ const Add = (props) => {
         returnArray.push(v);
       }
     }
+    console.log('returnArray', returnArray)
     setListUUIDChitiet(returnArray);
   }
 

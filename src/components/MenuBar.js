@@ -10,7 +10,7 @@ export const MenuBar = () => {
     history.push("/");
     return keycloak.logout();
   }
-  
+
   const [active, setActive] = useState(false);
   const items = [
     {
@@ -20,23 +20,30 @@ export const MenuBar = () => {
         {
           label: "Người dùng",
           icon: "pi pi-fw pi-user-plus",
-         
+
           permission: "",
-          command:()=> history.push('/nguoi-dung')
+          command: () => history.push('/nguoi-dung')
         },
         {
           label: "Vai trò",
           icon: "pi pi-fw pi-user-plus",
-          
+
           permission: "",
-          command:()=> history.push('/vai-tro')
+          command: () => history.push('/vai-tro')
         },
         {
           label: "Chứng thư số",
           icon: "pi pi-fw pi-user-plus",
-          
+
           permission: "",
-          command:()=> history.push('/chung-thu-so')
+          command: () => history.push('/chung-thu-so')
+        },
+        {
+          label: "Quản lý đăng ký",
+          icon: "pi pi-fw pi-user-plus",
+
+          permission: "",
+          command: () => history.push('/qldk')
         },
       ],
     },
@@ -95,7 +102,7 @@ export const MenuBar = () => {
                 className="p-menuitem-link"
                 aria-haspopup="false"
                 // onClick={() =>{ keycloak.logout()}}
-                onClick={handleLogout} 
+                onClick={handleLogout}
               >
                 <span
                   className="pi pi-sign-out"

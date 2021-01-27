@@ -1,10 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
+import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Paginator } from 'primereact/paginator';
+import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
+import React, { useEffect, useRef, useState } from 'react';
 import Moment from 'react-moment';
 import { useHistory, useLocation, withRouter } from "react-router-dom";
 import { convertJsonToQueryString, queryStringToJSON } from '../../helper/CyberTaxHelper';
@@ -12,19 +14,15 @@ import useFullPageLoader from '../../hooks/useFullPageLoader';
 import NhomQuyenService from '../../service/NhomQuyenService';
 import RoleService from '../../service/RoleService';
 import Add from './action/Add';
-import { ViewRole } from './ViewRole';
-import { confirmPopup } from 'primereact/confirmdialog';
-import { Toast } from 'primereact/toast';
-import { Dialog } from 'primereact/dialog';
 import { Edit } from './action/Edit';
+import { ViewRole } from './ViewRole';
 
 
 
 
 const Role = (props) => {
 
-
-
+    //==================================================================================
     const [loader, showLoader, hideLoader] = useFullPageLoader();
 
     const toast = useRef(null);
@@ -79,6 +77,8 @@ const Role = (props) => {
 
     const [idCNCT, setIdCNCT] = useState('');
 
+    const [objRoleTranfer, setObjRoleTranfer] = useState({})
+
 
 
 
@@ -91,15 +91,12 @@ const Role = (props) => {
 
         const result = await service.getAllRoleWithPaging(dataBody);
         if (result && result.status === 1000) {
-
-            hideLoader();
-
             //  console.log(result);
             // console.log('result - LOADING - totalItem: ', result.totalItem);
-
             setDataUser(result.object);
             setTotalRecord(result.totalItem);
         }
+        hideLoader();
 
 
     }
@@ -125,6 +122,9 @@ const Role = (props) => {
         // console.log('search', search)
         // console.log('onHandleChangeSearch: ', { ...search, search: e.target.value })
         setInputSearch(e.target.value)
+
+        console.log('{ ...search, search: e.target.value }', { ...search, search: e.target.value })
+
         setSearch({ ...search, search: e.target.value });
 
     };
@@ -228,10 +228,21 @@ const Role = (props) => {
         }
     }
 
-    const handleEditNhomQuyen = (id) => {
-        console.log('id', id)
+    const [arraySelectedKey, setArraySelectedKey] = useState()
+
+    const handleEditNhomQuyen = (rowData) => {
+        // console.log('rowData', rowData)
+        let { id, mota, ten } = rowData;
+       
+        let objRoleTranfer = {
+            id,ten, mota
+        }
+    //    console.log('objRoleTranfer', objRoleTranfer)
+       setObjRoleTranfer(objRoleTranfer)
         getNhomQuyenById(id);
         getListChucNangCt();
+
+
         setViewEditNhomQuyen(true)
 
         //setIdCNCT(id)
@@ -294,7 +305,7 @@ const Role = (props) => {
     const actionBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
-                <i className="pi pi-pencil p-mr-2 icon-medium" title={"Sửa"} style={{ color: "blue", cursor: "pointer" }} onClick={() => handleEditNhomQuyen(rowData.id)} />
+                <i className="pi pi-pencil p-mr-2 icon-medium" title={"Sửa"} style={{ color: "blue", cursor: "pointer" }} onClick={() => handleEditNhomQuyen(rowData)} />
                 <i className="pi pi-trash icon-medium" style={{ color: "red", cursor: "pointer" }} title={"Xóa"} onClick={() => handleDeleteNhomQuyen(rowData.id)} />
             </React.Fragment>
         );
@@ -302,12 +313,10 @@ const Role = (props) => {
 
 
     const getListChucNangCt = async () => {
-        showLoader();
         const result = await nhomQuyenService.getDataNhomQuenCt({ ...paginate, ...search }); //getNhomQuyenCtByI
         if (result && result.status === 1000) {
-            hideLoader();
             // setDatachucnangct(result.list);
-            console.log('result.list', result.list)
+            // console.log('result.list', result.list)
             setDatachucnangct(result.list);
 
 
@@ -316,12 +325,9 @@ const Role = (props) => {
 
 
     const getNhomQuyenById = async (id) => {
-        showLoader();
         // const result = await nhomQuyenService.getDataNhomQuenCt({ ...paginate, ...search }); //getNhomQuyenCtById
         const result = await roleService.getNhomQuyenCtById(id);
         if (result && result.status === 1000) {
-            hideLoader();
-            // setDatachucnangct(result.list);
             // console.log('result.list', result.list)
             setlistNhomQuyenView(result.list);
         }
@@ -451,7 +457,14 @@ const Role = (props) => {
 
 
                 <ViewRole visible={viewRole} onHide={hidenViewRole} listNhomQuyenView={listNhomQuyenView} />
-                <Edit visible={viewEditNhomQuyen} onHide={hidenViewEditNhomQuyen} listNhomQuyenView={listNhomQuyenView} datachucnangct={datachucnangct} />
+                <Edit
+                    visible={viewEditNhomQuyen}
+                    onHide={hidenViewEditNhomQuyen}
+                    listNhomQuyenView={listNhomQuyenView}
+                    datachucnangct={datachucnangct}
+                    objRoleTranfer={objRoleTranfer}
+                    fetDataUser={fetDataUser}
+                />
             </div>
             {loader}
         </React.Fragment>
