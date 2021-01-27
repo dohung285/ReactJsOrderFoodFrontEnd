@@ -97,7 +97,9 @@ const RegisterTVAN = (props) => {
     });
     setSearch({ ...search, masothue: e.target.value });
   };
-  const onHandleRefresh = () => {};
+  const onHandleRefresh = () => {
+    fetData();
+  };
 
   const leftContents = (
     <React.Fragment>

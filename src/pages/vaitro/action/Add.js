@@ -35,12 +35,13 @@ const Add = (props) => {
   };
 
   const showError = (message) => {
-    toast.current.show({
-      severity: "error",
-      summary: "Error Message",
-      detail: message,
-      life: 3000,
-    });
+    // toast.current.show({
+    //   severity: "error",
+    //   summary: "Error Message",
+    //   detail: message,
+    //   life: 3000,
+    // });
+    alert(message);
   };
 
   function handleOnCloseDialog(params) {
