@@ -100,9 +100,10 @@ const Role = (props) => {
 
 
     }
-    const searchRoleWithPaging = async (varSearch) => {
+    const searchRoleWithPaging = async () => {
         // console.log('{ ...paginate, ...varSearch }', { ...paginate, ...varSearch })
-        const result = await service.getAllRoleWithPaging({ ...paginate, ...varSearch });
+        const dataBody = { search: inputSearch };
+        const result = await service.getAllRoleWithPaging(dataBody);
         if (result && result.status === 1000) {
             setDataUser(result.object);
             // setTotalRecord(result.totalItem);
@@ -135,31 +136,10 @@ const Role = (props) => {
     };
 
     const onHandleRefresh = () => {
-
-        // console.log('search.text', search.text)
-
-        // console.log('location', location)
-        // console.log('history before', history)
-        history.replace({ location: { search: '' } })
-        // console.log('history after', history)
-        // history.push('/vai-tro')
-        setSearch({
-            search: "",
+        props.history.push({
+            search:""
         })
-
-        setPaginate(
-            {
-                page: 0,
-                size: 10,
-            }
-        )
-
-        //clear text ô search
-
-
-        fetDataUser();
-
-
+        setSearch({search:""});
     }
 
 
@@ -188,7 +168,7 @@ const Role = (props) => {
             search: dataSearchQueryString,
         })
 
-        searchRoleWithPaging();
+        // searchRoleWithPaging();
 
     };
     const onPageChange = (event) => {

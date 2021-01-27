@@ -57,7 +57,7 @@ const RegisterTVAN = (props) => {
 
   const searchWithPaging = async (dataBody) => {
     const result = await registerTVANService.searchWithMstAndPaging({
-        dataBody
+      dataBody,
     });
     if (result && result.status === 1000) {
       setData(result.object);
@@ -71,17 +71,15 @@ const RegisterTVAN = (props) => {
     // eslint-disable-next-line
   }, [props.location.search]); //props.location.search
 
-  // update state 
+  // update state
   const fetDataWithSearch = async () => {
     //  debugger
 
-    
+    const dataBody = { masothue: inputSearch };
     showLoader();
-     const dataBody = { "masothue":inputSearch};
-
     const result = await registerTVANService.searchWithMstAndPaging(dataBody);
     if (result && result.status === 1000) {
-      console.log("result: ", result.object)
+      console.log("result: ", result.object);
       setData(result.object);
       setTotalRecord(result.totalItem);
     }
@@ -90,11 +88,6 @@ const RegisterTVAN = (props) => {
 
   const onHandleChangeSearch = (e) => {
     setInputSearch(e.target.value);
-    // setSearch({ ...search, search: e.target.value });
-    console.log("{ ...search, masothue: e.target.value }", {
-      ...search,
-      masothue: e.target.value,
-    });
     setSearch({ ...search, masothue: e.target.value });
   };
   const onHandleRefresh = () => {
@@ -125,13 +118,15 @@ const RegisterTVAN = (props) => {
     </React.Fragment>
   );
   function onHandleSearchClick() {
-    if(inputSearch === ""){
+    if (inputSearch === "") {
       alert("chua nhap ma so thue!");
       return;
     }
-      console.log('ok');
-      console.log("fuck:",fetDataWithSearch());
-      console.log("text search:", inputSearch)
+    fetDataWithSearch();
+    // console.log('ok');
+    // console.log("fuck:",fetDataWithSearch());
+    // console.log("text search:", inputSearch)
+
     // const dataSearch = queryStringToJSON(props.location.search);
     // console.log("dataSearch", dataSearch);
     // const dataSearchQueryString = convertJsonToQueryString({
@@ -154,7 +149,7 @@ const RegisterTVAN = (props) => {
     setPaginate({ ...paginate, size: event.rows, page: event.page });
     let dataSearch = { size: event.rows, page: event.page };
     let queryString = convertJsonToQueryString({ ...dataSearch, ...search });
-    console.log('props', props)
+    console.log("props", props);
     props.history.push({
       search: queryString,
     });
