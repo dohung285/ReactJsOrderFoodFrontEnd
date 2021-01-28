@@ -89,6 +89,7 @@ const Role = (props) => {
         const dataBody = { ...paginate, ...search }
         // console.log('dataBody', dataBody)
 
+        console.log("fetdata:", paginate);
         const result = await service.getAllRoleWithPaging(dataBody);
         if (result && result.status === 1000) {
             //  console.log(result);
@@ -192,8 +193,10 @@ const Role = (props) => {
 
     };
     const onPageChange = (event) => {
+        console.log("on change")
         setFirst(event.first);
         setPaginate({ ...paginate, size: event.rows, page: event.page });
+        
         let dataSearch = { size: event.rows, page: event.page };
         let queryString = convertJsonToQueryString({ ...dataSearch, ...search });
         props.history.push({
@@ -217,7 +220,7 @@ const Role = (props) => {
     }
 
     const handleDeleteNhomQuyen = (id) => {
-        console.log('id', id)
+        // console.log('id', id)
         setIdCNCT(id)
         // onClick('displayBasic')
         let name = 'displayBasic'
@@ -446,7 +449,7 @@ const Role = (props) => {
                                 first={first}
                                 rows={paginate.size}
                                 totalRecords={totalRecord}
-                                rowsPerPageOptions={[10, 20, 50, 100]}
+                                rowsPerPageOptions={[1,10, 20, 50, 100]}
                                 onPageChange={(event) => onPageChange(event)}
                                 template=" RowsPerPageDropdown FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink " />
                         </div>

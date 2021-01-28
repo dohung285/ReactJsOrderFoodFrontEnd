@@ -9,6 +9,9 @@ import { Calendar } from 'primereact/calendar';
 import ChungThuSoService from './../../../service/ChungThuSoService';
 import { Toast } from 'primereact/toast';
 import './ToastDemo.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 
 const DialogPlus = (props) => {
@@ -38,13 +41,33 @@ const DialogPlus = (props) => {
     const [chungThuSo, setChungThuSo] = useState();
     const [mst, setMst] = useState();
     const [pkcs10File, setPkcs10File] = useState();
-    const toast = useRef(null);
-    const showSuccess = () => {
-        toast.current.show({ severity: 'success', summary: 'Success Message', detail: 'Message Content', life: 3000 });
-    }
-    const showError = (message) => {
-        toast.current.show({ severity: 'error', summary: 'Error Message', detail: message, life: 5000 });
-    }
+    // const toast = useRef(null);
+
+    // function notification
+
+    const notifySuccess = (message) => {
+        toast.success(`🦄 ${message}`, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    };
+
+    const notifyError = (message) => {
+        toast.error(`🦄 ${message}`, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    };
 
     // call api to save
     const addChungThuSo = async (chungThuSoObject) => {
@@ -54,10 +77,12 @@ const DialogPlus = (props) => {
             console.log("result reponse add chung thu so:", result);
             setTimeout(props.fetDataUser, 500);
             clearState();
+            notifySuccess(result.message);
 
         } else {
             // alert("them khong thanh cong");
-            showError(result.message)
+            // showError(result.message)
+            notifyError (result.message);
             console.log("response: ", result);
         }
     };
@@ -76,9 +101,9 @@ const DialogPlus = (props) => {
     }
 
     const onHide = (name, check) => {
-       
-        
-        
+
+
+
         if (check === 0) {
             console.log("close");
         } else {
@@ -98,20 +123,22 @@ const DialogPlus = (props) => {
 
 
             var pat = /[0-9]{10}/;
-            
-            
+
+
 
             if (nameabc === null || selectApikey === null || password === null || dnChungthuso === null || nhaCungCap === null ||
                 nhaCungCap === null || chungThuSo === null || mst === null || selectTrangThai === null || selectHostHsm === null || selectHostHsm.name === null
-                || selectApikey.name === null || selectTrangThai.name === null){
-                alert("chu nhap du thong tin! kiem tra lai");
+                || selectApikey.name === null || selectTrangThai.name === null) {
+                    notifyError ( "chu nhap du thong tin! kiem tra lai" );
+                // alert("chu nhap du thong tin! kiem tra lai");
                 return;
             }
 
 
             if (!patMst.test(mst)) {
                 // alert("ma so thue phai du 10 so");
-                toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'ma so thue phai du 10 so', life: 3000 });
+                // toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'ma so thue phai du 10 so', life: 3000 });
+                notifyError ( "ma so thue phai du 10 so" );
                 return;
             }
 
@@ -119,10 +146,11 @@ const DialogPlus = (props) => {
             var count = strongPassword(password);
             if (count > 0) {
                 //toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'password phai du 6 ki tu tro len va co chu hoa chu thuong so va ki tu dac biet', life: 5000 });
-                alert("password phai du 6 ki tu tro len va co chu hoa chu thuong so va ki tu dac biet");
-                 return;
+                // alert("password phai du 6 ki tu tro len va co chu hoa chu thuong so va ki tu dac biet");
+                notifyError ("password phai du 6 ki tu tro len va co chu hoa chu thuong so va ki tu dac biet");
+                return;
             }
-            
+
 
             //call api
             // addChungThuSo({
@@ -268,8 +296,20 @@ const DialogPlus = (props) => {
     return (
 
 
+
         <div>
-            <Toast ref={toast} />
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
+            {/* <Toast ref={toast} /> */}
             <Button icon="pi pi-plus" className="p-mr-2 p-button-success" onClick={() => onClick('displayBasic')} />
 
             <Dialog header={<div><h1>Khởi tạo chứng thư số</h1></div>}

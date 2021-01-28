@@ -1,22 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Toolbar } from 'primereact/toolbar';
 import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
-import { Dropdown } from 'primereact/dropdown';
-import { Calendar } from 'primereact/calendar';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Card } from 'primereact/card';
 import ChungThuSoService from './../../service/ChungThuSoService';
 import { Tag } from 'primereact/tag';
 import Moment from 'react-moment';
 import { Paginator } from 'primereact/paginator';
 import { convertJsonToQueryString, queryStringToJSON } from '../../helper/CyberTaxHelper';
 import { withRouter } from "react-router-dom";
-import { confirmPopup } from 'primereact/confirmpopup';
-import 'primeflex/primeflex.css';
-import { Dialog } from 'primereact/dialog';
-import { Password } from 'primereact/password';
 import DialogPlus from './action/DialogPlus';
 import DialogEdit from './action/DialogEdit';
 import DeleteHandle from './action/DeleteHandle';
@@ -28,8 +20,8 @@ const ChungThuSo = (props) => {
         trangthai: "",
     });
     const [paginate, setPaginate] = useState({
-        page: 1,
-        size: 10,
+        page: 0,
+        size: 20,
     });
     const [dataUser, setDataUser] = useState(
         // [{
@@ -56,13 +48,15 @@ const ChungThuSo = (props) => {
     const [totalRecord, setTotalRecord] = useState();
     const [selectedStatus, setSelectedStatus] = useState("");
     const fetDataUser = async () => {
-        const result = await service.getList();
+
+        const result = await service.getList({...paginate,...search});
         console.log("result:",result)
+        console.log("page: ", paginate)
         if (result && result.status === 1000) {
             setDataUser(result.object);
             setTotalRecord(result.totalItem);
-            console.log(result.totalItem)
-            console.log('run');
+            // console.log(result.totalItem)
+            // console.log('run');
         }
     };
 
@@ -75,7 +69,7 @@ const ChungThuSo = (props) => {
     useEffect(() => {
         fetDataUser();
         // eslint-disable-next-line
-    }, []);
+    }, [props.location.search]);
     const onHandleChangeSearch = (e) => {
         setSearch({ ...search, [e.target.name]: e.target.value });
     };
@@ -129,6 +123,7 @@ const ChungThuSo = (props) => {
         })
     };
     const onPageChange = (event) => {
+        console.log("go to here",event.rows,event.page)
         setFirst(event.first);
         setPaginate({ ...paginate, size: event.rows, page: event.page });
         let dataSearch = { size: event.rows, page: event.page };
@@ -183,7 +178,7 @@ const ChungThuSo = (props) => {
 
     const paginatorLeft = <Button type="button" icon="pi pi-refresh" className="p-button-text" />;
     const paginatorRight = <Button type="button" icon="pi pi-cloud" className="p-button-text" />;
-    
+    console.log("dataUser: ", dataUser)
     return (
         <React.Fragment>
             {/* <Card style={{ 'margin-bottom': 10 }}>
@@ -204,10 +199,9 @@ const ChungThuSo = (props) => {
                         onSelectionChange={(e) => setSelectionRecord(e.value)}
                         rowHover 
 
-                        paginator
-                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" rows={paginate.size} rowsPerPageOptions={[10,20,50,100]}
-                    // paginatorLeft={paginatorLeft} paginatorRight={paginatorRight}
+                    //     paginator
+                    // paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
+                    // currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" rows={paginate.size} rowsPerPageOptions={[1,10,20,50,100]}                   
                         
                         >
                         <Column selectionMode="multiple" headerStyle={{ width: '3.3rem' }} className="p-text-center" />
@@ -240,15 +234,15 @@ const ChungThuSo = (props) => {
                         <div className="p-mt-3">
                             <span>Tổng số <b>{totalRecord}</b> bản ghi</span>
                         </div>
-                        {/* <div className="p-ml-auto">
+                        <div className="p-ml-auto">
                             <Paginator
                                 first={first}
                                 rows={paginate.size}
                                 totalRecords={totalRecord}
-                                rowsPerPageOptions={[10, 20, 50, 100]}
+                                rowsPerPageOptions={[1,10, 20, 50, 100]}
                                 onPageChange={(event) => onPageChange(event)}
                                 template=" RowsPerPageDropdown FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink " />
-                        </div> */}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -9,6 +9,8 @@ import { Calendar } from 'primereact/calendar';
 import ChungThuSoService from './../../../service/ChungThuSoService';
 import { Toast } from 'primereact/toast';
 import './ToastDemo.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 const DialogEdit = (props) => {
@@ -38,13 +40,38 @@ const DialogEdit = (props) => {
     const [chungThuSo, setChungThuSo] = useState(props.rowData.chungthuso);
     const [mst, setMst] = useState(props.rowData.masothue);
     const [pkcs10File, setPkcs10File] = useState();
-    const toast = useRef(null);
-    const showSuccess = () => {
-        toast.current.show({ severity: 'success', summary: 'Success Message', detail: 'Message Content', life: 3000 });
-    }
-    const showError = (message) => {
-        toast.current.show({ severity: 'error', summary: 'Error Message', detail: message, life: 5000 });
-    }
+    // const toast = useRef(null);
+    // const showSuccess = () => {
+    //     toast.current.show({ severity: 'success', summary: 'Success Message', detail: 'Message Content', life: 3000 });
+    // }
+    // const showError = (message) => {
+    //     toast.current.show({ severity: 'error', summary: 'Error Message', detail: message, life: 5000 });
+    // }
+    // Thêm 2 function 
+
+    const notifySuccess = (message) => {
+        toast.success(`🦄 ${message}`, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    };
+
+    const notifyError = (message) => {
+        toast.error(`🦄 ${message}`, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    };
 
     // call api to save
     const editChungThuSo = async (chungThuSoObject) => {
@@ -53,12 +80,14 @@ const DialogEdit = (props) => {
         if (result && result.status === 1000) {
             console.log("result reponse add chung thu so:", result);
             setTimeout(props.fetDataUser, 500);
-           
+
+            notifySuccess(result.message);
 
         } else {
             // alert("them khong thanh cong");
-            showError(result.message)
-            console.log("response: ", result);
+            // showError(result.message)
+            // console.log("response: ", result);
+            notifyError (result.message);
         }
         clearState();
     };
@@ -77,9 +106,9 @@ const DialogEdit = (props) => {
     }
 
     const onHide = (name, check) => {
-        
-        
-        
+
+
+
         if (check === 0) {
             clearState();
             console.log("close");
@@ -100,13 +129,14 @@ const DialogEdit = (props) => {
 
 
             var pat = /[0-9]{10}/;
-            
-            
+
+
 
             if (nameabc === null || selectApikey === null || password === null || dnChungthuso === null || nhaCungCap === null ||
                 nhaCungCap === null || chungThuSo === null || mst === null || selectTrangThai === null || selectHostHsm === null || selectHostHsm.name === null
-                || selectApikey.name === null || selectTrangThai.name === null){
-                alert("chu nhap du thong tin! kiem tra lai");
+                || selectApikey.name === null || selectTrangThai.name === null) {
+                    notifyError ( "chu nhap du thong tin! kiem tra lai" );
+                // alert("chu nhap du thong tin! kiem tra lai");
                 clearState();
                 return;
             }
@@ -114,7 +144,8 @@ const DialogEdit = (props) => {
 
             if (!patMst.test(mst)) {
                 // alert("ma so thue phai du 10 so");
-                toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'ma so thue phai du 10 so', life: 3000 });
+                notifyError ( "ma so thue phai du 10 so" );
+               // toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'ma so thue phai du 10 so', life: 3000 });
                 clearState();
                 return;
             }
@@ -123,11 +154,12 @@ const DialogEdit = (props) => {
             var count = strongPassword(password);
             if (count > 0) {
                 //toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'password phai du 6 ki tu tro len va co chu hoa chu thuong so va ki tu dac biet', life: 5000 });
-                alert("password phai du 6 ki tu tro len va co chu hoa chu thuong so va ki tu dac biet");
+                // alert("password phai du 6 ki tu tro len va co chu hoa chu thuong so va ki tu dac biet");
+                notifyError ( "password phai du 6 ki tu tro len va co chu hoa chu thuong so va ki tu dac biet" );
                 clearState();
-                 return;
+                return;
             }
-            
+
 
             //call api
             // addChungThuSo({
@@ -145,7 +177,7 @@ const DialogEdit = (props) => {
             //     "pkcs10": "sfff"
             // });
             editChungThuSo({
-                "id":props.rowData.iddoanhnghiep,
+                "id": props.rowData.iddoanhnghiep,
                 "masothue": mst,
                 "ten": nameabc,
                 "dnChungThuSo": dnChungthuso,
@@ -174,12 +206,12 @@ const DialogEdit = (props) => {
         setNhaCungCap(props.rowData.nhacungcap);
         setChungThuSo(props.rowData.chungthuso);
         setMst(props.rowData.masothue);
-        setSelectApikey({name:props.rowData.apikey});
-        setSelectHostHsm({name:props.rowData.hosthsm});
-        setStartDate({name:props.rowData.ngaybatdau});
-        setEndDate({name:props.rowData.ngayketthuc});
-        setSelectTrangThai({name:""+props.rowData.trangthai});
-        
+        setSelectApikey({ name: props.rowData.apikey });
+        setSelectHostHsm({ name: props.rowData.hosthsm });
+        setStartDate({ name: props.rowData.ngaybatdau });
+        setEndDate({ name: props.rowData.ngayketthuc });
+        setSelectTrangThai({ name: "" + props.rowData.trangthai });
+
     }
     const renderFooter = (name) => {
         return (
@@ -191,11 +223,11 @@ const DialogEdit = (props) => {
     }
 
     // console.log("fuckyou: ", props.testFunc);
-    const [selectApikey, setSelectApikey] = useState({name:props.rowData.apikey});
-    const [selectHostHsm, setSelectHostHsm] = useState({name:props.rowData.hosthsm});
-    const [startDate, setStartDate] = useState({name:props.rowData.ngaybatdau});
-    const [endDate, setEndDate] = useState({name:props.rowData.ngayketthuc});
-    const [selectTrangThai, setSelectTrangThai] = useState({name:""+props.rowData.trangthai});
+    const [selectApikey, setSelectApikey] = useState({ name: props.rowData.apikey });
+    const [selectHostHsm, setSelectHostHsm] = useState({ name: props.rowData.hosthsm });
+    const [startDate, setStartDate] = useState({ name: props.rowData.ngaybatdau });
+    const [endDate, setEndDate] = useState({ name: props.rowData.ngayketthuc });
+    const [selectTrangThai, setSelectTrangThai] = useState({ name: "" + props.rowData.trangthai });
     const trangThai = [
         { name: "0" },
         { name: "1" }
@@ -276,7 +308,19 @@ const DialogEdit = (props) => {
     return (
 
         <div>
-            <Toast ref={toast} />
+            {/* <Toast ref={toast} /> */}
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
+
             <i className="pi pi-pencil p-mr-2 icon-medium" title={"Sửa"} style={{ color: "blue", cursor: "pointer" }} onClick={() => onClick('displayBasic')} />
 
             {/* <Button icon="pi pi-plus" className="p-mr-2 p-button-success" onClick={() => onClick('displayBasic')} /> */}
@@ -312,7 +356,7 @@ const DialogEdit = (props) => {
                                 console.log("value: ", e.target.value);
                                 setName(e.target.value);
                             }}
-                            value={nameabc} />
+                                value={nameabc} />
 
                         </div>
                         {/* <p id ="test">{() => {
@@ -338,9 +382,9 @@ const DialogEdit = (props) => {
 
                                     // aCheck.push(checkMst);
                                     setMst(e.target.value)
-                                }} 
+                                }}
                                 value={mst}
-                                />
+                            />
 
 
                         </div>
@@ -423,7 +467,7 @@ const DialogEdit = (props) => {
                                 }
                                 // aCheck.push(checkPassword);
                                 setPassword(e.target.value)
-                            }} placeholder="Password" value={password}/>
+                            }} placeholder="Password" value={password} />
                         </div>
                         {renderMessageError(checkPassword)}
                     </div>
@@ -484,7 +528,7 @@ const DialogEdit = (props) => {
                                 }
                                 // aCheck.push(checkDnChungThuSo);
                                 setdnChungthuso(e.target.value)
-                            }} value={dnChungthuso}/>
+                            }} value={dnChungthuso} />
                         </div>
                         {renderMessageError(checkDnChungThuSo)}
                     </div>
@@ -504,7 +548,7 @@ const DialogEdit = (props) => {
                                 }
                                 // aCheck.push(checkNhaCungCap);
                                 setNhaCungCap(e.target.value)
-                            }} value={nhaCungCap}/>
+                            }} value={nhaCungCap} />
                         </div>
                         {renderMessageError(checkNhaCungCap)}
                     </div>
@@ -524,7 +568,7 @@ const DialogEdit = (props) => {
                                 }
                                 // aCheck.push(checkChungThuSo);
                                 setChungThuSo(e.target.value)
-                            }} value={chungThuSo}/>
+                            }} value={chungThuSo} />
                         </div>
                         {renderMessageError(checkChungThuSo)}
                     </div>
