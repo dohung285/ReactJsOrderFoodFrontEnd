@@ -203,13 +203,14 @@ const RegisterTVAN = (props) => {
       <React.Fragment>
         <i
           className="pi pi-pencil p-mr-2 icon-medium"
-          title={"Sửa"}
+          title={"Active"}
           style={{ color: "blue", cursor: "pointer" }}
+          onClick={()=>alert('Acitve')}
         />
         <i
           className="pi pi-trash icon-medium"
           style={{ color: "red", cursor: "pointer" }}
-          title={"Xóa"}
+          title={"DeActive"}
         />
       </React.Fragment>
     );

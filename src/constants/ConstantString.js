@@ -1,1 +1,3 @@
-export const EXPRITIME_HIDER_LOADER = 100;
+
+
+export const EXPRITIME_HIDER_LOADER = 1000;

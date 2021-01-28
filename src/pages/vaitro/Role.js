@@ -9,6 +9,7 @@ import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
 import Moment from 'react-moment';
 import { useHistory, useLocation, withRouter } from "react-router-dom";
+import { EXPRITIME_HIDER_LOADER } from '../../constants/ConstantString';
 import { convertJsonToQueryString, queryStringToJSON } from '../../helper/CyberTaxHelper';
 import useFullPageLoader from '../../hooks/useFullPageLoader';
 import NhomQuyenService from '../../service/NhomQuyenService';
@@ -187,7 +188,7 @@ const Role = (props) => {
         if (result && result.status === 1000) {
             console.log('result', result)
             showInfo(result.message)
-            setTimeout(fetDataUser, 1000);
+            setTimeout(fetDataUser, EXPRITIME_HIDER_LOADER);
             onHide(name)
         }
         if (result && result.status === 1001) {

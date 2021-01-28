@@ -5,6 +5,10 @@ import { Tree } from "primereact/tree";
 import React, { useState, useRef, useEffect } from "react";
 import RoleService from "../../../service/RoleService";
 import { Accordion, AccordionTab } from "primereact/accordion";
+import { EXPRITIME_HIDER_LOADER } from "../../../constants/ConstantString";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 export const Edit = (props) => {
   const {
@@ -225,26 +229,25 @@ export const Edit = (props) => {
   const [tenNhomQuyen, setTenNhomQuyen] = useState(objRoleTranfer.ten);
   const [mota, setMota] = useState(objRoleTranfer.id);
 
+  // const toast = useRef(null);
 
-  const toast = useRef(null);
+  // const showSuccess = (message) => {
+  //   toast.current.show({
+  //     severity: "success",
+  //     summary: "Success Message",
+  //     detail: message,
+  //     life: 3000,
+  //   });
+  // };
 
-  const showSuccess = (message) => {
-    toast.current.show({
-      severity: "success",
-      summary: "Success Message",
-      detail: message,
-      life: 3000,
-    });
-  };
-
-  const showError = (message) => {
-    toast.current.show({
-      severity: "error",
-      summary: "Error Message",
-      detail: message,
-      life: 3000,
-    });
-  };
+  // const showError = (message) => {
+  //   toast.current.show({
+  //     severity: "error",
+  //     summary: "Error Message",
+  //     detail: message,
+  //     life: 3000,
+  //   });
+  // };
 
   function getStateNodeSelectedKey() {
     let objSelected = process();
@@ -270,9 +273,6 @@ export const Edit = (props) => {
 
   // Xử lý nút đồng ý thêm nhóm quyền
   function handleOnYesDialog(name) {
-   
-
-
     updateRoleIntoDatabase();
     props.fetDataUser();
     onHide(name);
@@ -300,8 +300,16 @@ export const Edit = (props) => {
     console.log("arrayIdChucNangCT", arrayIdChucNangCT);
 
     const dataBody = {
-      ten: tenNhomQuyen === null || tenNhomQuyen === undefined || tenNhomQuyen === '' ? objRoleTranfer.ten : tenNhomQuyen ,
-      mota: mota === null || mota === undefined || mota === '' ? objRoleTranfer.mota : mota,
+      ten:
+        tenNhomQuyen === null ||
+        tenNhomQuyen === undefined ||
+        tenNhomQuyen === ""
+          ? objRoleTranfer.ten
+          : tenNhomQuyen,
+      mota:
+        mota === null || mota === undefined || mota === ""
+          ? objRoleTranfer.mota
+          : mota,
       idchucnangct: arrayIdChucNangCT,
     };
 
@@ -311,11 +319,14 @@ export const Edit = (props) => {
     );
     if (result && result.status === 1000) {
       let message = result.message;
-      setTimeout(props.fetDataUser, 1000); // đợi 0.5s sau mới gọi hàm fetData()
+      setTimeout(props.fetDataUser, EXPRITIME_HIDER_LOADER); // đợi 0.5s sau mới gọi hàm fetData()
+      notifySuccess(message)
     } else {
       let message = result.message;
-      showError(message);
+      // showError(message);
+      notifyError(message)
     }
+    setActiveIndex(null);
   };
 
   const renderFooter = (name) => {
@@ -506,7 +517,7 @@ export const Edit = (props) => {
     });
     // console.log("arrayIndexRemove", arrayIndexRemove);
     arrayKeySelected = arrayKeySelected.filter(function (value, index) {
-      return arrayIndexRemove.indexOf(index) == -1;
+      return arrayIndexRemove.indexOf(index) === -1;
     });
     // console.log("arrayKeySelected After", arrayKeySelected);
     // nếu mảng selectedKeys sau khi bị xóa có số lượng phần tử bằng 0
@@ -518,13 +529,55 @@ export const Edit = (props) => {
     return arrayKeySelected;
   }
 
+  const notifySuccess = (message) => {
+    toast.success(`🦄 ${message}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const notifyError = (message) => {
+    toast.error(`🦄 ${message}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const onCloseDialog = () => {
+ 
+    // notifySuccess('thanh cong!!')
+    setActiveIndex(null);
+    onHide();
+  };
+
   return (
     <div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Dialog
         header="Sửa mới nhóm quyền"
         visible={visible}
         style={{ width: "50vw" }}
-        onHide={onHide}
+        onHide={() => onCloseDialog()}
         footer={renderFooter("displayBasic")}
       >
         <div className="p-fluid">
