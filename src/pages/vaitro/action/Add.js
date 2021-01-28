@@ -121,14 +121,14 @@ const Add = (props) => {
     return (
       <div>
         <Button
-          label="No"
+          label="Hủy"
           icon="pi pi-times"
           // onClick={onHide}
           onClick={handleOnCloseDialog}
           className="p-button-text"
         />
         <Button
-          label="Yes"
+          label="Đồng ý"
           icon="pi pi-check"
           // onClick={() => onHide(name)}
           onClick={() => handleOnYesDialog(name)}

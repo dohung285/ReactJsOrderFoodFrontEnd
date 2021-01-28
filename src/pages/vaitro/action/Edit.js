@@ -319,8 +319,9 @@ export const Edit = (props) => {
     );
     if (result && result.status === 1000) {
       let message = result.message;
+      console.log('message', message)
       setTimeout(props.fetDataUser, EXPRITIME_HIDER_LOADER); // đợi 0.5s sau mới gọi hàm fetData()
-      notifySuccess(message)
+      notifySuccess('Sửa nhóm quyền thành công!')
     } else {
       let message = result.message;
       // showError(message);
