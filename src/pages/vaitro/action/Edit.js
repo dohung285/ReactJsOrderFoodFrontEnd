@@ -5,6 +5,10 @@ import { Tree } from "primereact/tree";
 import React, { useState, useRef, useEffect } from "react";
 import RoleService from "../../../service/RoleService";
 import { Accordion, AccordionTab } from "primereact/accordion";
+import { EXPRITIME_HIDER_LOADER } from "../../../constants/ConstantString";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 export const Edit = (props) => {
   const {
@@ -144,13 +148,13 @@ export const Edit = (props) => {
     return arrayReturnSelectKey;
   }
 
-  const obj = {
-    "9f0fb98b-7766-41fb-8a1f-9d1ad5aa66ea": { checked: true },
-    "e32ea907-60eb-4999-939f-3dd6cdb86d3a": { checked: true },
-    "8f1ec869-abf4-42d1-bba2-33bd2604e86c": { checked: true },
-    "1e3b0b15-4fe0-4d03-8f34-e595a9f37f4c": { checked: true },
-    "fe3e8926-c8d5-45cf-8d2c-dd0b949c52f3": { checked: true },
-  };
+  // const obj = {
+  //   "9f0fb98b-7766-41fb-8a1f-9d1ad5aa66ea": { checked: true },
+  //   "e32ea907-60eb-4999-939f-3dd6cdb86d3a": { checked: true },
+  //   "8f1ec869-abf4-42d1-bba2-33bd2604e86c": { checked: true },
+  //   "1e3b0b15-4fe0-4d03-8f34-e595a9f37f4c": { checked: true },
+  //   "fe3e8926-c8d5-45cf-8d2c-dd0b949c52f3": { checked: true },
+  // };
 
   // console.log(obj);
   // console.log('datachucnangct', datachucnangct);
@@ -171,37 +175,37 @@ export const Edit = (props) => {
   // mergeX = {...arraySelected}
 
   // console.log("mergeX", mergeX);
-  useEffect(() => {
-    setTenNhomQuyen(objRoleTranfer.ten);
-    setMota(objRoleTranfer.mota);
+  // useEffect(() => {
+  //   setTenNhomQuyen(objRoleTranfer.ten);
+  //   setMota(objRoleTranfer.mota);
 
-    //getStateNodeSelectedKey();
+  //   //getStateNodeSelectedKey();
 
-    // let objSelected = process();
-    // console.log('objSelected', objSelected)
-    // var dumpObj = [];
-    // objSelected.forEach(el => {
-    //   Object.keys(el).forEach(function (key) {
-    //     dumpObj[key] = el[key];
-    //     // dumpObj = dumpObj.push({[key]: el[key]});
-    //     // console.log({[key]: el[key]});
-    //   });
-    // });
-    // console.log(dumpObj)
-    // setSelectedKeys(dumpObj);
+  //   // let objSelected = process();
+  //   // console.log('objSelected', objSelected)
+  //   // var dumpObj = [];
+  //   // objSelected.forEach(el => {
+  //   //   Object.keys(el).forEach(function (key) {
+  //   //     dumpObj[key] = el[key];
+  //   //     // dumpObj = dumpObj.push({[key]: el[key]});
+  //   //     // console.log({[key]: el[key]});
+  //   //   });
+  //   // });
+  //   // console.log(dumpObj)
+  //   // setSelectedKeys(dumpObj);
 
-    // const obj = {
-    //   "9f0fb98b-7766-41fb-8a1f-9d1ad5aa66ea": { checked: true },
-    //   "e32ea907-60eb-4999-939f-3dd6cdb86d3a": { checked: true },
-    //   "8f1ec869-abf4-42d1-bba2-33bd2604e86c": { checked: true },
-    //   "1e3b0b15-4fe0-4d03-8f34-e595a9f37f4c": { checked: true },
-    //   "fe3e8926-c8d5-45cf-8d2c-dd0b949c52f3": { checked: true },
-    // };
+  //   // const obj = {
+  //   //   "9f0fb98b-7766-41fb-8a1f-9d1ad5aa66ea": { checked: true },
+  //   //   "e32ea907-60eb-4999-939f-3dd6cdb86d3a": { checked: true },
+  //   //   "8f1ec869-abf4-42d1-bba2-33bd2604e86c": { checked: true },
+  //   //   "1e3b0b15-4fe0-4d03-8f34-e595a9f37f4c": { checked: true },
+  //   //   "fe3e8926-c8d5-45cf-8d2c-dd0b949c52f3": { checked: true },
+  //   // };
 
-    // setSelectedKeys(obj);
-    // process();
-    // setSelectedKeys(arraySelected);
-  }, []);
+  //   // setSelectedKeys(obj);
+  //   // process();
+  //   // setSelectedKeys(arraySelected);
+  // }, []);
 
   // process();
 
@@ -222,28 +226,28 @@ export const Edit = (props) => {
 
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [listUUIDChitiet, setListUUIDChitiet] = useState([]);
-  const [tenNhomQuyen, setTenNhomQuyen] = useState("");
-  const [mota, setMota] = useState("");
+  const [tenNhomQuyen, setTenNhomQuyen] = useState(objRoleTranfer.ten);
+  const [mota, setMota] = useState(objRoleTranfer.id);
 
-  const toast = useRef(null);
+  // const toast = useRef(null);
 
-  const showSuccess = (message) => {
-    toast.current.show({
-      severity: "success",
-      summary: "Success Message",
-      detail: message,
-      life: 3000,
-    });
-  };
+  // const showSuccess = (message) => {
+  //   toast.current.show({
+  //     severity: "success",
+  //     summary: "Success Message",
+  //     detail: message,
+  //     life: 3000,
+  //   });
+  // };
 
-  const showError = (message) => {
-    toast.current.show({
-      severity: "error",
-      summary: "Error Message",
-      detail: message,
-      life: 3000,
-    });
-  };
+  // const showError = (message) => {
+  //   toast.current.show({
+  //     severity: "error",
+  //     summary: "Error Message",
+  //     detail: message,
+  //     life: 3000,
+  //   });
+  // };
 
   function getStateNodeSelectedKey() {
     let objSelected = process();
@@ -255,49 +259,58 @@ export const Edit = (props) => {
         // console.log('dumpObj', dumpObj)
       });
     });
+    // console.log({dumpObj});
     // console.log(dumpObj);
     // console.log('typeof', typeof dumpObj)
     setSelectedKeys(dumpObj);
   }
 
   function handleOnCloseDialog(params) {
-    setSelectedKeys(null);
+    setSelectedKeys([]);
     onHide();
     // getStateNodeSelectedKey();
   }
 
   // Xử lý nút đồng ý thêm nhóm quyền
   function handleOnYesDialog(name) {
-    if (
-      tenNhomQuyen === "" ||
-      tenNhomQuyen === null ||
-      tenNhomQuyen === undefined
-    ) {
-      // showError("Không được bỏ trống Tên nhóm quyền");
-      alert("Không được bỏ trống Tên nhóm quyền");
-      return;
-    }
-    if (mota === "" || mota === null || mota === undefined) {
-      alert("Không được bỏ trống mô tả");
-      return;
-    }
-    setListUUIDChitiet([
-      "e32ea907-60eb-4999-939f-3dd6cdb86d3a",
-      "8f1ec869-abf4-42d1-bba2-33bd2604e86c",
-    ]);
     updateRoleIntoDatabase();
-    // props.fetDataUser();
+    props.fetDataUser();
     onHide(name);
   }
 
   const updateRoleIntoDatabase = async () => {
+    //lấy ra danh sách chức năng chi tiết
+    console.log("selectedKeys", selectedKeys);
+
+    let tempArray = Object.keys(selectedKeys);
+
+    let mapTotal = getValueFromDataToMap(datachucnangct);
+
+    let arrayKeyParentOfMapTotal = []; //luu giu cac key parent cua arrayTotal
+    let arrayIdChucNangCT = [];
+    for (let x of mapTotal.keys()) {
+      arrayKeyParentOfMapTotal.push(x);
+    }
+    tempArray.forEach((el) => {
+      if (!arrayKeyParentOfMapTotal.includes(el)) {
+        arrayIdChucNangCT.push(el);
+      }
+    });
+
+    console.log("arrayIdChucNangCT", arrayIdChucNangCT);
+
     const dataBody = {
-      ten: tenNhomQuyen,
-      mota: mota,
-      idchucnangct: [
-        "e32ea907-60eb-4999-939f-3dd6cdb86d3a",
-        "8f1ec869-abf4-42d1-bba2-33bd2604e86c",
-      ],
+      ten:
+        tenNhomQuyen === null ||
+        tenNhomQuyen === undefined ||
+        tenNhomQuyen === ""
+          ? objRoleTranfer.ten
+          : tenNhomQuyen,
+      mota:
+        mota === null || mota === undefined || mota === ""
+          ? objRoleTranfer.mota
+          : mota,
+      idchucnangct: arrayIdChucNangCT,
     };
 
     const result = await roleService.updateNhomQuyen(
@@ -306,11 +319,14 @@ export const Edit = (props) => {
     );
     if (result && result.status === 1000) {
       let message = result.message;
-      setTimeout(props.fetDataUser, 1000); // đợi 0.5s sau mới gọi hàm fetData()
+      setTimeout(props.fetDataUser, EXPRITIME_HIDER_LOADER); // đợi 0.5s sau mới gọi hàm fetData()
+      notifySuccess(message)
     } else {
       let message = result.message;
-      showError(message);
+      // showError(message);
+      notifyError(message)
     }
+    setActiveIndex(null);
   };
 
   const renderFooter = (name) => {
@@ -403,23 +419,24 @@ export const Edit = (props) => {
   function handleOnChangeSelectedKey(e) {
     // console.log("e", e.value);
     // console.log('selectedKeys', selectedKeys)
-    // setSelectedKeys(e.value)
+    setSelectedKeys(e.value);
   }
   function handOnSelected(params) {
-    console.log("handOnSelected", params);
+    console.log("handOnSelected", params.node);
+    setSelectedKeys(params.node);
   }
 
   function handOnUnSelected(params) {
-   
-    console.log("handOnUnSelected", params.node);
+    // console.log("handOnUnSelected", params.node);
 
     // console.log("key", params.node.key);
     // console.log("children", params.node.children);
 
     // lay ra danh sach keyParent va keyChildren de xoa khoa selectedKeys
     let arrayKeys = []; // khai bao bien arrayKey de chua danh sach cac key can xoa khi unselected
-    let keyParent = params.node.key;
-    arrayKeys.push(keyParent);
+    let keySelected = params.node.key;
+    let arrayReturnSelectKey = [];
+    arrayKeys.push(keySelected);
     let listChildren = Array.isArray(params.node.children)
       ? params.node.children
       : [];
@@ -427,34 +444,140 @@ export const Edit = (props) => {
       listChildren.map((x) => {
         arrayKeys.push(x.key);
       });
-      console.log("Day la node Cha - co danh sach con");
-    } 
+      //console.log("Day la node Cha - co danh sach con");
+      const arrayKeySelected = processRemoveElementSelectedTreeNode(arrayKeys);
+      if (arrayKeySelected.length === 0) {
+        setSelectedKeys(arrayKeySelected);
+      }
+    } else {
+      //console.log("Day la node con");
+      const arrayKeySelected = processRemoveElementSelectedTreeNode(arrayKeys);
+      // console.log("arrayKeySelected", arrayKeySelected);
+
+      let mapTotal = getValueFromDataToMap(datachucnangct);
+      //Lấy ra các keyParent của mapTotal
+      let arrayKeyParentOfMapTotal = []; //luu giu cac key parent cua arrayTotal
+      for (let x of mapTotal.keys()) {
+        arrayKeyParentOfMapTotal.push(x);
+      }
+
+      for (const x of arrayKeySelected) {
+        if (arrayKeyParentOfMapTotal.includes(x)) {
+          // console.log("x la phan tu cha: ", x);
+          //Kiểm tra nếu nó là keyParent thì thêm vào mảng
+          let objSelectedKeyParent = {
+            [x]: { checked: false, partialChecked: true },
+          };
+          arrayReturnSelectKey.push(objSelectedKeyParent);
+        } else {
+          // console.log("x la phan tu con: ", x);
+          //Nếu nó ko phải là keyParent tức là nó là keyChildren sau đó thêm vào mảng
+          let objSelectedKeyChildren = {
+            [x]: { checked: true },
+          };
+          arrayReturnSelectKey.push(objSelectedKeyChildren);
+        }
+      }
+
+      // console.log("arrayReturnSelectKey", arrayReturnSelectKey);
+      let dumpObj = [];
+      arrayReturnSelectKey.forEach((el) => {
+        Object.keys(el).forEach(function (key) {
+          dumpObj[key] = el[key];
+          // console.log('dumpObj', dumpObj)
+        });
+      });
+      // console.log("dumpObj", dumpObj);
+      setSelectedKeys(dumpObj);
+    }
     // console.log('arrayKeys', arrayKeys)
-    // console.log("selectedKeys", selectedKeys);
+    //console.log('check', Array.isArray(selectedKeys))
+    // console.log("selectedKeys", selectedKeys); // mucj dich laf duyet cai nay
+
     // console.log('length', Object.keys(selectedKeys))
-
-
-    arrayKeys.findIndex((element,index,array) => {
-      console.log('element', element)
-      console.log('index', index)
-      console.log('array before delete', array)
-      let remove =  array.slice(index,1)
-      console.log('array after delete', remove)
-    })
-
-
-
-
-
   }
+
+  function processRemoveElementSelectedTreeNode(arrayKeys = []) {
+    let arrayKeySelected = Array.isArray(Object.keys(selectedKeys))
+      ? Object.keys(selectedKeys)
+      : [];
+    // console.log("arrayKeySelected Before", arrayKeySelected);
+    let arrayIndexRemove = [];
+    arrayKeySelected.findIndex((elementTarget, indexTarget) => {
+      // console.log("elementTarget", elementTarget);
+      // console.log("indexTarget", indexTarget);
+      arrayKeys.findIndex((element, index) => {
+        // console.log("element", element);
+        // console.log("index", index);
+        if (elementTarget === element) {
+          // console.log("indexTarget", indexTarget);
+          arrayIndexRemove.push(indexTarget);
+        }
+      });
+    });
+    // console.log("arrayIndexRemove", arrayIndexRemove);
+    arrayKeySelected = arrayKeySelected.filter(function (value, index) {
+      return arrayIndexRemove.indexOf(index) === -1;
+    });
+    // console.log("arrayKeySelected After", arrayKeySelected);
+    // nếu mảng selectedKeys sau khi bị xóa có số lượng phần tử bằng 0
+    // thì bỏ check hết các ô từ nút cha đến con của ô hiện tại Đang được check
+
+    // if (arrayKeySelected.length === 0) {
+    //   setSelectedKeys(arrayKeySelected);
+    // }
+    return arrayKeySelected;
+  }
+
+  const notifySuccess = (message) => {
+    toast.success(`🦄 ${message}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const notifyError = (message) => {
+    toast.error(`🦄 ${message}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const onCloseDialog = () => {
+ 
+    // notifySuccess('thanh cong!!')
+    setActiveIndex(null);
+    onHide();
+  };
 
   return (
     <div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Dialog
         header="Sửa mới nhóm quyền"
         visible={visible}
         style={{ width: "50vw" }}
-        onHide={onHide}
+        onHide={() => onCloseDialog()}
         footer={renderFooter("displayBasic")}
       >
         <div className="p-fluid">
@@ -500,8 +623,8 @@ export const Edit = (props) => {
                 value={datachucnangct}
                 selectionMode="checkbox"
                 selectionKeys={selectedKeys}
-                // onSelectionChange={handleOnChangeSelectedKey}
-                onSelect={handOnSelected}
+                onSelectionChange={handleOnChangeSelectedKey}
+                // onSelect={handOnSelected}
                 onUnselect={handOnUnSelected}
               />
             </AccordionTab>

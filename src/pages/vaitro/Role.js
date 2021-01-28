@@ -9,6 +9,7 @@ import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
 import Moment from 'react-moment';
 import { useHistory, useLocation, withRouter } from "react-router-dom";
+import { EXPRITIME_HIDER_LOADER } from '../../constants/ConstantString';
 import { convertJsonToQueryString, queryStringToJSON } from '../../helper/CyberTaxHelper';
 import useFullPageLoader from '../../hooks/useFullPageLoader';
 import NhomQuyenService from '../../service/NhomQuyenService';
@@ -101,9 +102,10 @@ const Role = (props) => {
 
 
     }
-    const searchRoleWithPaging = async (varSearch) => {
+    const searchRoleWithPaging = async () => {
         // console.log('{ ...paginate, ...varSearch }', { ...paginate, ...varSearch })
-        const result = await service.getAllRoleWithPaging({ ...paginate, ...varSearch });
+        const dataBody = { search: inputSearch };
+        const result = await service.getAllRoleWithPaging(dataBody);
         if (result && result.status === 1000) {
             setDataUser(result.object);
             // setTotalRecord(result.totalItem);
@@ -136,31 +138,11 @@ const Role = (props) => {
     };
 
     const onHandleRefresh = () => {
-
-        // console.log('search.text', search.text)
-
-        // console.log('location', location)
-        // console.log('history before', history)
-        history.replace({ location: { search: '' } })
-        // console.log('history after', history)
-        // history.push('/vai-tro')
-        setSearch({
-            search: "",
+        props.history.push({
+            search:""
         })
-
-        setPaginate(
-            {
-                page: 0,
-                size: 10,
-            }
-        )
-
-        //clear text ô search
-
-
-        fetDataUser();
-
-
+        setSearch({search:""});
+        setInputSearch('')
     }
 
 
@@ -168,8 +150,8 @@ const Role = (props) => {
         <React.Fragment>
             <InputText
                 className={"p-mr-3"}
-                value={search.text}
-                // value={inputSearch}
+                // value={search.text}
+                value={inputSearch}
                 onChange={onHandleChangeSearch}
                 tooltip={"Tên"}
                 name={"text"}
@@ -189,7 +171,7 @@ const Role = (props) => {
             search: dataSearchQueryString,
         })
 
-        searchRoleWithPaging();
+        // searchRoleWithPaging();
 
     };
     const onPageChange = (event) => {
@@ -209,7 +191,7 @@ const Role = (props) => {
         if (result && result.status === 1000) {
             console.log('result', result)
             showInfo(result.message)
-            setTimeout(fetDataUser, 1000);
+            setTimeout(fetDataUser, EXPRITIME_HIDER_LOADER);
             onHide(name)
         }
         if (result && result.status === 1001) {
