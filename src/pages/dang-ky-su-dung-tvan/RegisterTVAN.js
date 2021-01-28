@@ -91,6 +91,7 @@ const RegisterTVAN = (props) => {
     setSearch({ ...search, masothue: e.target.value });
   };
   const onHandleRefresh = () => {
+    setInputSearch('')
     fetData();
   };
 
@@ -98,8 +99,8 @@ const RegisterTVAN = (props) => {
     <React.Fragment>
       <InputText
         className={"p-mr-3"}
-        value={search.text}
-        // value={inputSearch}
+        // value={search.text}
+        value={inputSearch}
         onChange={onHandleChangeSearch}
         tooltip={"Mã số thuế"}
         name={"text"}

@@ -140,6 +140,7 @@ const Role = (props) => {
             search:""
         })
         setSearch({search:""});
+        setInputSearch('')
     }
 
 
@@ -147,8 +148,8 @@ const Role = (props) => {
         <React.Fragment>
             <InputText
                 className={"p-mr-3"}
-                value={search.text}
-                // value={inputSearch}
+                // value={search.text}
+                value={inputSearch}
                 onChange={onHandleChangeSearch}
                 tooltip={"Tên"}
                 name={"text"}
