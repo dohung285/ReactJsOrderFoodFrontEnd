@@ -9,8 +9,7 @@ import React, { useEffect, useState } from "react";
 import Moment from "react-moment";
 import { withRouter } from "react-router-dom";
 import {
-  convertJsonToQueryString,
-  queryStringToJSON,
+  convertJsonToQueryString
 } from "../../helper/CyberTaxHelper";
 import useFullPageLoader from "../../hooks/useFullPageLoader";
 import RegisterTvanService from "../../service/RegisterTvanService";

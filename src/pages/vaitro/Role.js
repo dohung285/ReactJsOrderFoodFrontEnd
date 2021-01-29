@@ -8,7 +8,7 @@ import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
 import Moment from 'react-moment';
-import { useHistory, useLocation, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { EXPRITIME_HIDER_LOADER } from '../../constants/ConstantString';
 import { convertJsonToQueryString, queryStringToJSON } from '../../helper/CyberTaxHelper';
 import useFullPageLoader from '../../hooks/useFullPageLoader';
@@ -38,11 +38,7 @@ const Role = (props) => {
 
     // const service = new UserServices();
     const service = new RoleService();
-    const history = useHistory();
-    const location = useLocation();
-
-
-
+   
     const [search, setSearch] = useState(
         {
             search: "",
