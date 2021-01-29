@@ -15,6 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 
 const DialogPlus = (props) => {
+
     const service = new ChungThuSoService
     const [displayBasic, setDisplayBasic] = useState(false);
     const [displayBasic2, setDisplayBasic2] = useState(false);
@@ -82,7 +83,7 @@ const DialogPlus = (props) => {
         } else {
             // alert("them khong thanh cong");
             // showError(result.message)
-            notifyError (result.message);
+            notifyError(result.message);
             console.log("response: ", result);
         }
     };
@@ -129,7 +130,7 @@ const DialogPlus = (props) => {
             if (nameabc === null || selectApikey === null || password === null || dnChungthuso === null || nhaCungCap === null ||
                 nhaCungCap === null || chungThuSo === null || mst === null || selectTrangThai === null || selectHostHsm === null || selectHostHsm.name === null
                 || selectApikey.name === null || selectTrangThai.name === null) {
-                    notifyError ( "chu nhap du thong tin! kiem tra lai" );
+                notifyError("chu nhap du thong tin! kiem tra lai");
                 // alert("chu nhap du thong tin! kiem tra lai");
                 return;
             }
@@ -138,7 +139,7 @@ const DialogPlus = (props) => {
             if (!patMst.test(mst)) {
                 // alert("ma so thue phai du 10 so");
                 // toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'ma so thue phai du 10 so', life: 3000 });
-                notifyError ( "ma so thue phai du 10 so" );
+                notifyError("ma so thue phai du 10 so");
                 return;
             }
 
@@ -147,7 +148,7 @@ const DialogPlus = (props) => {
             if (count > 0) {
                 //toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'password phai du 6 ki tu tro len va co chu hoa chu thuong so va ki tu dac biet', life: 5000 });
                 // alert("password phai du 6 ki tu tro len va co chu hoa chu thuong so va ki tu dac biet");
-                notifyError ("password phai du 6 ki tu tro len va co chu hoa chu thuong so va ki tu dac biet");
+                notifyError("password phai du 6 ki tu tro len va co chu hoa chu thuong so va ki tu dac biet");
                 return;
             }
 
@@ -173,13 +174,13 @@ const DialogPlus = (props) => {
                 "dnChungThuSo": dnChungthuso,
                 "nhaCungCap": nhaCungCap,
                 "chungThuSo": chungThuSo,
-                "ngayBatDau": null,
-                "ngayKetThuc": null,
+                "ngayBatDau": startDate,
+                "ngayKetThuc": endDate,
                 "hostHsm": selectHostHsm.name,
                 "apiKey": selectApikey.name,
                 "passHsm": password,
                 "trangThai": selectTrangThai.name === "0" ? 0 : 1,
-                "pkcs10": "sfff"
+                "pkcs10": pkcs10File
             });
             // recall list
             // props.fetDataUser();
@@ -465,10 +466,23 @@ const DialogPlus = (props) => {
                             </span>
                             {/* <InputText placeholder="HostHsm" /> */}
                             <Calendar id="icon" value={startDate} onChange={(e) => {
-                                setStartDate(e.value);
+
                                 var valDate = e.target.value;
                                 console.log("startDate fuck: ", e.target.value);
-                                console.log("date: ", e.target.value.getDate(), valDate.getMonth() + 1, valDate.getFullYear())
+                                console.log("date: ", e.target.value.getDate(), valDate.getMonth() + 1, valDate.getFullYear());
+                                var date = e.target.value.getDate();
+                                var month = valDate.getMonth() + 1;
+                                var year = valDate.getFullYear();
+
+                                if (e.target.value.getDate() < 10) {
+                                    date = "0" + date;
+                                }
+                                if (valDate.getMonth() < 9) {
+                                    month = "0" + month;
+                                }
+                                var dateString = year + "-" + month + "-" + date;
+                                console.log("dateString: ", dateString);
+                                setStartDate(dateString);
                             }}
                                 showIcon dateFormat="dd/mm/yy" placeholder="startDate" />
                         </div>
@@ -479,7 +493,24 @@ const DialogPlus = (props) => {
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
                             </span>
-                            <Calendar id="icon" value={endDate} onChange={(e) => setEndDate(e.value.toString())} showIcon dateFormat="dd/mm/yy" placeholder="endDate" />
+                            <Calendar id="icon" value={endDate} onChange={(e) => {
+                                var valDate = e.target.value;
+                                var date = e.target.value.getDate();
+                                var month = valDate.getMonth() + 1;
+                                var year = valDate.getFullYear();
+
+                                if (e.target.value.getDate() < 10) {
+                                    date = "0" + date;
+                                }
+                                if (valDate.getMonth() < 9) {
+                                    month = "0" + month;
+                                }
+                                var dateString = year + "-" + month + "-" + date;
+                                console.log("dateString: ", dateString);
+                                setEndDate(dateString)
+                            }
+
+                            } showIcon dateFormat="dd/mm/yy" placeholder="endDate" />
                         </div>
                     </div>
                 </div>

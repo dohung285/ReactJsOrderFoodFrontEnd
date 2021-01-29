@@ -14,6 +14,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 
 const DialogEdit = (props) => {
+
+    // const [test, setTest] = useState(props.rowData);
+    // console.log("fuckyou lần 1: ", test.iddoanhnghiep)
+
     const service = new ChungThuSoService
     const [displayBasic, setDisplayBasic] = useState(false);
     const [displayBasic2, setDisplayBasic2] = useState(false);
@@ -481,10 +485,22 @@ const DialogEdit = (props) => {
                             </span>
                             {/* <InputText placeholder="HostHsm" /> */}
                             <Calendar id="icon" value={startDate} onChange={(e) => {
-                                setStartDate(e.value);
+                               // setStartDate(e.value);
                                 var valDate = e.target.value;
                                 console.log("startDate fuck: ", e.target.value);
                                 console.log("date: ", e.target.value.getDate(), valDate.getMonth() + 1, valDate.getFullYear())
+                                var date = e.target.value.getDate();
+                                var month =  valDate.getMonth() + 1;
+                                var year = valDate.getFullYear();
+
+                                if (e.target.value.getDate() < 10) {
+                                    date = "0" + date;
+                                }
+                                if (valDate.getMonth() < 9) {
+                                    month = "0" + month;
+                                }
+                               var dateString = year + "-" + month + "-" + date;
+                                setStartDate(dateString);
                             }}
                                 showIcon dateFormat="dd/mm/yy" placeholder="startDate" />
                         </div>
@@ -495,7 +511,22 @@ const DialogEdit = (props) => {
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
                             </span>
-                            <Calendar id="icon" value={endDate} onChange={(e) => setEndDate(e.value.toString())} showIcon dateFormat="dd/mm/yy" placeholder="endDate" />
+                            <Calendar id="icon" value={endDate} onChange={(e) => {
+                             //   setEndDate(e.value.toString())
+                             var valDate = e.target.value;
+                                var date = e.target.value.getDate();
+                                var month =  valDate.getMonth() + 1;
+                                var year = valDate.getFullYear();
+
+                                if (e.target.value.getDate() < 10) {
+                                    date = "0" + date;
+                                }
+                                if (valDate.getMonth() < 9) {
+                                    month = "0" + month;
+                                }
+                               var dateString = year + "-" + month + "-" + date;
+                                setEndDate(dateString)
+                            }} showIcon dateFormat="dd/mm/yy" placeholder="endDate" />
                         </div>
                     </div>
                 </div>
