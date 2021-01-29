@@ -323,6 +323,7 @@ const DialogPlus = (props) => {
 
                 <div className="p-grid p-fluid">
                     <div className="p-col-12 p-md-6">
+                        <label>Tên</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
@@ -354,6 +355,7 @@ const DialogPlus = (props) => {
                     </div>
 
                     <div className="p-col-12 p-md-6">
+                        <label>Mã số thuế</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }} >
                                 *
@@ -379,6 +381,7 @@ const DialogPlus = (props) => {
                 <br />
                 <div className="p-grid p-fluid">
                     <div className="p-col-12 p-md-6">
+                        <label>PKCS 10 file</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
@@ -399,9 +402,9 @@ const DialogPlus = (props) => {
                                   reader.readAsText(f);
                             }}
                             /> */}
-                            <span className="p-inputgroup-addon" style={{ color: 'red' }}>
+                            {/* <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 PKCS 10
-                            </span>
+                            </span> */}
                             <Button>
                                 <input type="file" accept="*" onChange={e =>
                                     handleChangeFile(e.target.files[0])} />
@@ -410,6 +413,7 @@ const DialogPlus = (props) => {
 
                     </div>
                     <div className="p-col-12 p-md-6">
+                        <label>Trạng thái</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
@@ -431,6 +435,7 @@ const DialogPlus = (props) => {
                 <br />
                 <div className="p-grid p-fluid">
                     <div className="p-col-12 p-md-6">
+                        <label>Host HSM</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
@@ -440,6 +445,7 @@ const DialogPlus = (props) => {
                         </div>
                     </div>
                     <div className="p-col-12 p-md-6">
+                        <label>Password</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
@@ -460,6 +466,7 @@ const DialogPlus = (props) => {
                 <br />
                 <div className="p-grid p-fluid">
                     <div className="p-col-12 p-md-6">
+                        <label>Ngày bắt đầu</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
@@ -489,6 +496,7 @@ const DialogPlus = (props) => {
                     </div>
                     {/* end date */}
                     <div className="p-col-12 p-md-6">
+                        <label>Ngày kết thúc</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
@@ -517,6 +525,7 @@ const DialogPlus = (props) => {
                 <br />
                 <div className="p-grid p-fluid">
                     <div className="p-col-12 ">
+                        <label>API key</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
@@ -531,6 +540,7 @@ const DialogPlus = (props) => {
 
                 <div className="p-grid p-fluid">
                     <div className="p-col-12 ">
+                        <label>Dn chứng thư số</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
@@ -551,6 +561,7 @@ const DialogPlus = (props) => {
                 <br />
                 <div className="p-grid p-fluid">
                     <div className="p-col-12 ">
+                        <label>Nhà cung cấp</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
@@ -571,6 +582,7 @@ const DialogPlus = (props) => {
                 <br />
                 <div className="p-grid p-fluid">
                     <div className="p-col-12 ">
+                        <label>Chứng thư số</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *

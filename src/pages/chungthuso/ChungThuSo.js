@@ -140,7 +140,7 @@ const ChungThuSo = (props) => {
     
     const rightContents = (
         <React.Fragment>
-            <Button icon="pi pi-search" className="p-mr-2" onClick={onHandleSearchClick} />
+            {/* <Button icon="pi pi-search" className="p-mr-2" onClick={onHandleSearchClick} /> */}
             {/* <Button icon="pi pi-plus" className="p-mr-2 p-button-success" onClick={onHandlePlus} />
             <Button icon="pi pi-trash" className="p-mr-2 p-button-danger" /> */}
             <DialogPlus visible="true" fetDataUser={fetDataUser} test2={setTestDataUser}>
@@ -170,7 +170,7 @@ const ChungThuSo = (props) => {
                 {/* <i className="pi pi-pencil p-mr-2 icon-medium" title={"Sửa"} style={{ color: "blue", cursor: "pointer" }} onClick={() => { props.history.push('/vai-tro') }} /> */}
                 <DialogEdit rowData = {rowData} test2={setTestDataUser} fetDataUser={fetDataUser}/>
                 {/* <i className="pi pi-trash icon-medium" style={{ color: "red", cursor: "pointer" }} title={"Xóa"} onClick={onHandleDelete} value = "0" /> */}
-                <DeleteHandle index={1} />
+                {/* <DeleteHandle index={1} /> */}
                 
             </React.Fragment>
         );
@@ -239,7 +239,7 @@ const ChungThuSo = (props) => {
                                 first={first}
                                 rows={paginate.size}
                                 totalRecords={totalRecord}
-                                rowsPerPageOptions={[1,10, 20, 50, 100]}
+                                rowsPerPageOptions={[10, 20, 50, 100]}
                                 onPageChange={(event) => onPageChange(event)}
                                 template=" RowsPerPageDropdown FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink " />
                         </div>

@@ -91,7 +91,7 @@ const DialogEdit = (props) => {
             // alert("them khong thanh cong");
             // showError(result.message)
             // console.log("response: ", result);
-            notifyError (result.message);
+            notifyError(result.message);
         }
         clearState();
     };
@@ -139,7 +139,7 @@ const DialogEdit = (props) => {
             if (nameabc === null || selectApikey === null || password === null || dnChungthuso === null || nhaCungCap === null ||
                 nhaCungCap === null || chungThuSo === null || mst === null || selectTrangThai === null || selectHostHsm === null || selectHostHsm.name === null
                 || selectApikey.name === null || selectTrangThai.name === null) {
-                    notifyError ( "chu nhap du thong tin! kiem tra lai" );
+                notifyError("chu nhap du thong tin! kiem tra lai");
                 // alert("chu nhap du thong tin! kiem tra lai");
                 clearState();
                 return;
@@ -148,8 +148,8 @@ const DialogEdit = (props) => {
 
             if (!patMst.test(mst)) {
                 // alert("ma so thue phai du 10 so");
-                notifyError ( "ma so thue phai du 10 so" );
-               // toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'ma so thue phai du 10 so', life: 3000 });
+                notifyError("ma so thue phai du 10 so");
+                // toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'ma so thue phai du 10 so', life: 3000 });
                 clearState();
                 return;
             }
@@ -159,7 +159,7 @@ const DialogEdit = (props) => {
             if (count > 0) {
                 //toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'password phai du 6 ki tu tro len va co chu hoa chu thuong so va ki tu dac biet', life: 5000 });
                 // alert("password phai du 6 ki tu tro len va co chu hoa chu thuong so va ki tu dac biet");
-                notifyError ( "password phai du 6 ki tu tro len va co chu hoa chu thuong so va ki tu dac biet" );
+                notifyError("password phai du 6 ki tu tro len va co chu hoa chu thuong so va ki tu dac biet");
                 clearState();
                 return;
             }
@@ -311,7 +311,7 @@ const DialogEdit = (props) => {
     console.log("prop fuck: ", props.rowData);
     return (
 
-        <div>
+        <div style={{"text-align": "left"}}>
             {/* <Toast ref={toast} /> */}
             <ToastContainer
                 position="top-right"
@@ -339,6 +339,7 @@ const DialogEdit = (props) => {
 
                 <div className="p-grid p-fluid">
                     <div className="p-col-12 p-md-6">
+                        <label>Tên</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
@@ -371,6 +372,7 @@ const DialogEdit = (props) => {
                     </div>
 
                     <div className="p-col-12 p-md-6">
+                        <label>Mã số thuế</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }} >
                                 *
@@ -398,6 +400,7 @@ const DialogEdit = (props) => {
                 <br />
                 <div className="p-grid p-fluid">
                     <div className="p-col-12 p-md-6">
+                        <label>PKCS 10 file</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
@@ -418,9 +421,9 @@ const DialogEdit = (props) => {
                                   reader.readAsText(f);
                             }}
                             /> */}
-                            <span className="p-inputgroup-addon" style={{ color: 'red' }}>
+                            {/* <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 PKCS 10
-                            </span>
+                            </span> */}
                             <Button>
                                 <input type="file" accept="*" onChange={e =>
                                     handleChangeFile(e.target.files[0])} />
@@ -429,6 +432,7 @@ const DialogEdit = (props) => {
 
                     </div>
                     <div className="p-col-12 p-md-6">
+                        <label>Trạng thái</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
@@ -450,6 +454,7 @@ const DialogEdit = (props) => {
                 <br />
                 <div className="p-grid p-fluid">
                     <div className="p-col-12 p-md-6">
+                        <label>Host HSM</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
@@ -459,6 +464,7 @@ const DialogEdit = (props) => {
                         </div>
                     </div>
                     <div className="p-col-12 p-md-6">
+                        <label>Password</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
@@ -479,18 +485,19 @@ const DialogEdit = (props) => {
                 <br />
                 <div className="p-grid p-fluid">
                     <div className="p-col-12 p-md-6">
+                        <label>Ngày bắt đầu</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
                             </span>
                             {/* <InputText placeholder="HostHsm" /> */}
                             <Calendar id="icon" value={startDate} onChange={(e) => {
-                               // setStartDate(e.value);
+                                // setStartDate(e.value);
                                 var valDate = e.target.value;
                                 console.log("startDate fuck: ", e.target.value);
                                 console.log("date: ", e.target.value.getDate(), valDate.getMonth() + 1, valDate.getFullYear())
                                 var date = e.target.value.getDate();
-                                var month =  valDate.getMonth() + 1;
+                                var month = valDate.getMonth() + 1;
                                 var year = valDate.getFullYear();
 
                                 if (e.target.value.getDate() < 10) {
@@ -499,7 +506,7 @@ const DialogEdit = (props) => {
                                 if (valDate.getMonth() < 9) {
                                     month = "0" + month;
                                 }
-                               var dateString = year + "-" + month + "-" + date;
+                                var dateString = year + "-" + month + "-" + date;
                                 setStartDate(dateString);
                             }}
                                 showIcon dateFormat="dd/mm/yy" placeholder="startDate" />
@@ -507,15 +514,16 @@ const DialogEdit = (props) => {
                     </div>
                     {/* end date */}
                     <div className="p-col-12 p-md-6">
+                        <label>Ngày kết thúc</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
                             </span>
                             <Calendar id="icon" value={endDate} onChange={(e) => {
-                             //   setEndDate(e.value.toString())
-                             var valDate = e.target.value;
+                                //   setEndDate(e.value.toString())
+                                var valDate = e.target.value;
                                 var date = e.target.value.getDate();
-                                var month =  valDate.getMonth() + 1;
+                                var month = valDate.getMonth() + 1;
                                 var year = valDate.getFullYear();
 
                                 if (e.target.value.getDate() < 10) {
@@ -524,7 +532,7 @@ const DialogEdit = (props) => {
                                 if (valDate.getMonth() < 9) {
                                     month = "0" + month;
                                 }
-                               var dateString = year + "-" + month + "-" + date;
+                                var dateString = year + "-" + month + "-" + date;
                                 setEndDate(dateString)
                             }} showIcon dateFormat="dd/mm/yy" placeholder="endDate" />
                         </div>
@@ -533,6 +541,7 @@ const DialogEdit = (props) => {
                 <br />
                 <div className="p-grid p-fluid">
                     <div className="p-col-12 ">
+                        <label>API key</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
@@ -547,6 +556,7 @@ const DialogEdit = (props) => {
 
                 <div className="p-grid p-fluid">
                     <div className="p-col-12 ">
+                        <label>Dn chứng thư số</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
@@ -567,6 +577,7 @@ const DialogEdit = (props) => {
                 <br />
                 <div className="p-grid p-fluid">
                     <div className="p-col-12 ">
+                        <label>Nhà cung cấp</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
@@ -587,6 +598,7 @@ const DialogEdit = (props) => {
                 <br />
                 <div className="p-grid p-fluid">
                     <div className="p-col-12 ">
+                        <label>Chứng thư số</label>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon" style={{ color: 'red' }}>
                                 *
