@@ -1,17 +1,16 @@
-import "primeflex/primeflex.css";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import UserServices from "../../service/UserService";
 import { TIME_OUT_CLOSE_NOTIFY } from "../../constants/ConstantString";
+import UserServices from "../../service/UserService";
 
-const AddUser = (props) => {
+const EditUser = (props) => {
   // console.log("props", props);
-  const { visible, onHide } = props;
+  const { visible, onHide, userObj } = props;
+  console.log("userObj", userObj);
 
   const [file, setFile] = useState(null);
   const [formInput, setFormInput] = useState({
@@ -39,7 +38,7 @@ const AddUser = (props) => {
   };
 
   const notifyError = (message) => {
-    toast.error(`😂🤣 ${message}`, {
+    toast.error(`😢😢😢😢😢😢 ${message}`, {
       position: "top-right",
       autoClose: TIME_OUT_CLOSE_NOTIFY,
       hideProgressBar: false,
@@ -49,6 +48,14 @@ const AddUser = (props) => {
       progress: undefined,
     });
   };
+
+  useEffect(() => {
+    console.log("userObj useEffect", userObj);
+    setFormInput({
+      ...formInput,
+      userObj
+    });
+  }, []);
 
   function handleOnCloseDialog() {
     onHide();
@@ -80,7 +87,10 @@ const AddUser = (props) => {
     data.append("file", file);
     data.append("nguoidung", jsonObj);
 
-    const result = await userService.saveUser(data);
+    let id = userObj.id;
+    console.log("id", id);
+
+    const result = await userService.editUser(id, data);
     if (result && result.status === 1000) {
       let message = result.message;
       notifySuccess(message);
@@ -96,7 +106,7 @@ const AddUser = (props) => {
 
   const onChangeFormInput = (e, type) => {
     let value = e.target.value;
-    // console.log("value", value);
+    console.log("value", value);
     switch (type) {
       case 1:
         // set hoten
@@ -220,7 +230,7 @@ const AddUser = (props) => {
         pauseOnHover
       />
       <Dialog
-        header="Thêm mới người dùng"
+        header="Sửa mới người dùng"
         visible={visible}
         style={{ width: "50vw" }}
         onHide={onHide}
@@ -233,6 +243,7 @@ const AddUser = (props) => {
               id="hoten"
               type="text"
               value={formInput.hoten}
+              name="hoten"
               onChange={(e) => onChangeFormInput(e, 1)}
             />
           </div>
@@ -303,4 +314,5 @@ const AddUser = (props) => {
     </div>
   );
 };
-export default withRouter(AddUser);
+
+export default withRouter(EditUser);

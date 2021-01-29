@@ -26,9 +26,21 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { EXPRITIME_HIDER_LOADER } from "../../constants/ConstantString";
 import useFullPageLoader from "../../hooks/useFullPageLoader";
+import EditUser from "./EditUser";
 
 const User = (props) => {
   const [visibleAddUser, setVisibleAddUser] = useState(false);
+  const [visibleEditUser, setVisibleEditUser] = useState(false);
+
+  const [userObj, setUserObj] = useState({
+    hoten: "",
+    diachi: "",
+    sodienthoai: "",
+    tendangnhap: "",
+    thudientu: "",
+    loai: "",
+  });
+
   const handleHideAddUser = () => {
     // alert('handleHideAddUser')
     setVisibleAddUser(false);
@@ -210,6 +222,23 @@ const User = (props) => {
     setIdUser(event.id);
     setDisplayBasic(true);
   };
+
+  const onHandleEdit = (event) => {
+    console.log(event);
+
+    setUserObj({
+      id:event.id,
+      hoten: event.hoten,
+      diachi: event.diachi,
+      sodienthoai: event.sodienthoai,
+      tendangnhap: event.tendangnhap,
+      thudientu: event.thudientu,
+      loai: event.loai,
+    });
+
+    setVisibleEditUser(true);
+  };
+
   const rightContents = (
     <React.Fragment>
       <Button
@@ -251,9 +280,7 @@ const User = (props) => {
           className="pi pi-pencil p-mr-2 icon-medium"
           title={"Sửa"}
           style={{ color: "blue", cursor: "pointer" }}
-          onClick={() => {
-            props.history.push("/vai-tro");
-          }}
+          onClick={() => onHandleEdit(rowData)}
         />
         <i
           className="pi pi-trash icon-medium"
@@ -266,6 +293,7 @@ const User = (props) => {
   };
 
   const [displayBasic, setDisplayBasic] = useState(false);
+
   const [position, setPosition] = useState("center");
 
   const dialogFuncMap = {
@@ -285,7 +313,7 @@ const User = (props) => {
   };
 
   const onHandleDeleteModel = async (name) => {
-    console.log('Tham so truyen vao la: ', idUser )
+    console.log("Tham so truyen vao la: ", idUser);
     const result = await service.deleteUser(idUser);
     if (result && result.status === 1000) {
       setTimeout(function () {
@@ -411,7 +439,13 @@ const User = (props) => {
             </div>
           </div>
         </div>
+
         <AddUser visible={visibleAddUser} onHide={handleHideAddUser} />
+        <EditUser
+          visible={visibleEditUser}
+          onHide={() => setVisibleEditUser(false)}
+          userObj={userObj}
+        />
       </div>
       {loader}
     </React.Fragment>
