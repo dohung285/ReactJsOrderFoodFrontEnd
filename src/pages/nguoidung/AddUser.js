@@ -1,22 +1,25 @@
-import axios from "axios";
 import "primeflex/primeflex.css";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import React from "react";
+import { Tree } from "primereact/tree";
+import React, { useRef, useState } from "react";
 import { withRouter } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { FileUpload } from "primereact/fileupload";
+import { reject } from "lodash";
 
 const AddUser = (props) => {
   // console.log("props", props);
   const { visible, onHide } = props;
 
-
+  
 
   const notifySuccess = (message) => {
-    toast.success(`✔❤ ${message}`, {
+    toast.success(`🦄 ${message}`, {
       position: "top-right",
       autoClose: 2000,
       hideProgressBar: false,
@@ -28,7 +31,7 @@ const AddUser = (props) => {
   };
 
   const notifyError = (message) => {
-    toast.error(`😢 ${message}`, {
+    toast.error(`🦄 ${message}`, {
       position: "top-right",
       autoClose: 2000,
       hideProgressBar: false,
@@ -69,57 +72,23 @@ const AddUser = (props) => {
     notifySuccess("Thành công!!");
   };
 
-  const onBasicUpload = (e) => {
-    console.log('e', e)
-    // notifySuccess("Thành công!!");
+  const onBasicUpload = () => {
+    notifySuccess("Thành công!!");
   };
 
   const onHandleSelectedFile = async (e) => {
     // console.log("e", e.target.files);
 
-    let files = e.target.files;
-    console.log('files', files)
+    let files = e.target.files[0];
 
-    let reader = new FileReader();
-    reader.readAsDataURL(files[0]);
-    reader.onload = (e) => {
-      let url = 'http://localhost:8080/upload';
-      const bodyData = { file: e.target.result }
-      // console.log("reader", e.target.result);
+    const base64 = await convertBase64(files);
+    console.log(base64);
 
-      let token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ1Q0VCSk43c21ZSDRBOTZFNGRqRllhcWllMGJMajNGNFNPNzRCNzh4LWNZIn0.eyJleHAiOjE2MTE4ODcxMjQsImlhdCI6MTYxMTg1MTEyNCwianRpIjoiZGE2NzRjMWQtNmExZC00ZTlmLTliYWItMDI1NTNlNzgwNzQyIiwiaXNzIjoiaHR0cDovLzEwLjMwLjEuNDA6ODA4MC9hdXRoL3JlYWxtcy9kZW1vIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjM5OGQ4Zjk0LWZmZWUtNGU0Yi05ZGM1LWRkZDE5ZmU5ZjkyNiIsInR5cCI6IkJlYXJlciIsImF6cCI6InJlYWN0LWFwcCIsInNlc3Npb25fc3RhdGUiOiI5MmI4NGE3ZC1iNThjLTRlZGMtOGMwMS1jN2NiODVkNzJjYmEiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHA6Ly8xMC4zMC4xLjE0MCJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgZW1haWwiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6ImNiZWlkMDAwMDE4MCJ9.RIreon1C8foa09hus7LhC76-dQ9bImAv2wnHMYOdZNNkwqdRyfdHZFG458kBbjoe1I5J0QzEQzEfxCiwNcADe1wDyuxyLq_2Lpeva7AZ3T6W47Uf1VIR3h64sMCMtWJP_IB35Y7LNlARhcNFtbex4rwa_lVu0RVEuG6UpauudX17P9GPJpNOrQ_7RVLIcrBucAjDjHiwR8IFFfSSCHL2AXTHM-MLUeRnIbrqhO1Q8a3l4RTxl_vWsGYKORta3iaUG5Q4TZLnvzmIXw5mOrIy8Wim0_jxk6cOsM82NIsKhAhBx3jHR5KSgalzOs3b6slD3Z_bM93eYi3gLejh2VKx6w';
-
-      let data = new FormData();
-      data.append('file', files[0]);
-
-      console.log('data', data);
-
-
-      var config = {
-        method: 'POST',
-        url: url,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`
-        },
-        data: data
-      };
-
-      return axios(config)
-        .then(function (response) {
-          console.log(JSON.stringify(response.data));
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    };
-
-
-    // const base64 = await convertBase64(files);
-    // console.log(base64);
-    notifySuccess('thanh cong!')
-
-
+    // let reader = new FileReader();
+    // reader.readAsDataURL(files[0]);
+    // reader.onload = (e) => {
+    //   console.log("reader", e.target.result);
+    // };
   };
 
   const convertBase64 = (file) => {
@@ -195,12 +164,29 @@ const AddUser = (props) => {
               id="loai"
               type="file"
               onChange={(e) => onHandleSelectedFile(e)}
-              accept="image/*"
-              maxfilesize={1000000}
-
             />
+            {/* <FileUpload
+              mode="basic"
+              name="demo[]"
+              url="./upload.php"
+              accept="image/*"
+              maxFileSize={1000000}
+              onUpload={onBasicUpload}
+              onSelect={ onHandleSelectedFile}
+            /> */}
           </div>
-
+          {/* <FileUpload
+            name="demo[]"
+            url="./upload.php"
+            // onUpload={onUpload}
+            multiple
+            accept="image/*"
+            maxFileSize={1000000}
+            // disabled={true}
+            emptyTemplate={
+              <p className="p-m-0">Drag and drop files to here to upload.</p>
+            }
+          /> */}
         </div>
       </Dialog>
     </div>
