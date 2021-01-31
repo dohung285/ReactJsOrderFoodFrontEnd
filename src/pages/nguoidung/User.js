@@ -1,32 +1,28 @@
-import React, { useState, useEffect } from "react";
-import { Toolbar } from "primereact/toolbar";
 import { Button } from "primereact/button";
-import { InputText } from "primereact/inputtext";
-import { Dropdown } from "primereact/dropdown";
-import { Calendar } from "primereact/calendar";
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import UserServices from "../../service/UserService";
-import { Tag } from "primereact/tag";
-import Moment from "react-moment";
-import { Paginator } from "primereact/paginator";
-import {
-  convertJsonToQueryString,
-  queryStringToJSON,
-} from "../../helper/CyberTaxHelper";
-import { withRouter } from "react-router-dom";
-import { confirmPopup } from "primereact/confirmpopup";
-import AddUser from "./AddUser";
-import { values } from "lodash";
-
-import { confirmAlert } from "react-confirm-alert"; // Import
-import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
+import { DataTable } from "primereact/datatable";
 import { Dialog } from "primereact/dialog";
-import { ToastContainer, toast } from "react-toastify";
+import { Dropdown } from "primereact/dropdown";
+import { InputText } from "primereact/inputtext";
+import { Paginator } from "primereact/paginator";
+import { Tag } from "primereact/tag";
+import { Toolbar } from "primereact/toolbar";
+import React, { useEffect, useState } from "react";
+import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
+import Moment from "react-moment";
+import { withRouter } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { EXPRITIME_HIDER_LOADER } from "../../constants/ConstantString";
+import {
+  convertJsonToQueryString,
+  queryStringToJSON
+} from "../../helper/CyberTaxHelper";
 import useFullPageLoader from "../../hooks/useFullPageLoader";
+import UserServices from "../../service/UserService";
+import AddUser from "./AddUser";
 import EditUser from "./EditUser";
+
 
 const User = (props) => {
   const [visibleAddUser, setVisibleAddUser] = useState(false);
@@ -259,9 +255,9 @@ const User = (props) => {
       {/* <Button icon="pi pi-trash" className="p-mr-2 p-button-danger" /> */}
     </React.Fragment>
   );
-  const renderRowIndex = (rowData, column) => {
-    return column.rowIndex + 1 + first;
-  };
+  // const renderRowIndex = (rowData, column) => {
+  //   return column.rowIndex + 1 + first;
+  // };
   const renderRowCreatedAt = (rowData) => {
     return <Moment format="DD/MM/YYYY H:m:s">{rowData.ngaytao}</Moment>;
   };
@@ -294,19 +290,19 @@ const User = (props) => {
 
   const [displayBasic, setDisplayBasic] = useState(false);
 
-  const [position, setPosition] = useState("center");
+  // const [position, setPosition] = useState("center");
 
   const dialogFuncMap = {
     displayBasic: setDisplayBasic,
   };
 
-  const onClick = (name, position) => {
-    dialogFuncMap[`${name}`](true);
+  // const onClick = (name, position) => {
+  //   dialogFuncMap[`${name}`](true);
 
-    if (position) {
-      setPosition(position);
-    }
-  };
+  //   if (position) {
+  //     setPosition(position);
+  //   }
+  // };
 
   const onHide = (name) => {
     dialogFuncMap[`${name}`](false);

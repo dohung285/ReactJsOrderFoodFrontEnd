@@ -8,7 +8,7 @@ import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
 import Moment from 'react-moment';
-import { useHistory, useLocation, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { EXPRITIME_HIDER_LOADER } from '../../constants/ConstantString';
 import { convertJsonToQueryString, queryStringToJSON } from '../../helper/CyberTaxHelper';
 import useFullPageLoader from '../../hooks/useFullPageLoader';
@@ -61,7 +61,7 @@ const Role = (props) => {
     const [selectionRecord, setSelectionRecord] = useState();
     const [first, setFirst] = useState(0);
     const [totalRecord, setTotalRecord] = useState();
-    const [selectedStatus, setSelectedStatus] = useState("");
+    // const [selectedStatus, setSelectedStatus] = useState("");
 
     const [datachucnangct, setDatachucnangct] = useState([]);
     const [listNhomQuyenView, setlistNhomQuyenView] = useState([]); // lưu trữ danh sách nhóm quyền của user
@@ -86,7 +86,7 @@ const Role = (props) => {
         const dataBody = { ...paginate, ...search }
         // console.log('dataBody', dataBody)
 
-        console.log("fetdata:", paginate);
+        // console.log("fetdata:", paginate);
         const result = await service.getAllRoleWithPaging(dataBody);
         if (result && result.status === 1000) {
             //  console.log(result);
@@ -98,16 +98,16 @@ const Role = (props) => {
 
 
     }
-    const searchRoleWithPaging = async () => {
-        // console.log('{ ...paginate, ...varSearch }', { ...paginate, ...varSearch })
-        const dataBody = { search: inputSearch };
-        const result = await service.getAllRoleWithPaging(dataBody);
-        if (result && result.status === 1000) {
-            setDataUser(result.object);
-            // setTotalRecord(result.totalItem);
-            // console.log('result searchRoleWithPaging: ', result)
-        }
-    }
+    // const searchRoleWithPaging = async () => {
+    //     // console.log('{ ...paginate, ...varSearch }', { ...paginate, ...varSearch })
+    //     const dataBody = { search: inputSearch };
+    //     const result = await service.getAllRoleWithPaging(dataBody);
+    //     if (result && result.status === 1000) {
+    //         setDataUser(result.object);
+    //         // setTotalRecord(result.totalItem);
+    //         // console.log('result searchRoleWithPaging: ', result)
+    //     }
+    // }
 
 
 
@@ -128,10 +128,10 @@ const Role = (props) => {
 
     };
 
-    const onChangeStatus = (e) => {
-        setSelectedStatus(e.value);
-        setSearch({ ...search, trangthai: e.value ? e.value.code : "" });
-    };
+    // const onChangeStatus = (e) => {
+    //     setSelectedStatus(e.value);
+    //     setSearch({ ...search, trangthai: e.value ? e.value.code : "" });
+    // };
 
     const onHandleRefresh = () => {
         props.history.push({
@@ -209,7 +209,7 @@ const Role = (props) => {
         }
     }
 
-    const [arraySelectedKey, setArraySelectedKey] = useState()
+    // const [arraySelectedKey, setArraySelectedKey] = useState()
 
     const handleEditNhomQuyen = (rowData) => {
         // console.log('rowData', rowData)
@@ -323,13 +323,13 @@ const Role = (props) => {
 
     }
 
-    const onClick = (name, position) => {
-        dialogFuncMap[`${name}`](true);
+    // const onClick = (name, position) => {
+    //     dialogFuncMap[`${name}`](true);
 
-        if (position) {
-            setPosition(position);
-        }
-    }
+    //     if (position) {
+    //         setPosition(position);
+    //     }
+    // }
 
     const onHide = (name) => {
         dialogFuncMap[`${name}`](false);

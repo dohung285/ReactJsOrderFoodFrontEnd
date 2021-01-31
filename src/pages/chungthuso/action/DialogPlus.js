@@ -329,7 +329,7 @@ const DialogPlus = (props) => {
                                 *
                             </span>
                             <InputText placeholder="Tên" onChange={(e) => {
-                                if (e.target.value == "") {
+                                if (e.target.value === "") {
                                     // setNotification("abc");
                                     // document.getElementById("test").value = "i love u";
 
@@ -362,7 +362,7 @@ const DialogPlus = (props) => {
                             </span>
                             <InputText placeholder="Mã số thuế" onChange={(e) => { setMst(e.target.value) }}
                                 onChange={(e) => {
-                                    if (e.target.value == "") {
+                                    if (e.target.value === "") {
                                         console.log("test patten string: ", patMst.test(e.target.value));
                                         setCheckMst(false);
                                     } else {
@@ -419,7 +419,7 @@ const DialogPlus = (props) => {
                                 *
                             </span>
                             <Dropdown value={selectTrangThai} options={trangThai} onChange={(e) => {
-                                if (e.value == "") {
+                                if (e.value === "") {
                                     setCheckTrangThai(false);
                                 } else {
                                     setCheckTrangThai(true);
@@ -451,7 +451,7 @@ const DialogPlus = (props) => {
                                 *
                             </span>
                             <Password onChange={(e) => {
-                                if (e.target.value == "") {
+                                if (e.target.value === "") {
                                     setCheckPassword(false);
                                 } else {
                                     setCheckPassword(true);
@@ -546,7 +546,7 @@ const DialogPlus = (props) => {
                                 *
                             </span>
                             <InputText placeholder="dn Chứng thư số" onChange={(e) => {
-                                if (e.target.value == "") {
+                                if (e.target.value === "") {
                                     setCheckDnChungThuSo(false);
                                 } else {
                                     setCheckDnChungThuSo(true);
@@ -567,7 +567,7 @@ const DialogPlus = (props) => {
                                 *
                             </span>
                             <InputText placeholder="Nhà cung cấp" onChange={(e) => {
-                                if (e.target.value == "") {
+                                if (e.target.value === "") {
                                     setCheckNhaCungCap(false);
                                 } else {
                                     setCheckNhaCungCap(true);
@@ -588,7 +588,7 @@ const DialogPlus = (props) => {
                                 *
                             </span>
                             <InputText placeholder="Chứng thư số" onChange={(e) => {
-                                if (e.target.value == "") {
+                                if (e.target.value === "") {
                                     setCheckChungThuSo(false);
                                 } else {
                                     setCheckChungThuSo(true);

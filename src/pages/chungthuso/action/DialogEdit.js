@@ -1,16 +1,14 @@
-import React, { Component, useState, useEffect, useRef } from 'react'
+import { Button } from 'primereact/button';
+import { Calendar } from 'primereact/calendar';
 import { Dialog } from 'primereact/dialog';
+import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
-import { Dropdown } from 'primereact/dropdown';
-import { Button } from 'primereact/button';
-import { FileUpload } from 'primereact/fileupload';
-import { Calendar } from 'primereact/calendar';
-import ChungThuSoService from './../../../service/ChungThuSoService';
-import { Toast } from 'primereact/toast';
-import './ToastDemo.css';
-import { ToastContainer, toast } from "react-toastify";
+import React, { useState } from 'react';
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ChungThuSoService from './../../../service/ChungThuSoService';
+import './ToastDemo.css';
 
 
 const DialogEdit = (props) => {
@@ -18,7 +16,7 @@ const DialogEdit = (props) => {
     // const [test, setTest] = useState(props.rowData);
     // console.log("fuckyou lần 1: ", test.iddoanhnghiep)
 
-    const service = new ChungThuSoService
+    const service = new ChungThuSoService()
     const [displayBasic, setDisplayBasic] = useState(false);
     const [displayBasic2, setDisplayBasic2] = useState(false);
     const [displayModal, setDisplayModal] = useState(false);
@@ -308,10 +306,9 @@ const DialogEdit = (props) => {
         fileData.onloadend = handleFile;
         fileData.readAsBinaryString(file);
     }
-    console.log("prop fuck: ", props.rowData);
     return (
 
-        <div style={{"text-align": "left"}}>
+        <div style={{ textAlign: "left" }}>
             {/* <Toast ref={toast} /> */}
             <ToastContainer
                 position="top-right"
@@ -379,7 +376,7 @@ const DialogEdit = (props) => {
                             </span>
                             <InputText placeholder="Mã số thuế" onChange={(e) => { setMst(e.target.value) }}
                                 onChange={(e) => {
-                                    if (e.target.value == "") {
+                                    if (e.target.value === "") {
                                         console.log("test patten string: ", patMst.test(e.target.value));
                                         setCheckMst(false);
                                     } else {
@@ -438,7 +435,7 @@ const DialogEdit = (props) => {
                                 *
                             </span>
                             <Dropdown value={selectTrangThai} options={trangThai} onChange={(e) => {
-                                if (e.value == "") {
+                                if (e.value === "") {
                                     setCheckTrangThai(false);
                                 } else {
                                     setCheckTrangThai(true);
@@ -470,7 +467,7 @@ const DialogEdit = (props) => {
                                 *
                             </span>
                             <Password onChange={(e) => {
-                                if (e.target.value == "") {
+                                if (e.target.value === "") {
                                     setCheckPassword(false);
                                 } else {
                                     setCheckPassword(true);
@@ -562,7 +559,7 @@ const DialogEdit = (props) => {
                                 *
                             </span>
                             <InputText placeholder="dn Chứng thư số" onChange={(e) => {
-                                if (e.target.value == "") {
+                                if (e.target.value === "") {
                                     setCheckDnChungThuSo(false);
                                 } else {
                                     setCheckDnChungThuSo(true);
@@ -583,7 +580,7 @@ const DialogEdit = (props) => {
                                 *
                             </span>
                             <InputText placeholder="Nhà cung cấp" onChange={(e) => {
-                                if (e.target.value == "") {
+                                if (e.target.value === "") {
                                     setCheckNhaCungCap(false);
                                 } else {
                                     setCheckNhaCungCap(true);
@@ -604,7 +601,7 @@ const DialogEdit = (props) => {
                                 *
                             </span>
                             <InputText placeholder="Chứng thư số" onChange={(e) => {
-                                if (e.target.value == "") {
+                                if (e.target.value === "") {
                                     setCheckChungThuSo(false);
                                 } else {
                                     setCheckChungThuSo(true);

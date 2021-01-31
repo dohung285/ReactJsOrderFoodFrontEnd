@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Toolbar } from 'primereact/toolbar';
-import { Button } from 'primereact/button';
-import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import ChungThuSoService from './../../service/ChungThuSoService';
-import { Tag } from 'primereact/tag';
-import Moment from 'react-moment';
+import { DataTable } from 'primereact/datatable';
 import { Paginator } from 'primereact/paginator';
-import { convertJsonToQueryString, queryStringToJSON } from '../../helper/CyberTaxHelper';
+import { Toolbar } from 'primereact/toolbar';
+import React, { useEffect, useState } from 'react';
+import Moment from 'react-moment';
 import { withRouter } from "react-router-dom";
-import DialogPlus from './action/DialogPlus';
+import { convertJsonToQueryString } from '../../helper/CyberTaxHelper';
+import ChungThuSoService from './../../service/ChungThuSoService';
 import DialogEdit from './action/DialogEdit';
-import DeleteHandle from './action/DeleteHandle';
+import DialogPlus from './action/DialogPlus';
 
 
 const ChungThuSo = (props) => {
@@ -21,7 +18,7 @@ const ChungThuSo = (props) => {
     });
     const [paginate, setPaginate] = useState({
         page: 0,
-        size: 20,
+        size: 10,
     });
     const [dataUser, setDataUser] = useState(
         // [{
@@ -46,7 +43,7 @@ const ChungThuSo = (props) => {
     const [selectionRecord, setSelectionRecord] = useState();
     const [first, setFirst] = useState(0);
     const [totalRecord, setTotalRecord] = useState();
-    const [selectedStatus, setSelectedStatus] = useState("");
+    // const [selectedStatus, setSelectedStatus] = useState("");
     const fetDataUser = async () => {
 
         const result = await service.getList({...paginate,...search});
@@ -70,14 +67,15 @@ const ChungThuSo = (props) => {
         fetDataUser();
         // eslint-disable-next-line
     }, [props.location.search]);
-    const onHandleChangeSearch = (e) => {
-        setSearch({ ...search, [e.target.name]: e.target.value });
-    };
-    const onChangeStatus = (e) => {
-        console.log(e);
-        setSelectedStatus(e.value);
-        setSearch({ ...search, trangthai: e.value ? e.value.code : "" });
-    };
+    // const onHandleChangeSearch = (e) => {
+    //     setSearch({ ...search, [e.target.name]: e.target.value });
+    // };
+
+    // const onChangeStatus = (e) => {
+    //     console.log(e);
+    //     setSelectedStatus(e.value);
+    //     setSearch({ ...search, trangthai: e.value ? e.value.code : "" });
+    // };
 
     const leftContents = (
         <React.Fragment>
@@ -115,13 +113,13 @@ const ChungThuSo = (props) => {
             /> */}
         </React.Fragment>
     );
-    const onHandleSearchClick = () => {
-        const dataSearch = queryStringToJSON(props.location.search);
-        const dataSearchQueryString = convertJsonToQueryString({ ...dataSearch, ...search });
-        props.history.push({
-            search: dataSearchQueryString,
-        })
-    };
+    // const onHandleSearchClick = () => {
+    //     const dataSearch = queryStringToJSON(props.location.search);
+    //     const dataSearchQueryString = convertJsonToQueryString({ ...dataSearch, ...search });
+    //     props.history.push({
+    //         search: dataSearchQueryString,
+    //     })
+    // };
     const onPageChange = (event) => {
         console.log("go to here",event.rows,event.page)
         setFirst(event.first);
@@ -134,9 +132,9 @@ const ChungThuSo = (props) => {
     };
 
 
-    const testFunc = (param) => {
-        test = param;
-    }
+    // const testFunc = (param) => {
+    //     test = param;
+    // }
     
     const rightContents = (
         <React.Fragment>
@@ -156,14 +154,14 @@ const ChungThuSo = (props) => {
     const renderRowCreatedAt = (rowData) => {
         return <Moment format="DD/MM/YYYY H:m:s">{rowData.ngaytao}</Moment>
     };
-    const renderRowType = (rowData) => {
-        const type = rowData.loai === 0 ? "Loại 1" : "Loại 2";
-        return <Tag severity="success" value={type} />;
-    };
-    const renderRowStatus = (rowData) => {
-        const status = rowData.trangthai === 0 ? "Hoạt động" : "Khóa";
-        return <Tag severity="info" value={status} />;
-    };
+    // const renderRowType = (rowData) => {
+    //     const type = rowData.loai === 0 ? "Loại 1" : "Loại 2";
+    //     return <Tag severity="success" value={type} />;
+    // };
+    // const renderRowStatus = (rowData) => {
+    //     const status = rowData.trangthai === 0 ? "Hoạt động" : "Khóa";
+    //     return <Tag severity="info" value={status} />;
+    // };
     const actionBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
@@ -176,9 +174,9 @@ const ChungThuSo = (props) => {
         );
     };
 
-    const paginatorLeft = <Button type="button" icon="pi pi-refresh" className="p-button-text" />;
-    const paginatorRight = <Button type="button" icon="pi pi-cloud" className="p-button-text" />;
-    console.log("dataUser: ", dataUser)
+    // const paginatorLeft = <Button type="button" icon="pi pi-refresh" className="p-button-text" />;
+    // const paginatorRight = <Button type="button" icon="pi pi-cloud" className="p-button-text" />;
+    
     return (
         <React.Fragment>
             {/* <Card style={{ 'margin-bottom': 10 }}>

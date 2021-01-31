@@ -3,15 +3,14 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Tree } from "primereact/tree";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { EXPRITIME_HIDER_LOADER } from "../../../constants/ConstantString";
 import RoleService from "../../../service/RoleService";
 import "../css/style.scss";
 import "./action.css";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const Add = (props) => {
   // console.log("props", props);
@@ -23,8 +22,39 @@ const Add = (props) => {
 
   const [selectedKeys, setSelectedKeys] = useState(null);
   const [listUUIDChitiet, setListUUIDChitiet] = useState([]);
+
   const [tenNhomQuyen, setTenNhomQuyen] = useState("");
   const [mota, setMota] = useState("");
+
+  const [tenNhomQuyenErrors, setTenNhomQuyenErrors] = useState({})
+  const [motaErrors, setMotaErrors] = useState({})
+
+
+  const formValidation = () => {
+    // debugger
+    const tenNhomQuyenErrors = {}
+    const motaErrors = {}
+
+    let isValid = true;
+
+    if (tenNhomQuyen === '') {
+      tenNhomQuyenErrors.tenNhomQuyenRequired = "Không được bỏ trống";
+      isValid = false;
+    }
+
+    if (mota === '') {
+      motaErrors.motaRequired = "Không được bỏ trống";
+      isValid = false;
+    }
+    //=====================
+
+    setTenNhomQuyenErrors(tenNhomQuyenErrors);
+    setMotaErrors(motaErrors);
+
+    return isValid;
+  }
+
+
 
   const notifySuccess = (message) => {
     toast.success(`🦄 ${message}`, {
@@ -50,51 +80,36 @@ const Add = (props) => {
     });
   };
 
-  // const toast = useRef(null);
 
-  // const showSuccess = (message) => {
-  //   toast.current.show({
-  //     severity: "success",
-  //     summary: "Success Message",
-  //     detail: message,
-  //     life: 3000,
-  //   });
-  // };
-
-  // const showError = (message) => {
-  //   // toast.current.show({
-  //   //   severity: "error",
-  //   //   summary: "Error Message",
-  //   //   detail: message,
-  //   //   life: 3000,
-  //   // });
-  //   alert(message);
-  // };
 
   function handleOnCloseDialog(params) {
     setSelectedKeys(null);
     onHide();
   }
+  const onResetFormInputErrors = () => {
+    setTenNhomQuyenErrors("")
+    setMotaErrors("")
+  }
+
+  const onResetFormInput = () => {
+    setTenNhomQuyen("")
+    setMota("")
+  }
 
   // Xử lý nút đồng ý thêm nhóm quyền
   function handleOnYesDialog(name) {
-    if (
-      tenNhomQuyen === "" ||
-      tenNhomQuyen === null ||
-      tenNhomQuyen === undefined
-    ) {
-      // showError("Không được bỏ trống Tên nhóm quyền");
-      notifyError("Không được bỏ trống Tên nhóm quyền")
-      return;
+
+    let isValid = formValidation();
+    if (isValid) {
+      console.log('Thanh cong@@@')
+      // saveRoleIntoDatabase();
+      // props.fetDataUser();
+      // onResetFormInput();
+      // onResetFormInputErrors();
+      // onHide(name);
     }
-    if (mota === "" || mota === null || mota === undefined) {
-      // showError("Không được bỏ trống mô tả");
-      notifyError("Không được bỏ trống mô tả")
-      return;
-    }
-    saveRoleIntoDatabase();
-    // props.fetDataUser();
-    onHide(name);
+
+
   }
 
   const saveRoleIntoDatabase = async () => {
@@ -154,7 +169,7 @@ const Add = (props) => {
         returnArray.push(v);
       }
     }
-    console.log("returnArray", returnArray);
+    // console.log("returnArray", returnArray);
     setListUUIDChitiet(returnArray);
   }
 
@@ -170,7 +185,7 @@ const Add = (props) => {
 
   function setDataForMap() {
     let map = new Map();
-    console.log("datachucnangct", datachucnangct);
+    // console.log("datachucnangct", datachucnangct);
     datachucnangct.forEach((element) => {
       let key = Object.values(element)[0];
       let objCheck = Object.values(element)[3];
@@ -191,14 +206,25 @@ const Add = (props) => {
   let map = setDataForMap();
 
   function handleOnChangeTenNhomQuyen(e) {
-    // console.log("e", e.target.value);
     let value = e.target.value;
-    setTenNhomQuyen(value);
+
+    if (value.length > 0) {
+      setTenNhomQuyenErrors("")
+    } else {
+      setTenNhomQuyenErrors("Không được bỏ trống")
+    }
+    setTenNhomQuyen(value)
+
   }
 
   function handleOnChangeMota(e) {
     let value = e.target.value;
-    setMota(value);
+    if (value.length > 0) {
+      setMotaErrors("")
+    } else {
+      setMotaErrors("Không được bỏ trống")
+    }
+    setMota(value)
   }
 
   return (
@@ -221,26 +247,33 @@ const Add = (props) => {
         onHide={onHide}
         footer={renderFooter("displayBasic")}
       >
-        <div className="p-fluid">
-          <div className="p-field">
+        <div className="p-fluid p-formgrid p-grid">
+          <div className="p-field p-col">
             <label htmlFor="tenNhomQuyen">Tên nhóm quyền</label>
             <InputText
+              className={Object.keys(tenNhomQuyenErrors).length > 0 ? "error" : null}
               id="tenNhomQuyen"
               name="tenNhomQuyen"
               type="text"
               onChange={handleOnChangeTenNhomQuyen}
               value={tenNhomQuyen}
             />
+            {Object.keys(tenNhomQuyenErrors).map((keyIndex, key) => {
+              return <span className="errorMessage" key={key} >{tenNhomQuyenErrors[keyIndex]}</span>
+            })}
           </div>
-
-          <div className="p-field">
+          <div className="p-field p-col">
             <label htmlFor="mota">Mô tả</label>
             <InputText
+              className={Object.keys(motaErrors).length > 0 ? "error" : null}
               id="mota"
               type="text"
               onChange={handleOnChangeMota}
               value={mota}
             />
+            {Object.keys(motaErrors).map((keyIndex, key) => {
+              return <span className="errorMessage" key={key} >{motaErrors[keyIndex]}</span>
+            })}
           </div>
         </div>
 

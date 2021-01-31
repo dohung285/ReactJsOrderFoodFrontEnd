@@ -1,13 +1,13 @@
+import { Accordion, AccordionTab } from "primereact/accordion";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Tree } from "primereact/tree";
-import React, { useState, useRef, useEffect } from "react";
-import RoleService from "../../../service/RoleService";
-import { Accordion, AccordionTab } from "primereact/accordion";
-import { EXPRITIME_HIDER_LOADER } from "../../../constants/ConstantString";
-import { ToastContainer, toast } from "react-toastify";
+import React, { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { EXPRITIME_HIDER_LOADER } from "../../../constants/ConstantString";
+import RoleService from "../../../service/RoleService";
 
 
 export const Edit = (props) => {
@@ -225,29 +225,39 @@ export const Edit = (props) => {
   // console.log("datachucnangct", datachucnangct);
 
   const [selectedKeys, setSelectedKeys] = useState([]);
-  const [listUUIDChitiet, setListUUIDChitiet] = useState([]);
+  // const [listUUIDChitiet, setListUUIDChitiet] = useState([]);
   const [tenNhomQuyen, setTenNhomQuyen] = useState(objRoleTranfer.ten);
   const [mota, setMota] = useState(objRoleTranfer.id);
 
-  // const toast = useRef(null);
 
-  // const showSuccess = (message) => {
-  //   toast.current.show({
-  //     severity: "success",
-  //     summary: "Success Message",
-  //     detail: message,
-  //     life: 3000,
-  //   });
-  // };
+  const [tenNhomQuyenErrors, setTenNhomQuyenErrors] = useState({})
+  const [motaErrors, setMotaErrors] = useState({})
 
-  // const showError = (message) => {
-  //   toast.current.show({
-  //     severity: "error",
-  //     summary: "Error Message",
-  //     detail: message,
-  //     life: 3000,
-  //   });
-  // };
+  const formValidation = () => {
+    // debugger
+    const tenNhomQuyenErrors = {}
+    const motaErrors = {}
+
+    let isValid = true;
+
+    if (tenNhomQuyen === '') {
+      tenNhomQuyenErrors.tenNhomQuyenRequired = "Không được bỏ trống";
+      isValid = false;
+    }
+
+    if (mota === '') {
+      motaErrors.motaRequired = "Không được bỏ trống";
+      isValid = false;
+    }
+    //=====================
+
+    setTenNhomQuyenErrors(tenNhomQuyenErrors);
+    setMotaErrors(motaErrors);
+
+    return isValid;
+  }
+
+
 
   function getStateNodeSelectedKey() {
     let objSelected = process();
@@ -266,16 +276,39 @@ export const Edit = (props) => {
   }
 
   function handleOnCloseDialog(params) {
+    onResetFormInput();
+    onResetFormInputErrors();
     setSelectedKeys([]);
     onHide();
     // getStateNodeSelectedKey();
   }
 
+  const onResetFormInputErrors = () => {
+    setTenNhomQuyenErrors("")
+    setMotaErrors("")
+  }
+
+  const onResetFormInput = () => {
+    setTenNhomQuyen("")
+    setMota("")
+  }
+
   // Xử lý nút đồng ý thêm nhóm quyền
   function handleOnYesDialog(name) {
-    updateRoleIntoDatabase();
-    props.fetDataUser();
-    onHide(name);
+
+    // console.log('tenNhomQuyen', tenNhomQuyen)
+    // console.log('mota', mota)
+    let isValid = formValidation();
+    if (isValid) {
+      console.log('Thanh cong@@@')
+      updateRoleIntoDatabase();
+      props.fetDataUser();
+      onResetFormInput();
+      onResetFormInputErrors();
+      onHide(name);
+    }
+
+
   }
 
   const updateRoleIntoDatabase = async () => {
@@ -302,8 +335,8 @@ export const Edit = (props) => {
     const dataBody = {
       ten:
         tenNhomQuyen === null ||
-        tenNhomQuyen === undefined ||
-        tenNhomQuyen === ""
+          tenNhomQuyen === undefined ||
+          tenNhomQuyen === ""
           ? objRoleTranfer.ten
           : tenNhomQuyen,
       mota:
@@ -351,63 +384,66 @@ export const Edit = (props) => {
     );
   };
 
-  function setDataForMap() {
-    let map = new Map();
-    listNhomQuyenView.forEach((element) => {
-      let key = Object.values(element)[0];
-      let objCheck = Object.values(element)[3];
-      let arrayValue = [];
-      if (objCheck.length > 0) {
-        // console.log("key", key);
-        objCheck.forEach(function (x) {
-          // console.log("keyChild: ", x.key);
-          arrayValue.push(x.key);
-        });
-        map.set(key, arrayValue);
-      }
-    });
+  // function setDataForMap() {
+  //   let map = new Map();
+  //   listNhomQuyenView.forEach((element) => {
+  //     let key = Object.values(element)[0];
+  //     let objCheck = Object.values(element)[3];
+  //     let arrayValue = [];
+  //     if (objCheck.length > 0) {
+  //       // console.log("key", key);
+  //       objCheck.forEach(function (x) {
+  //         // console.log("keyChild: ", x.key);
+  //         arrayValue.push(x.key);
+  //       });
+  //       map.set(key, arrayValue);
+  //     }
+  //   });
 
-    return map;
-  }
+  //   return map;
+  // }
 
-  let map = setDataForMap();
+  // let map = setDataForMap();
 
-  function handleSelectionChange(e) {
-    let arrayKey = getKeyParent(map);
-    let x = e.value;
-    setSelectedKeys(x);
-    let arr = [];
-    if (x) {
-      arr = Object.keys(x);
-    }
-    let returnArray = [];
-    for (const v of arr) {
-      if (!arrayKey.includes(v)) {
-        returnArray.push(v);
-      }
-    }
+  // function handleSelectionChange(e) {
+  //   let arrayKey = getKeyParent(map);
+  //   let x = e.value;
+  //   setSelectedKeys(x);
+  //   let arr = [];
+  //   if (x) {
+  //     arr = Object.keys(x);
+  //   }
+  //   let returnArray = [];
+  //   for (const v of arr) {
+  //     if (!arrayKey.includes(v)) {
+  //       returnArray.push(v);
+  //     }
+  //   }
 
-    setListUUIDChitiet(returnArray);
-  }
+  //   setListUUIDChitiet(returnArray);
+  // }
 
-  function getKeyParent(map) {
-    let arrayReturnKey = [];
-    if (map instanceof Map) {
-      for (const key of map.keys()) {
-        arrayReturnKey.push(key);
-      }
-    }
-    return arrayReturnKey;
-  }
+  // function getKeyParent() {
+  //   let map = setDataForMap();
+  //   let arrayReturnKey = [];
+  //   if (map instanceof Map) {
+  //     for (const key of map.keys()) {
+  //       arrayReturnKey.push(key);
+  //     }
+  //   }
+  //   return arrayReturnKey;
+  // }
 
   function handleOnChangeTenNhomQuyen(e) {
     // console.log("e", e.target.value);
     let value = e.target.value;
+    // console.log('value', value)
     setTenNhomQuyen(value);
   }
 
   function handleOnChangeMota(e) {
     let value = e.target.value;
+    // console.log('value', value)
     setMota(value);
   }
 
@@ -422,10 +458,10 @@ export const Edit = (props) => {
     // console.log('selectedKeys', selectedKeys)
     setSelectedKeys(e.value);
   }
-  function handOnSelected(params) {
-    console.log("handOnSelected", params.node);
-    setSelectedKeys(params.node);
-  }
+  // function handOnSelected(params) {
+  //   console.log("handOnSelected", params.node);
+  //   setSelectedKeys(params.node);
+  // }
 
   function handOnUnSelected(params) {
     // console.log("handOnUnSelected", params.node);
@@ -554,8 +590,9 @@ export const Edit = (props) => {
     });
   };
 
-  const onCloseDialog = () => {
- 
+  const onCloseXDialog = () => {
+    onResetFormInputErrors();
+    onResetFormInput();
     // notifySuccess('thanh cong!!')
     setActiveIndex(null);
     onHide();
@@ -578,41 +615,43 @@ export const Edit = (props) => {
         header="Sửa mới nhóm quyền"
         visible={visible}
         style={{ width: "50vw" }}
-        onHide={() => onCloseDialog()}
+        onHide={() => onCloseXDialog()}
         footer={renderFooter("displayBasic")}
       >
-        <div className="p-fluid">
-          <div className="p-field">
+
+        <div className="p-fluid p-formgrid p-grid">
+          <div className="p-field p-col">
             <label htmlFor="tenNhomQuyen">Tên nhóm quyền</label>
             <InputText
+              className={Object.keys(tenNhomQuyenErrors).length > 0 ? "error" : null}
               id="tenNhomQuyen"
               name="tenNhomQuyen"
               type="text"
               onChange={handleOnChangeTenNhomQuyen}
-              value={
-                tenNhomQuyen === null ||
-                tenNhomQuyen === "" ||
-                tenNhomQuyen === undefined
-                  ? objRoleTranfer.ten
-                  : tenNhomQuyen
-              }
+              // defaultValue={tenNhomQuyen === "" ? objRoleTranfer.ten : tenNhomQuyen}
+              defaultValue={objRoleTranfer.ten}
+            // value={tenNhomQuyen}
             />
+            {Object.keys(tenNhomQuyenErrors).map((keyIndex, key) => {
+              return <span className="errorMessage" key={key} >{tenNhomQuyenErrors[keyIndex]}</span>
+            })}
           </div>
-
-          <div className="p-field">
+          <div className="p-field p-col">
             <label htmlFor="mota">Mô tả</label>
             <InputText
+              className={Object.keys(motaErrors).length > 0 ? "error" : null}
               id="mota"
               type="text"
               onChange={handleOnChangeMota}
-              value={
-                mota === null || mota === "" || mota === undefined
-                  ? objRoleTranfer.mota
-                  : mota
-              }
+              defaultValue={objRoleTranfer.mota}
+            // value={mota}
             />
+            {Object.keys(motaErrors).map((keyIndex, key) => {
+              return <span className="errorMessage" key={key} >{motaErrors[keyIndex]}</span>
+            })}
           </div>
         </div>
+
 
         <div className="bg-gr">
           <Accordion
