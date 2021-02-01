@@ -1,10 +1,13 @@
+import { Accordion, AccordionTab } from "primereact/accordion";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Tree } from "primereact/tree";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { EXPRITIME_HIDER_LOADER } from "../../../constants/ConstantString";
 import RoleService from "../../../service/RoleService";
-import { Accordion, AccordionTab } from "primereact/accordion";
 
 export const Edit = (props) => {
   const {
@@ -221,29 +224,35 @@ export const Edit = (props) => {
   // console.log("datachucnangct", datachucnangct);
 
   const [selectedKeys, setSelectedKeys] = useState([]);
-  const [listUUIDChitiet, setListUUIDChitiet] = useState([]);
-  const [tenNhomQuyen, setTenNhomQuyen] = useState(objRoleTranfer.ten);
-  const [mota, setMota] = useState(objRoleTranfer.id);
+  // const [listUUIDChitiet, setListUUIDChitiet] = useState([]);
+  const [tenNhomQuyen, setTenNhomQuyen] = useState();  //objRoleTranfer.ten
+  const [mota, setMota] = useState(); //objRoleTranfer.id
 
+  const [tenNhomQuyenErrors, setTenNhomQuyenErrors] = useState({});
+  const [motaErrors, setMotaErrors] = useState({});
 
-  const toast = useRef(null);
+  const formValidation = () => {
+    debugger
+    const tenNhomQuyenErrors = {};
+    const motaErrors = {};
 
-  const showSuccess = (message) => {
-    toast.current.show({
-      severity: "success",
-      summary: "Success Message",
-      detail: message,
-      life: 3000,
-    });
-  };
+    let isValid = true;
 
-  const showError = (message) => {
-    toast.current.show({
-      severity: "error",
-      summary: "Error Message",
-      detail: message,
-      life: 3000,
-    });
+    if (tenNhomQuyen === "") {
+      tenNhomQuyenErrors.tenNhomQuyenRequired = "Không được bỏ trống";
+      isValid = false;
+    }
+
+    if (mota === "") {
+      motaErrors.motaRequired = "Không được bỏ trống";
+      isValid = false;
+    }
+    //=====================
+
+    setTenNhomQuyenErrors(tenNhomQuyenErrors);
+    setMotaErrors(motaErrors);
+
+    return isValid;
   };
 
   function getStateNodeSelectedKey() {
@@ -263,19 +272,38 @@ export const Edit = (props) => {
   }
 
   function handleOnCloseDialog(params) {
+    onResetFormInput();
+    onResetFormInputErrors();
     setSelectedKeys([]);
     onHide();
     // getStateNodeSelectedKey();
   }
 
+  const onResetFormInputErrors = () => {
+    setTenNhomQuyenErrors("");
+    setMotaErrors("");
+  };
+
+  const onResetFormInput = () => {
+    setTenNhomQuyen("");
+    setMota("");
+  };
+
   // Xử lý nút đồng ý thêm nhóm quyền
   function handleOnYesDialog(name) {
-   
-
-
-    updateRoleIntoDatabase();
-    props.fetDataUser();
-    onHide(name);
+    // console.log('tenNhomQuyen', tenNhomQuyen)
+    // console.log('mota', mota)
+    let isValid = formValidation();
+    if (isValid) {
+      console.log("Thanh cong@@@");
+      updateRoleIntoDatabase();
+      // props.fetDataUser();
+      onResetFormInput();
+      onResetFormInputErrors();
+      onHide(name);
+    }else{
+      console.log('Thất bại')
+    }
   }
 
   const updateRoleIntoDatabase = async () => {
@@ -300,22 +328,36 @@ export const Edit = (props) => {
     console.log("arrayIdChucNangCT", arrayIdChucNangCT);
 
     const dataBody = {
-      ten: tenNhomQuyen === null || tenNhomQuyen === undefined || tenNhomQuyen === '' ? objRoleTranfer.ten : tenNhomQuyen ,
-      mota: mota === null || mota === undefined || mota === '' ? objRoleTranfer.mota : mota,
+      ten:
+        tenNhomQuyen === null ||
+        tenNhomQuyen === undefined ||
+        tenNhomQuyen === ""
+          ? objRoleTranfer.ten
+          : tenNhomQuyen,
+      mota:
+        mota === null || mota === undefined || mota === ""
+          ? objRoleTranfer.mota
+          : mota,
       idchucnangct: arrayIdChucNangCT,
     };
 
-    const result = await roleService.updateNhomQuyen(
-      objRoleTranfer.id,
-      dataBody
-    );
-    if (result && result.status === 1000) {
-      let message = result.message;
-      setTimeout(props.fetDataUser, 1000); // đợi 0.5s sau mới gọi hàm fetData()
-    } else {
-      let message = result.message;
-      showError(message);
-    }
+    console.log("dataBody", dataBody);
+
+    // const result = await roleService.updateNhomQuyen(
+    //   objRoleTranfer.id,
+    //   dataBody
+    // );
+    // if (result && result.status === 1000) {
+    //   let message = result.message;
+    //   console.log('message', message)
+    //   setTimeout(props.fetDataUser, EXPRITIME_HIDER_LOADER); // đợi 0.5s sau mới gọi hàm fetData()
+    //   notifySuccess('Sửa nhóm quyền thành công!')
+    // } else {
+    //   let message = result.message;
+    //   // showError(message);
+    //   notifyError(message)
+    // }
+    setActiveIndex(null);
   };
 
   const renderFooter = (name) => {
@@ -339,63 +381,66 @@ export const Edit = (props) => {
     );
   };
 
-  function setDataForMap() {
-    let map = new Map();
-    listNhomQuyenView.forEach((element) => {
-      let key = Object.values(element)[0];
-      let objCheck = Object.values(element)[3];
-      let arrayValue = [];
-      if (objCheck.length > 0) {
-        // console.log("key", key);
-        objCheck.forEach(function (x) {
-          // console.log("keyChild: ", x.key);
-          arrayValue.push(x.key);
-        });
-        map.set(key, arrayValue);
-      }
-    });
+  // function setDataForMap() {
+  //   let map = new Map();
+  //   listNhomQuyenView.forEach((element) => {
+  //     let key = Object.values(element)[0];
+  //     let objCheck = Object.values(element)[3];
+  //     let arrayValue = [];
+  //     if (objCheck.length > 0) {
+  //       // console.log("key", key);
+  //       objCheck.forEach(function (x) {
+  //         // console.log("keyChild: ", x.key);
+  //         arrayValue.push(x.key);
+  //       });
+  //       map.set(key, arrayValue);
+  //     }
+  //   });
 
-    return map;
-  }
+  //   return map;
+  // }
 
-  let map = setDataForMap();
+  // let map = setDataForMap();
 
-  function handleSelectionChange(e) {
-    let arrayKey = getKeyParent(map);
-    let x = e.value;
-    setSelectedKeys(x);
-    let arr = [];
-    if (x) {
-      arr = Object.keys(x);
-    }
-    let returnArray = [];
-    for (const v of arr) {
-      if (!arrayKey.includes(v)) {
-        returnArray.push(v);
-      }
-    }
+  // function handleSelectionChange(e) {
+  //   let arrayKey = getKeyParent(map);
+  //   let x = e.value;
+  //   setSelectedKeys(x);
+  //   let arr = [];
+  //   if (x) {
+  //     arr = Object.keys(x);
+  //   }
+  //   let returnArray = [];
+  //   for (const v of arr) {
+  //     if (!arrayKey.includes(v)) {
+  //       returnArray.push(v);
+  //     }
+  //   }
 
-    setListUUIDChitiet(returnArray);
-  }
+  //   setListUUIDChitiet(returnArray);
+  // }
 
-  function getKeyParent(map) {
-    let arrayReturnKey = [];
-    if (map instanceof Map) {
-      for (const key of map.keys()) {
-        arrayReturnKey.push(key);
-      }
-    }
-    return arrayReturnKey;
-  }
+  // function getKeyParent() {
+  //   let map = setDataForMap();
+  //   let arrayReturnKey = [];
+  //   if (map instanceof Map) {
+  //     for (const key of map.keys()) {
+  //       arrayReturnKey.push(key);
+  //     }
+  //   }
+  //   return arrayReturnKey;
+  // }
 
   function handleOnChangeTenNhomQuyen(e) {
     // console.log("e", e.target.value);
     let value = e.target.value;
+    // console.log('value', value)
     setTenNhomQuyen(value);
   }
 
   function handleOnChangeMota(e) {
     let value = e.target.value;
+    // console.log('value', value)
     setMota(value);
   }
 
@@ -410,10 +455,10 @@ export const Edit = (props) => {
     // console.log('selectedKeys', selectedKeys)
     setSelectedKeys(e.value);
   }
-  function handOnSelected(params) {
-    console.log("handOnSelected", params.node);
-    setSelectedKeys(params.node);
-  }
+  // function handOnSelected(params) {
+  //   console.log("handOnSelected", params.node);
+  //   setSelectedKeys(params.node);
+  // }
 
   function handOnUnSelected(params) {
     // console.log("handOnUnSelected", params.node);
@@ -506,7 +551,7 @@ export const Edit = (props) => {
     });
     // console.log("arrayIndexRemove", arrayIndexRemove);
     arrayKeySelected = arrayKeySelected.filter(function (value, index) {
-      return arrayIndexRemove.indexOf(index) == -1;
+      return arrayIndexRemove.indexOf(index) === -1;
     });
     // console.log("arrayKeySelected After", arrayKeySelected);
     // nếu mảng selectedKeys sau khi bị xóa có số lượng phần tử bằng 0
@@ -518,45 +563,123 @@ export const Edit = (props) => {
     return arrayKeySelected;
   }
 
+  const notifySuccess = (message) => {
+    toast.success(`🦄 ${message}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const notifyError = (message) => {
+    toast.error(`🦄 ${message}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const onCloseXDialog = () => {
+    onResetFormInputErrors();
+    onResetFormInput();
+    // notifySuccess('thanh cong!!')
+    setActiveIndex(null);
+    onHide();
+  };
+
+  const handleBlur = (e) => {
+    let { name, value } = e.target;
+    // console.log("handleBlur", e);
+
+    switch (name) {
+      case "tenNhomQuyen":
+        if (value.length < 0) {
+          setTenNhomQuyenErrors("Không được bỏ trống");
+        } else {
+          setTenNhomQuyenErrors("");
+        }
+        setTenNhomQuyen(value);
+        break;
+      default:
+        if (value.length < 0) {
+          setMotaErrors("Không được bỏ trống");
+        } else {
+          setMotaErrors("");
+        }
+        setMota(value);
+    }
+  };
+
   return (
     <div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Dialog
         header="Sửa mới nhóm quyền"
         visible={visible}
         style={{ width: "50vw" }}
-        onHide={onHide}
+        onHide={() => onCloseXDialog()}
         footer={renderFooter("displayBasic")}
       >
-        <div className="p-fluid">
-          <div className="p-field">
+        <div className="p-fluid p-formgrid p-grid">
+          <div className="p-field p-col">
             <label htmlFor="tenNhomQuyen">Tên nhóm quyền</label>
             <InputText
+              className={
+                Object.keys(tenNhomQuyenErrors).length > 0 ? "error" : null
+              }
               id="tenNhomQuyen"
               name="tenNhomQuyen"
               type="text"
               onChange={handleOnChangeTenNhomQuyen}
-              value={
-                tenNhomQuyen === null ||
-                tenNhomQuyen === "" ||
-                tenNhomQuyen === undefined
-                  ? objRoleTranfer.ten
-                  : tenNhomQuyen
-              }
+              // defaultValue={tenNhomQuyen === "" ? objRoleTranfer.ten : tenNhomQuyen}
+              defaultValue={objRoleTranfer.ten}
+              // value={tenNhomQuyen}
+              // onBlur={handleBlur}
             />
+            {Object.keys(tenNhomQuyenErrors).map((keyIndex, key) => {
+              return (
+                <span className="errorMessage" key={key}>
+                  {tenNhomQuyenErrors[keyIndex]}
+                </span>
+              );
+            })}
           </div>
-
-          <div className="p-field">
+          <div className="p-field p-col">
             <label htmlFor="mota">Mô tả</label>
             <InputText
+              className={Object.keys(motaErrors).length > 0 ? "error" : null}
               id="mota"
               type="text"
               onChange={handleOnChangeMota}
-              value={
-                mota === null || mota === "" || mota === undefined
-                  ? objRoleTranfer.mota
-                  : mota
-              }
+              defaultValue={objRoleTranfer.mota}
+              // value={mota}
+              // onBlur={handleBlur}
             />
+            {Object.keys(motaErrors).map((keyIndex, key) => {
+              return (
+                <span className="errorMessage" key={key}>
+                  {motaErrors[keyIndex]}
+                </span>
+              );
+            })}
           </div>
         </div>
 

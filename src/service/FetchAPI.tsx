@@ -9,6 +9,7 @@ class FetchAPI extends Component {
     // const { keycloak } = useKeycloak();
     const [keycloak] = useKeycloak();
     const currentUserValue = keycloak.authenticated ? keycloak.token : "";
+    // console.log('keycloak.token', keycloak.token)
     this.axiosInstance = axios.create({
       baseURL: this.BASE_URL,
       timeout: 30000,
@@ -37,6 +38,7 @@ class FetchAPI extends Component {
     } finally {
     }
   }
+
   public handleResponse(error: any) {
     // const { keycloak } = useKeycloak();
     const [keycloak] = useKeycloak();
@@ -57,6 +59,8 @@ class FetchAPI extends Component {
     }
     throw new Error(error);
   }
+
+  
 }
 
 export default FetchAPI;

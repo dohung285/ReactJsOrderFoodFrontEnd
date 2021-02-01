@@ -4,7 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { useKeycloak } from '@react-keycloak/web'
 
 import HomePage from '../pages/Home'
-import User from '../pages/User';
+import User from '../pages/nguoidung/User';
 import Role from '../pages/vaitro/Role';
 import { PrivateRoute } from './utils'
 export const AppRouter = () => {

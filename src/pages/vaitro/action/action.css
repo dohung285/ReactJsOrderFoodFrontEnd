@@ -2,6 +2,10 @@
    .errorClass {
     color: #bf1650;
   }
+
+  .error {
+    border: 1px solid red;
+  }
   
   .errorClass::before {
     display: inline;

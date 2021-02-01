@@ -6,11 +6,9 @@ import { Paginator } from "primereact/paginator";
 import { Tag } from "primereact/tag";
 import { Toolbar } from "primereact/toolbar";
 import React, { useEffect, useState } from "react";
-import Moment from "react-moment";
 import { withRouter } from "react-router-dom";
 import {
-  convertJsonToQueryString,
-  queryStringToJSON,
+  convertJsonToQueryString
 } from "../../helper/CyberTaxHelper";
 import useFullPageLoader from "../../hooks/useFullPageLoader";
 import RegisterTvanService from "../../service/RegisterTvanService";
@@ -28,9 +26,9 @@ const RegisterTVAN = (props) => {
     size: 10,
   });
 
-  const [masothue, setMasothue] = useState({
-    masothue: "",
-  });
+  // const [masothue, setMasothue] = useState({
+  //   masothue: "",
+  // });
 
   const [inputSearch, setInputSearch] = useState("");
 
@@ -55,16 +53,16 @@ const RegisterTVAN = (props) => {
     hideLoader();
   };
 
-  const searchWithPaging = async (dataBody) => {
-    const result = await registerTVANService.searchWithMstAndPaging({
-      dataBody,
-    });
-    if (result && result.status === 1000) {
-      setData(result.object);
-      // setTotalRecord(result.totalItem);
-      // console.log('result searchRoleWithPaging: ', result)
-    }
-  };
+  // const searchWithPaging = async (dataBody) => {
+  //   const result = await registerTVANService.searchWithMstAndPaging({
+  //     dataBody,
+  //   });
+  //   if (result && result.status === 1000) {
+  //     setData(result.object);
+  //     // setTotalRecord(result.totalItem);
+  //     // console.log('result searchRoleWithPaging: ', result)
+  //   }
+  // };
 
   useEffect(() => {
     fetData();
@@ -164,21 +162,22 @@ const RegisterTVAN = (props) => {
     </React.Fragment>
   );
 
-  const renderRowCreatedAt = (rowData) => {
-    return <Moment format="DD/MM/YYYY H:m:s">{rowData.ngaytao}</Moment>;
-  };
-  const renderBodyChucNang = (rowData) => {
-    // console.log('rowData', rowData.id)
-    return (
-      <React.Fragment>
-        <i
-          className="pi pi-eye p-mr-2 icon-medium"
-          title={"Xem"}
-          style={{ color: "blue", cursor: "pointer" }}
-        />
-      </React.Fragment>
-    );
-  };
+  // const renderRowCreatedAt = (rowData) => {
+  //   return <Moment format="DD/MM/YYYY H:m:s">{rowData.ngaytao}</Moment>;
+  // };
+
+  // const renderBodyChucNang = (rowData) => {
+  //   // console.log('rowData', rowData.id)
+  //   return (
+  //     <React.Fragment>
+  //       <i
+  //         className="pi pi-eye p-mr-2 icon-medium"
+  //         title={"Xem"}
+  //         style={{ color: "blue", cursor: "pointer" }}
+  //       />
+  //     </React.Fragment>
+  //   );
+  // };
 
   const renderBodyTrangThai = (rowData) => {
     const status = rowData.trangthai;
@@ -203,13 +202,14 @@ const RegisterTVAN = (props) => {
       <React.Fragment>
         <i
           className="pi pi-pencil p-mr-2 icon-medium"
-          title={"Sửa"}
+          title={"Active"}
           style={{ color: "blue", cursor: "pointer" }}
+          onClick={()=>alert('Acitve')}
         />
         <i
           className="pi pi-trash icon-medium"
           style={{ color: "red", cursor: "pointer" }}
-          title={"Xóa"}
+          title={"DeActive"}
         />
       </React.Fragment>
     );

@@ -4,7 +4,7 @@ import RegisterTVAN from './pages/dang-ky-su-dung-tvan/RegisterTVAN';
 import Home from "./pages/Home";
 import InfoBusiness from './pages/InfoBusines/InfoBusiness';
 import NotFound from "./pages/NotFound";
-import User from "./pages/User";
+import User from "./pages/nguoidung/User";
 import Role from './pages/vaitro/Role';
 
 
