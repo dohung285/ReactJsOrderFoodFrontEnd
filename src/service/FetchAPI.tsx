@@ -16,7 +16,6 @@ class FetchAPI extends Component {
       headers: {
         Authorization: `Bearer ${currentUserValue}`,
         "X-Requested-With": "XMLHttpRequest",
-        "Content-Type": "multipart/form-data",
       },
       httpAgent: true,
     });

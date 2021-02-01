@@ -9,7 +9,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { EXPRITIME_HIDER_LOADER } from "../../../constants/ConstantString";
 import RoleService from "../../../service/RoleService";
 
-
 export const Edit = (props) => {
   const {
     visible,
@@ -226,26 +225,25 @@ export const Edit = (props) => {
 
   const [selectedKeys, setSelectedKeys] = useState([]);
   // const [listUUIDChitiet, setListUUIDChitiet] = useState([]);
-  const [tenNhomQuyen, setTenNhomQuyen] = useState(objRoleTranfer.ten);
-  const [mota, setMota] = useState(objRoleTranfer.id);
+  const [tenNhomQuyen, setTenNhomQuyen] = useState();  //objRoleTranfer.ten
+  const [mota, setMota] = useState(); //objRoleTranfer.id
 
-
-  const [tenNhomQuyenErrors, setTenNhomQuyenErrors] = useState({})
-  const [motaErrors, setMotaErrors] = useState({})
+  const [tenNhomQuyenErrors, setTenNhomQuyenErrors] = useState({});
+  const [motaErrors, setMotaErrors] = useState({});
 
   const formValidation = () => {
-    // debugger
-    const tenNhomQuyenErrors = {}
-    const motaErrors = {}
+    debugger
+    const tenNhomQuyenErrors = {};
+    const motaErrors = {};
 
     let isValid = true;
 
-    if (tenNhomQuyen === '') {
+    if (tenNhomQuyen === "") {
       tenNhomQuyenErrors.tenNhomQuyenRequired = "Không được bỏ trống";
       isValid = false;
     }
 
-    if (mota === '') {
+    if (mota === "") {
       motaErrors.motaRequired = "Không được bỏ trống";
       isValid = false;
     }
@@ -255,9 +253,7 @@ export const Edit = (props) => {
     setMotaErrors(motaErrors);
 
     return isValid;
-  }
-
-
+  };
 
   function getStateNodeSelectedKey() {
     let objSelected = process();
@@ -284,31 +280,30 @@ export const Edit = (props) => {
   }
 
   const onResetFormInputErrors = () => {
-    setTenNhomQuyenErrors("")
-    setMotaErrors("")
-  }
+    setTenNhomQuyenErrors("");
+    setMotaErrors("");
+  };
 
   const onResetFormInput = () => {
-    setTenNhomQuyen("")
-    setMota("")
-  }
+    setTenNhomQuyen("");
+    setMota("");
+  };
 
   // Xử lý nút đồng ý thêm nhóm quyền
   function handleOnYesDialog(name) {
-
     // console.log('tenNhomQuyen', tenNhomQuyen)
     // console.log('mota', mota)
     let isValid = formValidation();
     if (isValid) {
-      console.log('Thanh cong@@@')
+      console.log("Thanh cong@@@");
       updateRoleIntoDatabase();
-      props.fetDataUser();
+      // props.fetDataUser();
       onResetFormInput();
       onResetFormInputErrors();
       onHide(name);
+    }else{
+      console.log('Thất bại')
     }
-
-
   }
 
   const updateRoleIntoDatabase = async () => {
@@ -335,8 +330,8 @@ export const Edit = (props) => {
     const dataBody = {
       ten:
         tenNhomQuyen === null ||
-          tenNhomQuyen === undefined ||
-          tenNhomQuyen === ""
+        tenNhomQuyen === undefined ||
+        tenNhomQuyen === ""
           ? objRoleTranfer.ten
           : tenNhomQuyen,
       mota:
@@ -346,20 +341,22 @@ export const Edit = (props) => {
       idchucnangct: arrayIdChucNangCT,
     };
 
-    const result = await roleService.updateNhomQuyen(
-      objRoleTranfer.id,
-      dataBody
-    );
-    if (result && result.status === 1000) {
-      let message = result.message;
-      console.log('message', message)
-      setTimeout(props.fetDataUser, EXPRITIME_HIDER_LOADER); // đợi 0.5s sau mới gọi hàm fetData()
-      notifySuccess('Sửa nhóm quyền thành công!')
-    } else {
-      let message = result.message;
-      // showError(message);
-      notifyError(message)
-    }
+    console.log("dataBody", dataBody);
+
+    // const result = await roleService.updateNhomQuyen(
+    //   objRoleTranfer.id,
+    //   dataBody
+    // );
+    // if (result && result.status === 1000) {
+    //   let message = result.message;
+    //   console.log('message', message)
+    //   setTimeout(props.fetDataUser, EXPRITIME_HIDER_LOADER); // đợi 0.5s sau mới gọi hàm fetData()
+    //   notifySuccess('Sửa nhóm quyền thành công!')
+    // } else {
+    //   let message = result.message;
+    //   // showError(message);
+    //   notifyError(message)
+    // }
     setActiveIndex(null);
   };
 
@@ -598,6 +595,29 @@ export const Edit = (props) => {
     onHide();
   };
 
+  const handleBlur = (e) => {
+    let { name, value } = e.target;
+    // console.log("handleBlur", e);
+
+    switch (name) {
+      case "tenNhomQuyen":
+        if (value.length < 0) {
+          setTenNhomQuyenErrors("Không được bỏ trống");
+        } else {
+          setTenNhomQuyenErrors("");
+        }
+        setTenNhomQuyen(value);
+        break;
+      default:
+        if (value.length < 0) {
+          setMotaErrors("Không được bỏ trống");
+        } else {
+          setMotaErrors("");
+        }
+        setMota(value);
+    }
+  };
+
   return (
     <div>
       <ToastContainer
@@ -618,22 +638,28 @@ export const Edit = (props) => {
         onHide={() => onCloseXDialog()}
         footer={renderFooter("displayBasic")}
       >
-
         <div className="p-fluid p-formgrid p-grid">
           <div className="p-field p-col">
             <label htmlFor="tenNhomQuyen">Tên nhóm quyền</label>
             <InputText
-              className={Object.keys(tenNhomQuyenErrors).length > 0 ? "error" : null}
+              className={
+                Object.keys(tenNhomQuyenErrors).length > 0 ? "error" : null
+              }
               id="tenNhomQuyen"
               name="tenNhomQuyen"
               type="text"
               onChange={handleOnChangeTenNhomQuyen}
               // defaultValue={tenNhomQuyen === "" ? objRoleTranfer.ten : tenNhomQuyen}
               defaultValue={objRoleTranfer.ten}
-            // value={tenNhomQuyen}
+              // value={tenNhomQuyen}
+              // onBlur={handleBlur}
             />
             {Object.keys(tenNhomQuyenErrors).map((keyIndex, key) => {
-              return <span className="errorMessage" key={key} >{tenNhomQuyenErrors[keyIndex]}</span>
+              return (
+                <span className="errorMessage" key={key}>
+                  {tenNhomQuyenErrors[keyIndex]}
+                </span>
+              );
             })}
           </div>
           <div className="p-field p-col">
@@ -644,14 +670,18 @@ export const Edit = (props) => {
               type="text"
               onChange={handleOnChangeMota}
               defaultValue={objRoleTranfer.mota}
-            // value={mota}
+              // value={mota}
+              // onBlur={handleBlur}
             />
             {Object.keys(motaErrors).map((keyIndex, key) => {
-              return <span className="errorMessage" key={key} >{motaErrors[keyIndex]}</span>
+              return (
+                <span className="errorMessage" key={key}>
+                  {motaErrors[keyIndex]}
+                </span>
+              );
             })}
           </div>
         </div>
-
 
         <div className="bg-gr">
           <Accordion

@@ -220,7 +220,7 @@ const User = (props) => {
   };
 
   const onHandleEdit = (event) => {
-    console.log(event);
+    // console.log(event);
 
     setUserObj({
       id:event.id,
@@ -231,6 +231,10 @@ const User = (props) => {
       thudientu: event.thudientu,
       loai: event.loai,
     });
+
+    setTimeout(function () {
+      setVisibleEditUser(true)
+    },2000)
 
     setVisibleEditUser(true);
   };
@@ -436,11 +440,12 @@ const User = (props) => {
           </div>
         </div>
 
-        <AddUser visible={visibleAddUser} onHide={handleHideAddUser} />
+        <AddUser visible={visibleAddUser} onHide={handleHideAddUser} fetDataUser={fetDataUser} />
         <EditUser
           visible={visibleEditUser}
           onHide={() => setVisibleEditUser(false)}
           userObj={userObj}
+          fetDataUser={fetDataUser}
         />
       </div>
       {loader}

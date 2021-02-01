@@ -101,23 +101,26 @@ const Add = (props) => {
 
     let isValid = formValidation();
     if (isValid) {
-      console.log('Thanh cong@@@')
-      // saveRoleIntoDatabase();
-      // props.fetDataUser();
-      // onResetFormInput();
-      // onResetFormInputErrors();
-      // onHide(name);
+      // console.log('Thanh cong@@@')
+      saveRoleIntoDatabase();
+      props.fetDataUser();
+      onResetFormInput();
+      onResetFormInputErrors();
+      onHide(name);
     }
 
 
   }
 
   const saveRoleIntoDatabase = async () => {
+
     const dataBody = {
       ten: tenNhomQuyen,
       mota: mota,
       idchucnangct: listUUIDChitiet,
     };
+
+    // console.log('dataBody', dataBody)
 
     const result = await roleService.saveRole(dataBody);
     if (result && result.status === 1000) {

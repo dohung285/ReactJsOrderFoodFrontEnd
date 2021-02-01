@@ -3,10 +3,13 @@ import { TypeMethodConstantEnum } from "../helper/MethodAPIConstant";
 import FetchAPI from "./FetchAPI";
 
 class RoleService extends FetchAPI {
+
   async saveRole(dataBody) {
     let url = `${PREFIX_URL_NHOMQUYEN}/nhomquyen/save`;
     return await this.request(url, dataBody, TypeMethodConstantEnum.POST);
   }
+
+ 
 
 
   async getAllRoleWithPaging(dataBody) {
