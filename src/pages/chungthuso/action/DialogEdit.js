@@ -13,9 +13,7 @@ import './ToastDemo.css';
 
 const DialogEdit = (props) => {
 
-    // const [test, setTest] = useState(props.rowData);
-    // console.log("fuckyou lần 1: ", test.iddoanhnghiep)
-
+    
     const service = new ChungThuSoService()
     const [displayBasic, setDisplayBasic] = useState(false);
     const [displayBasic2, setDisplayBasic2] = useState(false);
