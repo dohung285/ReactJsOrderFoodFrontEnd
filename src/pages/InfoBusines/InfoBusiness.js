@@ -32,7 +32,6 @@ const emptyData = {
     tendoanhnghiepme: "",
     loaihinhkinhdoanh: "",
     mota: "",
-    logo: "",
     macoquanthue: "",
     tennguoidaidien: "",
     tennguoinopthue: "",
@@ -217,9 +216,6 @@ const actionBodyTemplate = (rowData) => {
             <i className="pi pi-pencil p-mr-2 icon-medium" 
             title={"Sửa"} style={{ color: "blue", cursor: "pointer" }} 
              onClick={() => onEditClick(rowData)}/>
-            <i className="pi pi-trash icon-medium" 
-            style={{ color: "red", cursor: "pointer" }} 
-            title={"Xóa"} onClick={onHandleDelete} />
         </React.Fragment>
     );
 };
@@ -274,7 +270,7 @@ return (
                 onHideDialog={onHideDialog}
                 adData={adData} setAdData={setAdData}
                 errData={errData} setErrdata={setErrdata}
-                fetDataInfoBusiness={fetDataInfoBusiness}
+                dataInfoBusiness={dataInfoBusiness}
                 typeAd={typeAd}
             />
     </React.Fragment>

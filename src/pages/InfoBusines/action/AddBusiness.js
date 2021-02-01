@@ -1,18 +1,60 @@
 import { Button } from 'primereact/button';
-import React, {useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext'
 import InfoBusinessService from '../../../service/InfoBusinessService';
 import { RadioButton } from 'primereact/radiobutton';
 import { FileUpload } from 'primereact/fileupload';
+import { useForm } from "react-hook-form";
 const AddBusiness = (props) => {
-
+    const { register, handleSubmit, errors } = useForm();
     const {
-        visible, onHideDialog, errData, setErrdata, fetDataInfoBusiness, typeAd,
+        visible, onHideDialog, errData, setErrdata, dataInfoBusiness, typeAd,
         adData, setAdData
     } = props;
+    const [file,setFile] = useState(null)
+    const [mstErrors, setMstErrors] = useState({})
+    const [thudientuErrors, setThudientuErrors] = useState({})
+    const [tendoanhnghiepErrors, setTendoanhnghiepErrors] = useState({})
+    const [logoErrors, setLogoErrors] = useState({})
     const service = new InfoBusinessService();
     const toast = useRef(null);
+
+
+    const formValidation = () => {
+        // debugger
+        const mstErrors = {}
+        const thudientuErrors = {}
+        const tendoanhnghiepErrors = {}
+        const logoErrors = {}
+
+        let isValid = true;
+
+        if (adData.mst === '') {
+            mstErrors.hotenRequired = "Không được bỏ trống";
+            isValid = false;
+        }
+
+        if (adData.thudientu === '') {
+            thudientuErrors.hotenRequired = "Không được bỏ trống";
+            isValid = false;
+        }
+        //=====================
+
+        if (adData.tendoanhnghiep === '') {
+            tendoanhnghiepErrors.hotenRequired = "Không được bỏ trống";
+            isValid = false;
+        }
+
+        if (adData.logo === '') {
+            logoErrors.hotenRequired = "Không được bỏ trống";
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+
     const updateField = (data, field) => {
         setAdData({
             ...adData,
@@ -20,13 +62,16 @@ const AddBusiness = (props) => {
         });
 
     };
+
     const onBasicUpload = (e) => {
-const fileName =  e.files[0].name 
-setAdData({
-    ...adData,
-    logo: fileName,
-});
+        let fileName =
+            e.target.files[0] === null || e.target.files[0] === undefined
+                ? null
+                : e.target.files[0];
+                setFile(fileName);
     }
+
+
     const showSuccess = (message) => {
         toast.current.show({
             severity: "success",
@@ -55,37 +100,37 @@ setAdData({
             [field]: data
         })
     }
-    const onBasicUploadAuto = () => {
-        toast.current.show({severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode'});
-    }
-
 
     async function handleOnYesDialog() {
         debugger
-        if (typeAd == 1) {
-            console.log(adData)
-            const result = await service.saveInfoBusiness(adData);
-            if (result && result.status === 1000) {
-                // console.log("result save: ", result);
-                let message = result.message;
-                setTimeout(fetDataInfoBusiness, 500); // đợi 0.5s sau mới gọi hàm fetData()
-                onHideDialog();
+        let jsonObj = JSON.stringify(adData);
+        let data = new FormData();
+        data.append("file", file);
+        data.append("ttdn", jsonObj);
+        let isValid = formValidation();
+        if (isValid) {
+            if (typeAd == 1) {
+                console.log(data.ttdn)
+                const result = await service.saveInfoBusiness(data);
+                if (result && result.status === 1000) {
+                    let message = result.message;
+                    setTimeout(dataInfoBusiness, 500); // đợi 0.5s sau mới gọi hàm fetData()
+                    onHideDialog();
+                } else {
+                    let message = result.message;
+                    console.log(message)
+                    showError(message);
+                }
             } else {
-                let message = result.message;
-                console.log(message)
-                showError(message);
-            }
-        } else {
-            console.log(adData)
-            const result = await service.updateInfoBusiness(adData.id, adData)
-            if (result && result.status === 1000) {
-                // console.log("result save: ", result);
-                let message = result.message;
-                setTimeout(fetDataInfoBusiness, 500); // đợi 0.5s sau mới gọi hàm fetData()
-                onHideDialog();
-            } else {
-                let message = result.message;
-                showError(message);
+                const result = await service.updateInfoBusiness(adData.id, data)
+                if (result && result.status === 1000) {
+                    let message = result.message;
+                    setTimeout(dataInfoBusiness, 500); // đợi 0.5s sau mới gọi hàm fetData()
+                    onHideDialog();
+                } else {
+                    let message = result.message;
+                    showError(message);
+                }
             }
         }
     }
@@ -119,7 +164,7 @@ setAdData({
                 visible={visible}
                 onHide={onHideDialog}
                 footer={renderFooter} >
-                <form onSubmit={handleOnYesDialog}>
+                <form onSubmit={handleSubmit(handleOnYesDialog)}>
                     <div className="p-fluid p-formgrid p-grid">
                         <div className="p-field p-col">
                             <label htmlFor="mst" >Mã số thuế</label>
@@ -129,6 +174,9 @@ setAdData({
                                 name="mst"
                                 onChange={(e) => updateField(e.target.value, 'mst')}
                             />
+                            {Object.keys(mstErrors).map((keyIndex, key) => {
+                                return <span className="errorMessage" key={key} >{mstErrors[keyIndex]}</span>
+                            })}
                         </div>
                         <div className="p-field p-col">
                             <label htmlFor="tendoanhnghiep">Tên doanh nghiệp</label>
@@ -138,6 +186,9 @@ setAdData({
                                 name="tendoanhnghiep"
                                 onChange={(e) => updateField(e.target.value, 'tendoanhnghiep')}
                             />
+                            {Object.keys(tendoanhnghiepErrors).map((keyIndex, key) => {
+                                return <span className="errorMessage" key={key} >{tendoanhnghiepErrors[keyIndex]}</span>
+                            })}
                         </div>
                     </div>
 
@@ -149,8 +200,10 @@ setAdData({
                                 value={adData.thudientu || ""}
                                 onChange={(e) => updateField(e.target.value, 'thudientu')}
                                 name="thudientu"
-
                             />
+                            {Object.keys(thudientuErrors).map((keyIndex, key) => {
+                                return <span className="errorMessage" key={key} >{thudientuErrors[keyIndex]}</span>
+                            })}
                         </div>
                         <div className="p-field p-col">
                             <label htmlFor="tenthuongmai">Tên thương mại</label>
@@ -194,28 +247,28 @@ setAdData({
                                 onChange={(e) => updateField(e.target.value, 'matinh')}
                             />
                         </div>
-                        
+
                         <div className="p-field p-col">
-                        <label htmlFor="lachinhanh" >Là chi nhánh</label>
-                        <div className="p-formgroup-inline p-mr-2 p-as-center">
-                            <div className="p-field-radiobutton">
-                                <RadioButton inputId="lachinhanh1" value={true}
-                                    onChange={(e) => updateField(e.target.value, 'lachinhanh')} checked={adData.lachinhanh === true} />
-                                <label htmlFor="lachinhanh1" >Có</label>
+                            <label htmlFor="lachinhanh" >Là chi nhánh</label>
+                            <div className="p-formgroup-inline p-mr-2 p-as-center" style={{ marginTop: '10px' }}>
+                                <div className="p-field-radiobutton">
+                                    <RadioButton inputId="lachinhanh1" value={true}
+                                        onChange={(e) => updateField(e.target.value, 'lachinhanh')} checked={adData.lachinhanh === true} />
+                                    <label htmlFor="lachinhanh1" >Có</label>
+                                </div>
+                                <div className="p-field-radiobutton">
+                                    <RadioButton inputId="lachinhanh2" value={false}
+                                        onChange={(e) => updateField(e.target.value, 'lachinhanh')} checked={adData.lachinhanh === false} />
+                                    <label htmlFor="lachinhanh2">Không</label>
+                                </div>
                             </div>
-                            <div className="p-field-radiobutton">
-                                <RadioButton inputId="lachinhanh2" value={false}
-                                    onChange={(e) => updateField(e.target.value, 'lachinhanh')} checked={adData.lachinhanh === false} />
-                                <label htmlFor="lachinhanh2">Không</label>
-                            </div>
-                        </div>
                         </div>
                     </div>
-                
+
 
                     <div className="p-fluid p-formgrid p-grid">
                         <div className="p-field p-col p-mb-2">
-                        <label htmlFor="tennguoidaidien" >Tên cơ quan thuế</label>
+                            <label htmlFor="tennguoidaidien" >Tên cơ quan thuế</label>
                             <InputText id="tencoquanthue"
                                 placeholder="Tên cơ quan thuế"
                                 name="tencoquanthue"
@@ -224,15 +277,14 @@ setAdData({
                             />
                         </div>
                         <div className="p-field p-col">
-                        <label htmlFor="logo" >Logo</label>
-                        <FileUpload mode="basic" type="file"
-                        name="logo[]"
-                        accept="image/*"
-                        customUpload uploadHandler={onBasicUpload}
-                        onUpload={onBasicUploadAuto}
-                        // onChange={(e) => updateField(e.target.value, 'logo')}
-                         />
-                    </div>
+                            <label htmlFor="logo" >Logo</label>
+                            <InputText
+                                id="logo"
+                                type="file"
+                                onChange={(e) => onBasicUpload(e)}
+                                name="logo"
+                            />
+                        </div>
                     </div>
 
                     <div className="p-fluid p-formgrid p-grid">

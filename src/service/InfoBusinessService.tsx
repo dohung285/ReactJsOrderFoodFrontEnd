@@ -30,11 +30,11 @@ class InfoBusinessService extends FetchAPI {
             TypeMethodConstantEnum.POST
         )
     }
-    public async updateInfoBusiness(mst : any){
-        let url= `${PREFIX_ADD}/update/${mst}`;
+    public async updateInfoBusiness(id:number ,data:any){
+        let url= `${PREFIX_ADD}/update/${id}`;
         return await this.request(
             url,
-            mst,
+            data,
             TypeMethodConstantEnum.POST
         )
     }
