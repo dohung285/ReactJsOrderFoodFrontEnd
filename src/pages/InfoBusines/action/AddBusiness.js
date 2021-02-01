@@ -6,23 +6,56 @@ import InfoBusinessService from '../../../service/InfoBusinessService';
 import { RadioButton } from 'primereact/radiobutton';
 import { FileUpload } from 'primereact/fileupload';
 import { useForm } from "react-hook-form";
+import './errors.css'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const AddBusiness = (props) => {
     const { register, handleSubmit, errors } = useForm();
     const {
-        visible, onHideDialog, errData, setErrdata, dataInfoBusiness, typeAd,
+        visible, onHideDialog, errData, setErrdata, fetDataInfoBusiness, typeAd,
         adData, setAdData
     } = props;
-    const [file,setFile] = useState(null)
+    const [file, setFile] = useState(null)
+
     const [mstErrors, setMstErrors] = useState({})
     const [thudientuErrors, setThudientuErrors] = useState({})
     const [tendoanhnghiepErrors, setTendoanhnghiepErrors] = useState({})
     const [logoErrors, setLogoErrors] = useState({})
     const service = new InfoBusinessService();
-    const toast = useRef(null);
+    // const toast = useRef(null);
+
+
+    // Thêm 2 function 
+
+    const notifySuccess = (message) => {
+        toast.success(`✔👌👌😘😘😘 ${message}`, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    };
+
+    const notifyError = (message) => {
+        toast.error(`😢😢😢😢😢😢 ${message}`, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    };
+
+
 
 
     const formValidation = () => {
-        // debugger
         const mstErrors = {}
         const thudientuErrors = {}
         const tendoanhnghiepErrors = {}
@@ -30,7 +63,8 @@ const AddBusiness = (props) => {
 
         let isValid = true;
 
-        if (adData.mst === '') {
+        if (adData.mst === '') { // cái này em lấy value của mst để kiểm tra ấy a
+
             mstErrors.hotenRequired = "Không được bỏ trống";
             isValid = false;
         }
@@ -51,6 +85,13 @@ const AddBusiness = (props) => {
             isValid = false;
         }
 
+
+        //chưa set object lỗi chô này à???
+        setMstErrors(mstErrors);
+        setTendoanhnghiepErrors(tendoanhnghiepErrors);
+        setThudientuErrors(thudientuErrors);
+
+
         return isValid;
     }
 
@@ -68,27 +109,27 @@ const AddBusiness = (props) => {
             e.target.files[0] === null || e.target.files[0] === undefined
                 ? null
                 : e.target.files[0];
-                setFile(fileName);
+        setFile(fileName);
     }
 
 
-    const showSuccess = (message) => {
-        toast.current.show({
-            severity: "success",
-            summary: "Success Message",
-            detail: message,
-            life: 3000,
-        });
-    };
+    // const showSuccess = (message) => {
+    //     toast.current.show({
+    //         severity: "success",
+    //         summary: "Success Message",
+    //         detail: message,
+    //         life: 3000,
+    //     });
+    // };
 
-    const showError = (message) => {
-        toast.current.show({
-            severity: "error",
-            summary: "Error Message",
-            detail: message,
-            life: 3000,
-        });
-    };
+    // const showError = (message) => {
+    //     toast.current.show({
+    //         severity: "error",
+    //         summary: "Error Message",
+    //         detail: message,
+    //         life: 3000,
+    //     });
+    // };
 
 
     onchange = (e) => {
@@ -102,11 +143,11 @@ const AddBusiness = (props) => {
     }
 
     async function handleOnYesDialog() {
-        debugger
         let jsonObj = JSON.stringify(adData);
         let data = new FormData();
         data.append("file", file);
         data.append("ttdn", jsonObj);
+
         let isValid = formValidation();
         if (isValid) {
             if (typeAd == 1) {
@@ -114,22 +155,23 @@ const AddBusiness = (props) => {
                 const result = await service.saveInfoBusiness(data);
                 if (result && result.status === 1000) {
                     let message = result.message;
-                    setTimeout(dataInfoBusiness, 500); // đợi 0.5s sau mới gọi hàm fetData()
+                    setTimeout(fetDataInfoBusiness, 1000); // đợi 0.5s sau mới gọi hàm fetData()
                     onHideDialog();
                 } else {
                     let message = result.message;
                     console.log(message)
-                    showError(message);
+                    notifyError(message)
+                    // showError(message);
                 }
             } else {
                 const result = await service.updateInfoBusiness(adData.id, data)
                 if (result && result.status === 1000) {
                     let message = result.message;
-                    setTimeout(dataInfoBusiness, 500); // đợi 0.5s sau mới gọi hàm fetData()
+                    setTimeout(fetDataInfoBusiness, 500); // đợi 0.5s sau mới gọi hàm fetData()
                     onHideDialog();
                 } else {
                     let message = result.message;
-                    showError(message);
+                    notifyError(message);
                 }
             }
         }
@@ -159,6 +201,18 @@ const AddBusiness = (props) => {
 
     return (
         <div>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
+
             <Dialog
                 header="Khởi tạo doanh nghiệp"
                 visible={visible}
@@ -169,6 +223,7 @@ const AddBusiness = (props) => {
                         <div className="p-field p-col">
                             <label htmlFor="mst" >Mã số thuế</label>
                             <InputText id="mst"
+                                // className
                                 placeholder="Mã số thuế"
                                 value={adData.mst || ""}
                                 name="mst"
