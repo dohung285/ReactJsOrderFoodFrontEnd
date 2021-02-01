@@ -45,6 +45,13 @@ export const MenuBar = () => {
           permission: "",
           command: () => history.push('/qldk')
         },
+        {
+          label: "Thông tin doanh nghiệp",
+          icon: "pi pi-fw pi-user-plus",
+
+          permission: "",
+          command: () => history.push('/thong-tin-doanh-nghiep')
+        },
       ],
     },
   ];
