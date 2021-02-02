@@ -16,13 +16,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { EXPRITIME_HIDER_LOADER } from "../../constants/ConstantString";
 import {
   convertJsonToQueryString,
-  queryStringToJSON
+  queryStringToJSON,
 } from "../../helper/CyberTaxHelper";
 import useFullPageLoader from "../../hooks/useFullPageLoader";
 import UserServices from "../../service/UserService";
 import AddUser from "./AddUser";
 import EditUser from "./EditUser";
-
 
 const User = (props) => {
   const [visibleAddUser, setVisibleAddUser] = useState(false);
@@ -134,45 +133,6 @@ const User = (props) => {
     setSearch({ ...search, trangthai: e.value ? e.value.code : "" });
   };
 
-  const leftContents = (
-    <React.Fragment>
-      <InputText
-        className={"p-mr-3"}
-        // value={search.textSearch}
-        value={inputSearch}
-        onChange={onHandleChangeSearch}
-        tooltip={"Tên, Tên đăng nhập, Số điện thoại"}
-        name={"text"}
-        placeholder={"Tên, tên đăng nhập, SĐT"}
-      />
-
-      <Dropdown
-        className={"p-mr-3"}
-        style={{ height: "39px" }}
-        optionLabel="name"
-        value={selectedStatus}
-        options={[
-          { name: "Hoạt động", code: "0" },
-          { name: "Khóa", code: "1" },
-        ]}
-        onChange={onChangeStatus}
-        placeholder="Trạng thái"
-        tooltip={"Trạng thái"}
-        name={"trangthai"}
-        showClear
-      />
-
-      {/* <Calendar
-        dateFormat="dd/mm/yy"
-        value={search.created_at}
-        onChange={onHandleChangeSearch}
-        name={"created_at"}
-        showIcon
-        placeholder={"Ngày tạo"}
-        tooltip={"Ngày tạo"}
-      /> */}
-    </React.Fragment>
-  );
   const onHandleSearchClick = () => {
     const dataSearch = queryStringToJSON(props.location.search);
     console.log("dataSearch", dataSearch);
@@ -223,7 +183,7 @@ const User = (props) => {
     // console.log(event);
 
     setUserObj({
-      id:event.id,
+      id: event.id,
       hoten: event.hoten,
       diachi: event.diachi,
       sodienthoai: event.sodienthoai,
@@ -233,14 +193,40 @@ const User = (props) => {
     });
 
     setTimeout(function () {
-      setVisibleEditUser(true)
-    },2000)
+      setVisibleEditUser(true);
+    }, 2000);
 
     setVisibleEditUser(true);
   };
 
-  const rightContents = (
+  const leftContents = (
     <React.Fragment>
+      <InputText
+        className={"p-mr-3"}
+        // value={search.textSearch}
+        value={inputSearch}
+        onChange={onHandleChangeSearch}
+        tooltip={"Tên, Tên đăng nhập, Số điện thoại"}
+        name={"text"}
+        placeholder={"Tên, tên đăng nhập, SĐT"}
+      />
+
+      <Dropdown
+        className={"p-mr-3"}
+        style={{ height: "39px" }}
+        optionLabel="name"
+        value={selectedStatus}
+        options={[
+          { name: "Hoạt động", code: "0" },
+          { name: "Khóa", code: "1" },
+        ]}
+        onChange={onChangeStatus}
+        placeholder="Trạng thái"
+        tooltip={"Trạng thái"}
+        name={"trangthai"}
+        showClear
+      />
+
       <Button
         icon="pi pi-search"
         className="p-mr-2"
@@ -256,6 +242,36 @@ const User = (props) => {
         className="p-mr-2 p-button-success"
         onClick={onHandleShowAddUser}
       />
+
+      {/* <Calendar
+        dateFormat="dd/mm/yy"
+        value={search.created_at}
+        onChange={onHandleChangeSearch}
+        name={"created_at"}
+        showIcon
+        placeholder={"Ngày tạo"}
+        tooltip={"Ngày tạo"}
+      /> */}
+    </React.Fragment>
+  );
+
+  const rightContents = (
+    <React.Fragment>
+      {/* <Button
+        icon="pi pi-search"
+        className="p-mr-2"
+        onClick={onHandleSearchClick}
+      />
+      <Button
+        icon="pi pi-refresh"
+        className="p-mr-2 p-button-help"
+        onClick={onHandleRefresh}
+      />
+      <Button
+        icon="pi pi-plus"
+        className="p-mr-2 p-button-success"
+        onClick={onHandleShowAddUser}
+      /> */}
       {/* <Button icon="pi pi-trash" className="p-mr-2 p-button-danger" /> */}
     </React.Fragment>
   );
@@ -440,7 +456,11 @@ const User = (props) => {
           </div>
         </div>
 
-        <AddUser visible={visibleAddUser} onHide={handleHideAddUser} fetDataUser={fetDataUser} />
+        <AddUser
+          visible={visibleAddUser}
+          onHide={handleHideAddUser}
+          fetDataUser={fetDataUser}
+        />
         <EditUser
           visible={visibleEditUser}
           onHide={() => setVisibleEditUser(false)}

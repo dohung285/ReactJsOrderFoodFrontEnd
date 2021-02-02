@@ -113,6 +113,14 @@ const ChungThuSo = (props) => {
                 placeholder={"Ngày tạo"}
                 tooltip={"Ngày tạo"}
             /> */}
+
+      <DialogPlus
+        visible="true"
+        fetDataUser={fetDataUser}
+        test2={setTestDataUser}
+      >
+        <h1>Test children props</h1>
+      </DialogPlus>
     </React.Fragment>
   );
   // const onHandleSearchClick = () => {
@@ -142,13 +150,13 @@ const ChungThuSo = (props) => {
       {/* <Button icon="pi pi-search" className="p-mr-2" onClick={onHandleSearchClick} /> */}
       {/* <Button icon="pi pi-plus" className="p-mr-2 p-button-success" onClick={onHandlePlus} />
             <Button icon="pi pi-trash" className="p-mr-2 p-button-danger" /> */}
-      <DialogPlus
+      {/* <DialogPlus
         visible="true"
         fetDataUser={fetDataUser}
         test2={setTestDataUser}
       >
         <h1>Test children props</h1>
-      </DialogPlus>
+      </DialogPlus> */}
     </React.Fragment>
   );
   const renderRowIndex = (rowData, column) => {

@@ -7,13 +7,14 @@ import { withRouter } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UserServices from "../../service/UserService";
-import { TIME_OUT_CLOSE_NOTIFY } from "../../constants/ConstantString";
+import {
+  EMAIL_REGEX,
+  TIME_OUT_CLOSE_NOTIFY,
+} from "../../constants/ConstantString";
 
 const AddUser = (props) => {
   // console.log("props", props);
   const { visible, onHide } = props;
-
-  
 
   const [file, setFile] = useState(null);
 
@@ -33,7 +34,7 @@ const AddUser = (props) => {
   const [fileErros, setFileErros] = useState({});
 
   const userService = new UserServices();
-  
+
   const formValidation = () => {
     // debugger
     const hotenErrors = {};
@@ -42,7 +43,7 @@ const AddUser = (props) => {
     const tendangnhapErrors = {};
     const thudientuErrors = {};
     const loaiErrors = {};
-    const fileErrors = {};
+    // const fileErrors = {};
 
     let isValid = true;
 
@@ -70,6 +71,9 @@ const AddUser = (props) => {
     if (thudientu === "") {
       thudientuErrors.thudientuRequired = "Không được bỏ trống";
       isValid = false;
+    } else if (EMAIL_REGEX.test(thudientu) === false) {
+      thudientuErrors.emailIsvalid = "Không đúng định dạng email";
+      isValid = false;
     }
 
     if (loai === "") {
@@ -77,10 +81,10 @@ const AddUser = (props) => {
       isValid = false;
     }
 
-    if (file === null || file === undefined) {
-      fileErrors.fileRequired = "Không được bỏ trống";
-      isValid = false;
-    }
+    // if (file === null || file === undefined) {
+    //   fileErrors.fileRequired = "Không được bỏ trống";
+    //   isValid = false;
+    // }
     // console.log('hotenErrors', hotenErrors)
     // console.log('diachiErrors', diachiErrors)
 
@@ -91,7 +95,7 @@ const AddUser = (props) => {
     setTendangnhapErrors(tendangnhapErrors);
     setThudientuErrors(thudientuErrors);
     setLoaiErrors(loaiErrors);
-    setFileErros(fileErrors);
+    // setFileErros(fileErrors);
 
     return isValid;
   };
@@ -136,7 +140,7 @@ const AddUser = (props) => {
     let isValid = formValidation();
     if (isValid) {
       console.log(` --SUBMITTING-- `);
-      
+
       const objUser = {
         diachi: diachi,
         hoten: hoten,
@@ -148,12 +152,15 @@ const AddUser = (props) => {
       let jsonObj = JSON.stringify(objUser);
 
       let data = new FormData();
-      data.append("file", file);
+      if (file != null) {
+        data.append("file", file);
+      }
       data.append("nguoidung", jsonObj);
 
-      // console.log('jsonObj', jsonObj)
+      console.log("jsonObj", jsonObj);
 
       const result = await userService.saveUser(data);
+      console.log("result: ", result);
       if (result && result.status === 1000) {
         let message = result.message;
         notifySuccess(message);
@@ -187,7 +194,7 @@ const AddUser = (props) => {
     setLoai("");
     setFile(null);
     setThudientu("");
-    setFile(null)
+    setFile(null);
   };
   const onResetFormInputErrors = () => {
     setHotenErrors("");
@@ -197,7 +204,7 @@ const AddUser = (props) => {
     setLoaiErrors("");
     setFile(null);
     setThudientuErrors("");
-    setFileErros("")
+    setFileErros("");
   };
 
   const onChangeFormInput = (e) => {
@@ -205,7 +212,6 @@ const AddUser = (props) => {
     const { name, value } = e.target;
     switch (name) {
       case "hoten":
-
         if (value.length > 0) {
           setHotenErrors("");
         } else {
@@ -241,6 +247,8 @@ const AddUser = (props) => {
       case "thudientu":
         if (value.length > 0) {
           setThudientuErrors("");
+        } else if (!EMAIL_REGEX.test(value)) {
+          setThudientuErrors("Không đúng định dạng email");
         } else {
           setThudientuErrors("Không được bỏ trống");
         }
@@ -282,11 +290,11 @@ const AddUser = (props) => {
     // console.log("e", e.target.files);
 
     let value = e.target.files[0];
-    if (value === null || value === undefined) {
-      setFileErros("Không được bỏ trống");
-    } else {
-      setFileErros("");
-    }
+    // if (value === null || value === undefined) {
+    //   setFileErros("Không được bỏ trống");
+    // } else {
+    //   setFileErros("");
+    // }
     let file = value === null || value === undefined ? null : value;
     setFile(file);
   };
@@ -335,7 +343,7 @@ const AddUser = (props) => {
               name="hoten"
               onChange={(e) => onChangeFormInput(e)}
             />
-            {Object.keys(hotenErrors).map((keyIndex, key) => {    
+            {Object.keys(hotenErrors).map((keyIndex, key) => {
               return (
                 <span className="errorMessage" key={key}>
                   {hotenErrors[keyIndex]}
@@ -451,19 +459,19 @@ const AddUser = (props) => {
           <div className="p-field p-col">
             <label htmlFor="base64anh">Ảnh</label>
             <InputText
-              className={Object.keys(fileErros).length > 0 ? "error" : null}
+              // className={Object.keys(fileErros).length > 0 ? "error" : null}
               id="base64anh"
               type="file"
               onChange={(e) => onHandleSelectedFile(e)}
               name="base64anh"
             />
-            {Object.keys(fileErros).map((keyIndex, key) => {
+            {/* {Object.keys(fileErros).map((keyIndex, key) => {
               return (
                 <span className="errorMessage" key={key}>
                   {fileErros[keyIndex]}
                 </span>
               );
-            })}
+            })} */}
           </div>
         </div>
       </Dialog>

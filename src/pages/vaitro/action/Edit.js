@@ -224,24 +224,25 @@ export const Edit = (props) => {
   // console.log("datachucnangct", datachucnangct);
 
   const [selectedKeys, setSelectedKeys] = useState([]);
-  // const [listUUIDChitiet, setListUUIDChitiet] = useState([]);
-  const [tenNhomQuyen, setTenNhomQuyen] = useState();  //objRoleTranfer.ten
-  const [mota, setMota] = useState(); //objRoleTranfer.id
+  
 
-  const [tenNhomQuyenErrors, setTenNhomQuyenErrors] = useState({});
+  // const [tenNhomQuyen, setTenNhomQuyen] = useState();  //objRoleTranfer.ten
+  // const [tenNhomQuyenErrors, setTenNhomQuyenErrors] = useState({});
+
+  const [mota, setMota] = useState(); //objRoleTranfer.id
   const [motaErrors, setMotaErrors] = useState({});
 
   const formValidation = () => {
-    debugger
-    const tenNhomQuyenErrors = {};
+    // debugger
+    // const tenNhomQuyenErrors = {};
     const motaErrors = {};
 
     let isValid = true;
 
-    if (tenNhomQuyen === "") {
-      tenNhomQuyenErrors.tenNhomQuyenRequired = "Không được bỏ trống";
-      isValid = false;
-    }
+    // if (tenNhomQuyen === "") {
+    //   tenNhomQuyenErrors.tenNhomQuyenRequired = "Không được bỏ trống";
+    //   isValid = false;
+    // }
 
     if (mota === "") {
       motaErrors.motaRequired = "Không được bỏ trống";
@@ -249,7 +250,7 @@ export const Edit = (props) => {
     }
     //=====================
 
-    setTenNhomQuyenErrors(tenNhomQuyenErrors);
+    // setTenNhomQuyenErrors(tenNhomQuyenErrors);
     setMotaErrors(motaErrors);
 
     return isValid;
@@ -280,12 +281,12 @@ export const Edit = (props) => {
   }
 
   const onResetFormInputErrors = () => {
-    setTenNhomQuyenErrors("");
+    // setTenNhomQuyenErrors("");
     setMotaErrors("");
   };
 
   const onResetFormInput = () => {
-    setTenNhomQuyen("");
+    // setTenNhomQuyen("");
     setMota("");
   };
 
@@ -328,12 +329,12 @@ export const Edit = (props) => {
     console.log("arrayIdChucNangCT", arrayIdChucNangCT);
 
     const dataBody = {
-      ten:
-        tenNhomQuyen === null ||
-        tenNhomQuyen === undefined ||
-        tenNhomQuyen === ""
-          ? objRoleTranfer.ten
-          : tenNhomQuyen,
+      // ten:
+      //   tenNhomQuyen === null ||
+      //   tenNhomQuyen === undefined ||
+      //   tenNhomQuyen === ""
+      //     ? objRoleTranfer.ten
+      //     : tenNhomQuyen,
       mota:
         mota === null || mota === undefined || mota === ""
           ? objRoleTranfer.mota
@@ -431,12 +432,12 @@ export const Edit = (props) => {
   //   return arrayReturnKey;
   // }
 
-  function handleOnChangeTenNhomQuyen(e) {
-    // console.log("e", e.target.value);
-    let value = e.target.value;
-    // console.log('value', value)
-    setTenNhomQuyen(value);
-  }
+  // function handleOnChangeTenNhomQuyen(e) {
+  //   // console.log("e", e.target.value);
+  //   let value = e.target.value;
+  //   // console.log('value', value)
+  //   setTenNhomQuyen(value);
+  // }
 
   function handleOnChangeMota(e) {
     let value = e.target.value;
@@ -599,23 +600,32 @@ export const Edit = (props) => {
     let { name, value } = e.target;
     // console.log("handleBlur", e);
 
-    switch (name) {
-      case "tenNhomQuyen":
-        if (value.length < 0) {
-          setTenNhomQuyenErrors("Không được bỏ trống");
-        } else {
-          setTenNhomQuyenErrors("");
-        }
-        setTenNhomQuyen(value);
-        break;
-      default:
-        if (value.length < 0) {
-          setMotaErrors("Không được bỏ trống");
-        } else {
-          setMotaErrors("");
-        }
-        setMota(value);
+    if (name === 'mota') {
+      if (value.length < 0) {
+        setMotaErrors("Không được bỏ trống");
+      } else {
+        setMotaErrors("");
+      }
+      setMota(value);
     }
+
+    // switch (name) {
+    //   case "tenNhomQuyen":
+    //     // if (value.length < 0) {
+    //     //   setTenNhomQuyenErrors("Không được bỏ trống");
+    //     // } else {
+    //     //   setTenNhomQuyenErrors("");
+    //     // }
+    //     // setTenNhomQuyen(value);
+    //     break;
+    //   default:
+    //     if (value.length < 0) {
+    //       setMotaErrors("Không được bỏ trống");
+    //     } else {
+    //       setMotaErrors("");
+    //     }
+    //     setMota(value);
+    // }
   };
 
   return (
@@ -639,7 +649,7 @@ export const Edit = (props) => {
         footer={renderFooter("displayBasic")}
       >
         <div className="p-fluid p-formgrid p-grid">
-          <div className="p-field p-col">
+          {/* <div className="p-field p-col">
             <label htmlFor="tenNhomQuyen">Tên nhóm quyền</label>
             <InputText
               className={
@@ -661,7 +671,7 @@ export const Edit = (props) => {
                 </span>
               );
             })}
-          </div>
+          </div> */}
           <div className="p-field p-col">
             <label htmlFor="mota">Mô tả</label>
             <InputText
