@@ -61,6 +61,9 @@ const AddUser = (props) => {
     if (sodienthoai === "") {
       sodienthoaiErrors.sodienthoaiRequired = "Không được bỏ trống";
       isValid = false;
+    } else if (String(sodienthoai).length < 0 && String(sodienthoai).length > 10) {
+      sodienthoaiErrors.sodienthoaiLength = "Số điện thoại phải gồm có 10 số";
+      isValid = false;
     }
 
     if (tendangnhap === "") {
@@ -152,14 +155,18 @@ const AddUser = (props) => {
       let jsonObj = JSON.stringify(objUser);
 
       let data = new FormData();
+      let result;
       if (file != null) {
+        console.log('co file ')
         data.append("file", file);
+        data.append("nguoidung", jsonObj);
+        result = await userService.saveUserHasFile(data);
+      } else {
+        console.log('khong co file ')
+        data.append("nguoidung", jsonObj);
+        result = await userService.saveUserDontHasFile(data);
       }
-      data.append("nguoidung", jsonObj);
-
       console.log("jsonObj", jsonObj);
-
-      const result = await userService.saveUser(data);
       console.log("result: ", result);
       if (result && result.status === 1000) {
         let message = result.message;
@@ -298,19 +305,6 @@ const AddUser = (props) => {
     let file = value === null || value === undefined ? null : value;
     setFile(file);
   };
-
-  // const convertBase64 = (file) => {
-  //   return new Promise((resolve, reject) => {
-  //     const fileReader = new FileReader();
-  //     fileReader.readAsDataURL(file);
-  //     fileReader.onload = () => {
-  //       resolve(fileReader.result);
-  //     };
-  //     fileReader.onerror = (error) => {
-  //       reject(error);
-  //     };
-  //   });
-  // };
 
   return (
     <div>

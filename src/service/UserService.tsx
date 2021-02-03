@@ -20,16 +20,29 @@ class UserServices extends FetchAPI {
     return await this.request(url, dataSearch, TypeMethodConstantEnum.POST);
   }
 
-  public async saveUser(formData: any) {
+  public async saveUserHasFile(formData: any) {
+    let url = `${PREFIX_URL_USER_ADD_EDIT_DELETE}/themfile`;
+    return await this.request(url, formData, TypeMethodConstantEnum.POST);
+  }
+
+  public async saveUserDontHasFile(formData: any) {
     let url = `${PREFIX_URL_USER_ADD_EDIT_DELETE}/them`;
-
     return await this.request(url, formData, TypeMethodConstantEnum.POST);
   }
 
-  public async editUser(id: any, formData: any) {
+
+
+  public async editUserDontHasFile(id: any, formData: any) {
     let url = `${PREFIX_URL_USER_ADD_EDIT_DELETE}/sua/${id}`;
-
     return await this.request(url, formData, TypeMethodConstantEnum.POST);
   }
+
+  public async editUserHasFile(id: any, formData: any) {
+    let url = `${PREFIX_URL_USER_ADD_EDIT_DELETE}/suafile/${id}`;
+    return await this.request(url, formData, TypeMethodConstantEnum.POST);
+  }
+
+
+
 }
 export default UserServices;

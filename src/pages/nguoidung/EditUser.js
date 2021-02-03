@@ -4,7 +4,7 @@ import { InputText } from "primereact/inputtext";
 import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { EXPRITIME_HIDER_LOADER, TIME_OUT_CLOSE_NOTIFY } from "../../constants/ConstantString";
+import { EMAIL_REGEX, EXPRITIME_HIDER_LOADER, TIME_OUT_CLOSE_NOTIFY } from "../../constants/ConstantString";
 import UserServices from "../../service/UserService";
 import "./user.css";
 
@@ -101,14 +101,14 @@ const EditUser = (props) => {
             : diachi,
         sodienthoai:
           sodienthoai === "" ||
-          sodienthoai === undefined ||
-          sodienthoai === null
+            sodienthoai === undefined ||
+            sodienthoai === null
             ? userObj.sodienthoai
             : sodienthoai,
         tendangnhap:
           tendangnhap === "" ||
-          tendangnhap === undefined ||
-          tendangnhap === null
+            tendangnhap === undefined ||
+            tendangnhap === null
             ? userObj.tendangnhap
             : tendangnhap,
         thudientu:
@@ -126,13 +126,25 @@ const EditUser = (props) => {
       let jsonObj = JSON.stringify(objUser);
 
       let data = new FormData();
-      data.append("file", file);
-      data.append("nguoidung", jsonObj);
-
+      let result;
       let id = userObj.id;
       console.log("id", id);
+      if (file != null) {
+        console.log('co file ')
+        data.append("file", file);
+        data.append("nguoidung", jsonObj);
+        result = await userService.editUserHasFile(id, data);
+      } else {
+        console.log('khong co file ')
+        data.append("nguoidung", jsonObj);
+        result = await userService.editUserDontHasFile(id, data);
+      }
 
-      const result = await userService.editUser(id, data);
+      console.log('result', result)
+
+
+
+
       if (result && result.status === 1000) {
         let message = result.message;
         notifySuccess(message);
@@ -142,7 +154,6 @@ const EditUser = (props) => {
       } else {
         console.log("result", result);
         let message = result.message;
-
         notifyError(message);
       }
 
@@ -165,7 +176,7 @@ const EditUser = (props) => {
     const tendangnhapErrors = {};
     const thudientuErrors = {};
     const loaiErrors = {};
-    const fileErrors = {};
+    // const fileErrors = {};
 
     let isValid = true;
 
@@ -184,14 +195,21 @@ const EditUser = (props) => {
       sodienthoaiErrors.hotenRequired = "Không được bỏ trống";
       isValid = false;
     }
+    // else if (String(sodienthoai).length < 0 && String(sodienthoai).length > 10) {
+    //   sodienthoaiErrors.sodienthoaiLength = "Số điện thoại phải gồm có 10 số";
+    //   isValid = false;
+    // }
 
     if (tendangnhap === "") {
       tendangnhapErrors.hotenRequired = "Không được bỏ trống";
       isValid = false;
     }
 
-    if (thudientu === "" || thudientu === undefined) {
-      thudientuErrors.hotenRequired = "Không được bỏ trống";
+    if (thudientu === "") {
+      thudientuErrors.thudientuRequired = "Không được bỏ trống";
+      isValid = false;
+    } else if (EMAIL_REGEX.test(thudientu) === false) {
+      thudientuErrors.emailIsvalid = "Không đúng định dạng email";
       isValid = false;
     }
 
@@ -200,10 +218,10 @@ const EditUser = (props) => {
       isValid = false;
     }
 
-    if (file === null) {
-      fileErrors.hotenRequired = "Không được bỏ trống";
-      isValid = false;
-    }
+    // if (file === null) {
+    //   fileErrors.hotenRequired = "Không được bỏ trống";
+    //   isValid = false;
+    // }
 
     setHotenErrors(hotenErrors);
     setDiachiErrors(diachiErrors);
@@ -212,7 +230,7 @@ const EditUser = (props) => {
     setTendangnhapErrors(tendangnhapErrors);
     setThudientuErrors(thudientuErrors);
     setLoaiErrors(loaiErrors);
-    setFileErrors(fileErrors);
+    // setFileErrors(fileErrors);
 
     return isValid;
   };
@@ -238,6 +256,7 @@ const EditUser = (props) => {
         setDiachi(value);
         break;
       case "sodienthoai":
+        console.log('value', value)
         if (value.length > 0) {
           setSodienthoaiErrors("");
         } else {
@@ -256,6 +275,8 @@ const EditUser = (props) => {
       case "thudientu":
         if (value.length > 0) {
           setThudientuErrors("");
+        } else if (!EMAIL_REGEX.test(value)) {
+          setThudientuErrors("Không đúng định dạng email");
         } else {
           setThudientuErrors("Không được bỏ trống");
         }
@@ -387,7 +408,7 @@ const EditUser = (props) => {
             <label htmlFor="sodienthoai">Số điện thoại</label>
             <InputText
               id="sodienthoai"
-              type="text"
+              type="number"
               defaultValue={userObj.sodienthoai}
               name="sodienthoai"
               onChange={(e) => onChangeFormInput(e)}
@@ -465,13 +486,13 @@ const EditUser = (props) => {
               onChange={(e) => onHandleSelectedFile(e)}
               name="base64anh"
             />
-            {Object.keys(fileErrors).map((keyIndex, key) => {
+            {/* {Object.keys(fileErrors).map((keyIndex, key) => {
               return (
                 <span className="errorMessage" key={key}>
                   {fileErrors[keyIndex]}
                 </span>
               );
-            })}
+            })} */}
           </div>
         </div>
       </Dialog>
