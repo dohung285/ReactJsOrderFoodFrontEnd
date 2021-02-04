@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import UserServices from "../../service/UserService";
 import {
   EMAIL_REGEX,
+  EXPRITIME_HIDER_LOADER,
   TIME_OUT_CLOSE_NOTIFY,
 } from "../../constants/ConstantString";
 
@@ -173,11 +174,14 @@ const AddUser = (props) => {
         notifySuccess(message);
         onResetFormInput();
         onResetFormInputErrors();
-        props.fetDataUser();
+        setTimeout(function () {
+          props.fetDataUser();
+        },EXPRITIME_HIDER_LOADER)
       } else {
         console.log("result", result);
         let message = result.message;
         notifyError(message);
+        return;
       }
     } else {
       console.error("FORM INVALID - DISPLAY ERROR MESSAGE");
