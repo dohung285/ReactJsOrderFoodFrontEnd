@@ -58,56 +58,56 @@ const AddBusiness = (props) => {
         const tencoquanthueErrors = {}
         let isValid = true;
 
-            if (
-                adData.mst === ''
-                || adData.mst === null
-                || adData.mst === undefined
-            ) {
+        if (
+            adData.mst === ''
+            || adData.mst === null
+            || adData.mst === undefined
+        ) {
 
-                mstErrors.mstRequired = "Không được bỏ trống";
-                isValid = false;
-            }
+            mstErrors.mstRequired = "Không được bỏ trống";
+            isValid = false;
+        }
 
-            if (adData.thudientu === ''
-                || adData.thudientu == null
-                || adData.thudientu == undefined
-            ) {
-                thudientuErrors.thudientuRequired = "Không được bỏ trống";
-                isValid = false;
-            }
-            //=====================
+        if (adData.thudientu === ''
+            || adData.thudientu == null
+            || adData.thudientu == undefined
+        ) {
+            thudientuErrors.thudientuRequired = "Không được bỏ trống";
+            isValid = false;
+        }
+        //=====================
 
-            if (
-                adData.tendoanhnghiep === ''
-                || adData.tendoanhnghiep == null
-                || adData.tendoanhnghiep == undefined
-            ) {
-                tendoanhnghiepErrors.tendoanhnghiepRequired = "Không được bỏ trống";
-                isValid = false;
-            }
+        if (
+            adData.tendoanhnghiep === ''
+            || adData.tendoanhnghiep == null
+            || adData.tendoanhnghiep == undefined
+        ) {
+            tendoanhnghiepErrors.tendoanhnghiepRequired = "Không được bỏ trống";
+            isValid = false;
+        }
 
-            if (
-                adData.tencoquanthue === ''
-                || adData.tencoquanthue == null
-                || adData.tencoquanthue == undefined
-            ) {
-                tencoquanthueErrors.tencoquanthueRequired = "Không được bỏ trống";
-                isValid = false;
-            }
+        if (
+            adData.tencoquanthue === ''
+            || adData.tencoquanthue == null
+            || adData.tencoquanthue == undefined
+        ) {
+            tencoquanthueErrors.tencoquanthueRequired = "Không được bỏ trống";
+            isValid = false;
+        }
 
-            if (
-                adData.sodienthoai === ''
-                || adData.sodienthoai == null
-                || adData.sodienthoai == undefined
-            ) {
-                sodienthoaiErrors.sodienthoaiRequired = "Không được bỏ trống";
-                isValid = false;
-            }
-            setMstErrors(mstErrors);
-            setTendoanhnghiepErrors(tendoanhnghiepErrors);
-            setThudientuErrors(thudientuErrors);
-            setTencoquanthueErrors(tencoquanthueErrors)
-            setSodienthoaiErrors(sodienthoaiErrors)
+        if (
+            adData.sodienthoai === ''
+            || adData.sodienthoai == null
+            || adData.sodienthoai == undefined
+        ) {
+            sodienthoaiErrors.sodienthoaiRequired = "Không được bỏ trống";
+            isValid = false;
+        }
+        setMstErrors(mstErrors);
+        setTendoanhnghiepErrors(tendoanhnghiepErrors);
+        setThudientuErrors(thudientuErrors);
+        setTencoquanthueErrors(tencoquanthueErrors)
+        setSodienthoaiErrors(sodienthoaiErrors)
         return isValid;
     }
 
