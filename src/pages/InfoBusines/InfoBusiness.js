@@ -79,7 +79,8 @@ const ThongTinDoanhNghiep = (props) => {
     const [viewEditInfoBussiness, setViewEditInfoBussiness] = useState(false);
     const [showInfoBussinessById, setShowInfoBussinessById] = useState();
     const [loader, showLoader, hideLoader] = useFullPageLoader();
-    
+
+    // function search data
     const fetDataInfoBusiness = async () => {
         showLoader()
         const result = await service.getDataInfoBusiness({ ...paginate, ...search, ...trangthai });
@@ -91,13 +92,11 @@ const ThongTinDoanhNghiep = (props) => {
     };
 
 
-    const handleEditInfoBussiness = (rowData) => {
-        setShowInfoBussinessById(rowData);
-        console.log('rowData: ', rowData);
-        // setViewEditInfoBussiness(true)
-        setViewDialog(true);
+    // const handleEditInfoBussiness = (rowData) => {
+    //     setShowInfoBussinessById(rowData);
+    //     setViewDialog(true);
 
-    }
+    // }
     useEffect(() => {
         fetDataInfoBusiness();
         // eslint-disable-next-line
@@ -121,6 +120,23 @@ const ThongTinDoanhNghiep = (props) => {
         setErrdata({});
         setVisibleDialog(false);
     }
+// function Refresh 
+    const onHandleRefresh = () => {
+        props.history.push({
+          search: "",
+        });
+        setSearch({
+          trangthai: "",
+          search: "",
+        });
+    
+        setPaginate({
+          page: 0,
+          size: 10,
+        });
+    
+        setSearch("");
+      };
 
 
     const onHandleChangeSearch = (e) => {
@@ -140,6 +156,14 @@ const ThongTinDoanhNghiep = (props) => {
     const hidenDialog = () => {
         setViewDialog(false);
         setViewEditInfoBussiness(false)
+    };
+
+    const onHandleSearchClick = () => {
+        const dataSearch = queryStringToJSON(props.location.search);
+        const dataSearchQueryString = convertJsonToQueryString({ ...dataSearch, ...search, ...trangthai });
+        props.history.push({
+            search: dataSearchQueryString,
+        })
     };
 
     const leftContents = (
@@ -167,15 +191,12 @@ const ThongTinDoanhNghiep = (props) => {
                 name={"trangthai"}
                 showClear
             />
+            <Button icon="pi pi-search" className="p-mr-2" onClick={onHandleSearchClick} />
+            <Button icon="pi pi-refresh" className="p-mr-2 p-button-help" onClick={onHandleRefresh} />
+            <Button icon="pi pi-plus" className="p-mr-2 p-button-success" onClick={onCreateClick} />
         </React.Fragment>
     );
-    const onHandleSearchClick = () => {
-        const dataSearch = queryStringToJSON(props.location.search);
-        const dataSearchQueryString = convertJsonToQueryString({ ...dataSearch, ...search, ...trangthai });
-        props.history.push({
-            search: dataSearchQueryString,
-        })
-    };
+
     const onPageChange = (event) => {
         setFirst(event.first);
         setPaginate({ ...paginate, size: event.rows, page: event.page });
@@ -195,12 +216,6 @@ const ThongTinDoanhNghiep = (props) => {
     };
 
 
-    const rightContents = (
-        <React.Fragment>
-            <Button icon="pi pi-search" className="p-mr-2" onClick={onHandleSearchClick} />
-            <Button icon="pi pi-plus" className="p-mr-2 p-button-success" onClick={onCreateClick} />
-        </React.Fragment>
-    );
     const renderRowIndex = (rowData, column) => {
         return column.rowIndex + 1 + first;
     };
@@ -229,7 +244,7 @@ const ThongTinDoanhNghiep = (props) => {
             <div className={"card"}>
                 <div className={"card-header"}>
                     <h1>Danh sách doanh nghiệp</h1>
-                    <Toolbar left={leftContents} right={rightContents} />
+                    <Toolbar left={leftContents}  />
                 </div>
                 <div className={"card-body"}>
                     <DataTable

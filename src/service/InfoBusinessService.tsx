@@ -23,7 +23,6 @@ class InfoBusinessService extends FetchAPI {
     }
     public async saveInfoBusiness(data : any){
         let url = `${PREFIX_ADD}/save`;
-        console.log(url)
         return await this.request(
             url,
             data,

@@ -1,33 +1,29 @@
 import { Button } from 'primereact/button';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext'
 import InfoBusinessService from '../../../service/InfoBusinessService';
 import { RadioButton } from 'primereact/radiobutton';
-import { FileUpload } from 'primereact/fileupload';
-import { useForm } from "react-hook-form";
 import './errors.css'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const AddBusiness = (props) => {
-    const { register, handleSubmit, errors } = useForm();
     const {
-        visible, onHideDialog, errData, setErrdata, fetDataInfoBusiness, typeAd,
+        visible, onHideDialog,
+        fetDataInfoBusiness, typeAd,
         adData, setAdData
     } = props;
-    const [file, setFile] = useState(null)
 
+    const [file, setFile] = useState("")
+    // state check errors
     const [mstErrors, setMstErrors] = useState({})
     const [thudientuErrors, setThudientuErrors] = useState({})
     const [tendoanhnghiepErrors, setTendoanhnghiepErrors] = useState({})
-    const [logoErrors, setLogoErrors] = useState({})
+    const [tencoquanthueErrors, setTencoquanthueErrors] = useState({})
+    const [sodienthoaiErrors, setSodienthoaiErrors] = useState({})
     const service = new InfoBusinessService();
-    // const toast = useRef(null);
-
-
-    // Thêm 2 function 
-
+    // show message success
     const notifySuccess = (message) => {
         toast.success(`✔👌👌😘😘😘 ${message}`, {
             position: "top-right",
@@ -39,7 +35,7 @@ const AddBusiness = (props) => {
             progress: undefined,
         });
     };
-
+    // show message errors
     const notifyError = (message) => {
         toast.error(`😢😢😢😢😢😢 ${message}`, {
             position: "top-right",
@@ -54,56 +50,139 @@ const AddBusiness = (props) => {
 
 
 
-
+    // check form after submit form
     const formValidation = () => {
         const mstErrors = {}
         const thudientuErrors = {}
         const tendoanhnghiepErrors = {}
-        const logoErrors = {}
-
+        const tencoquanthueErrors = {}
         let isValid = true;
 
-        if (adData.mst === '') { // cái này em lấy value của mst để kiểm tra ấy a
+            if (
+                adData.mst === ''
+                || adData.mst === null
+                || adData.mst === undefined
+            ) {
 
-            mstErrors.hotenRequired = "Không được bỏ trống";
-            isValid = false;
-        }
+                mstErrors.mstRequired = "Không được bỏ trống";
+                isValid = false;
+            }
 
-        if (adData.thudientu === '') {
-            thudientuErrors.hotenRequired = "Không được bỏ trống";
-            isValid = false;
-        }
-        //=====================
+            if (adData.thudientu === ''
+                || adData.thudientu == null
+                || adData.thudientu == undefined
+            ) {
+                thudientuErrors.thudientuRequired = "Không được bỏ trống";
+                isValid = false;
+            }
+            //=====================
 
-        if (adData.tendoanhnghiep === '') {
-            tendoanhnghiepErrors.hotenRequired = "Không được bỏ trống";
-            isValid = false;
-        }
+            if (
+                adData.tendoanhnghiep === ''
+                || adData.tendoanhnghiep == null
+                || adData.tendoanhnghiep == undefined
+            ) {
+                tendoanhnghiepErrors.tendoanhnghiepRequired = "Không được bỏ trống";
+                isValid = false;
+            }
 
-        if (adData.logo === '') {
-            logoErrors.hotenRequired = "Không được bỏ trống";
-            isValid = false;
-        }
+            if (
+                adData.tencoquanthue === ''
+                || adData.tencoquanthue == null
+                || adData.tencoquanthue == undefined
+            ) {
+                tencoquanthueErrors.tencoquanthueRequired = "Không được bỏ trống";
+                isValid = false;
+            }
 
-
-        //chưa set object lỗi chô này à???
-        setMstErrors(mstErrors);
-        setTendoanhnghiepErrors(tendoanhnghiepErrors);
-        setThudientuErrors(thudientuErrors);
-
-
+            if (
+                adData.sodienthoai === ''
+                || adData.sodienthoai == null
+                || adData.sodienthoai == undefined
+            ) {
+                sodienthoaiErrors.sodienthoaiRequired = "Không được bỏ trống";
+                isValid = false;
+            }
+            setMstErrors(mstErrors);
+            setTendoanhnghiepErrors(tendoanhnghiepErrors);
+            setThudientuErrors(thudientuErrors);
+            setTencoquanthueErrors(tencoquanthueErrors)
+            setSodienthoaiErrors(sodienthoaiErrors)
         return isValid;
     }
 
 
     const updateField = (data, field) => {
+        // check phone number
+        function is_phonenumber(phonenumber) {
+            var phoneno = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/;
+            if (phonenumber.match(phoneno)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        // check email
+        function validateEmail(email) {
+            var reg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+            if (email.match(reg)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        switch (field) {
+            case "mst":
+                if (data.trim().length > 0 && data !== null) {
+                    setMstErrors("");
+                } else {
+                    setMstErrors("Không được bỏ trống");
+                }
+                break;
+
+            case "thudientu":
+                if (validateEmail(data) && data !== null) {
+
+                    setThudientuErrors("");
+                } else {
+                    setThudientuErrors("Vui lòng nhập đúng định dạng Email !");
+                }
+                break;
+
+            case "tendoanhnghiep":
+                if (data.trim().length > 0 && data !== null) {
+                    setTendoanhnghiepErrors("");
+                } else {
+                    setTendoanhnghiepErrors("Không được bỏ trống");
+                }
+                break;
+
+            case "sodienthoai":
+                if (is_phonenumber(data) && data !== null) {
+                    setSodienthoaiErrors("");
+                } else {
+                    setSodienthoaiErrors("không đúng định dạng");
+                }
+                break;
+
+            case "tencoquanthue":
+                if (data.trim().length > 0 && data !== null) {
+                    setTencoquanthueErrors("");
+                } else {
+                    setTencoquanthueErrors("Không được bỏ trống");
+                }
+                break;
+
+        }
         setAdData({
             ...adData,
             [field]: data,
         });
-
     };
 
+    // get name upload file
     const onBasicUpload = (e) => {
         let fileName =
             e.target.files[0] === null || e.target.files[0] === undefined
@@ -112,63 +191,34 @@ const AddBusiness = (props) => {
         setFile(fileName);
     }
 
-
-    // const showSuccess = (message) => {
-    //     toast.current.show({
-    //         severity: "success",
-    //         summary: "Success Message",
-    //         detail: message,
-    //         life: 3000,
-    //     });
-    // };
-
-    // const showError = (message) => {
-    //     toast.current.show({
-    //         severity: "error",
-    //         summary: "Error Message",
-    //         detail: message,
-    //         life: 3000,
-    //     });
-    // };
-
-
-    onchange = (e) => {
-        let field = e.target.name;
-        let data = e.target.value;
-        console.log(data)
-        setAdData({
-            ...adData,
-            [field]: data
-        })
-    }
-
     async function handleOnYesDialog() {
+        //convert object to json
         let jsonObj = JSON.stringify(adData);
         let data = new FormData();
         data.append("file", file);
         data.append("ttdn", jsonObj);
-
         let isValid = formValidation();
         if (isValid) {
             if (typeAd == 1) {
-                console.log(data.ttdn)
+                // function save
                 const result = await service.saveInfoBusiness(data);
                 if (result && result.status === 1000) {
-                    let message = result.message;
                     setTimeout(fetDataInfoBusiness, 1000); // đợi 0.5s sau mới gọi hàm fetData()
                     onHideDialog();
+                    let message = result.message;
+                    notifySuccess(message)
                 } else {
                     let message = result.message;
-                    console.log(message)
                     notifyError(message)
-                    // showError(message);
                 }
             } else {
+                // function update
                 const result = await service.updateInfoBusiness(adData.id, data)
                 if (result && result.status === 1000) {
-                    let message = result.message;
                     setTimeout(fetDataInfoBusiness, 500); // đợi 0.5s sau mới gọi hàm fetData()
                     onHideDialog();
+                    let message = result.message;
+                    notifySuccess(message)
                 } else {
                     let message = result.message;
                     notifyError(message);
@@ -184,14 +234,12 @@ const AddBusiness = (props) => {
                 <Button
                     label="No"
                     icon="pi pi-times"
-                    // onClick={onHideDialog}
                     onClick={onHideDialog}
                     className="p-button-text"
                 />
                 <Button
                     label="Yes"
                     icon="pi pi-check"
-                    // onClick={() => onHide(name)}
                     onClick={handleOnYesDialog}
                     autoFocus
                 />
@@ -218,7 +266,7 @@ const AddBusiness = (props) => {
                 visible={visible}
                 onHide={onHideDialog}
                 footer={renderFooter} >
-                <form onSubmit={handleSubmit(handleOnYesDialog)}>
+                <form onSubmit={handleOnYesDialog}>
                     <div className="p-fluid p-formgrid p-grid">
                         <div className="p-field p-col">
                             <label htmlFor="mst" >Mã số thuế</label>
@@ -330,6 +378,9 @@ const AddBusiness = (props) => {
                                 value={adData.tencoquanthue || ""}
                                 onChange={(e) => updateField(e.target.value, 'tencoquanthue')}
                             />
+                            {Object.keys(tencoquanthueErrors).map((keyIndex, key) => {
+                                return <span className="errorMessage" key={key} >{tencoquanthueErrors[keyIndex]}</span>
+                            })}
                         </div>
                         <div className="p-field p-col">
                             <label htmlFor="logo" >Logo</label>
@@ -380,6 +431,9 @@ const AddBusiness = (props) => {
                                 name="sodienthoai"
                                 onChange={(e) => updateField(e.target.value, 'sodienthoai')}
                                 value={adData.sodienthoai || ""} />
+                            {Object.keys(sodienthoaiErrors).map((keyIndex, key) => {
+                                return <span className="errorMessage" key={key} >{sodienthoaiErrors[keyIndex]}</span>
+                            })}
                         </div>
                     </div>
                 </form>
