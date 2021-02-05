@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { EXPRITIME_HIDER_LOADER } from "../../../constants/ConstantString";
+import { EXPRITIME_HIDER_LOADER, MESSAGE_REQUIRE, TIME_OUT_CLOSE_NOTIFY } from "../../../constants/ConstantString";
 import RoleService from "../../../service/RoleService";
 import "../css/style.scss";
 import "./action.css";
@@ -38,12 +38,12 @@ const Add = (props) => {
     let isValid = true;
 
     if (tenNhomQuyen === '') {
-      tenNhomQuyenErrors.tenNhomQuyenRequired = "Không được bỏ trống";
+      tenNhomQuyenErrors.tenNhomQuyenRequired = MESSAGE_REQUIRE;
       isValid = false;
     }
 
     if (mota === '') {
-      motaErrors.motaRequired = "Không được bỏ trống";
+      motaErrors.motaRequired = MESSAGE_REQUIRE;
       isValid = false;
     }
     //=====================
@@ -59,7 +59,7 @@ const Add = (props) => {
   const notifySuccess = (message) => {
     toast.success(`🦄 ${message}`, {
       position: "top-right",
-      autoClose: 2000,
+      autoClose: TIME_OUT_CLOSE_NOTIFY,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -71,7 +71,7 @@ const Add = (props) => {
   const notifyError = (message) => {
     toast.error(`🦄 ${message}`, {
       position: "top-right",
-      autoClose: 2000,
+      autoClose: TIME_OUT_CLOSE_NOTIFY,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -214,7 +214,7 @@ const Add = (props) => {
     if (value.length > 0) {
       setTenNhomQuyenErrors("")
     } else {
-      setTenNhomQuyenErrors("Không được bỏ trống")
+      setTenNhomQuyenErrors(MESSAGE_REQUIRE)
     }
     setTenNhomQuyen(value)
 
@@ -225,7 +225,7 @@ const Add = (props) => {
     if (value.length > 0) {
       setMotaErrors("")
     } else {
-      setMotaErrors("Không được bỏ trống")
+      setMotaErrors(MESSAGE_REQUIRE)
     }
     setMota(value)
   }
@@ -234,7 +234,7 @@ const Add = (props) => {
     <div>
       <ToastContainer
         position="top-right"
-        autoClose={5000}
+        autoClose={TIME_OUT_CLOSE_NOTIFY}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

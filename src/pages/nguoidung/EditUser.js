@@ -8,6 +8,8 @@ import { toast, ToastContainer } from "react-toastify";
 import {
   EMAIL_REGEX,
   EXPRITIME_HIDER_LOADER,
+  MESSAGE_EMAIL_FORMAT_ERROR,
+  MESSAGE_REQUIRE,
   TIME_OUT_CLOSE_NOTIFY,
 } from "../../constants/ConstantString";
 import UserServices from "../../service/UserService";
@@ -63,7 +65,7 @@ const EditUser = (props) => {
   };
 
   function handleOnCloseDialog() {
-    setActiveIndex(null)
+    setActiveIndex(null);
     onResetFormInputErrors();
     onResetFormInput();
     onHide();
@@ -103,40 +105,7 @@ const EditUser = (props) => {
         thudientu: thudientu,
         loai: loai,
       };
-
-      // const objUser = {
-      //   hoten:
-      //     hoten === "" || hoten === undefined || hoten === null
-      //       ? userObj.hoten
-      //       : hoten,
-      //   diachi:
-      //     diachi === "" || diachi === undefined || diachi === null
-      //       ? userObj.diachi
-      //       : diachi,
-      //   sodienthoai:
-      //     sodienthoai === "" ||
-      //     sodienthoai === undefined ||
-      //     sodienthoai === null
-      //       ? userObj.sodienthoai
-      //       : sodienthoai,
-      //   tendangnhap:
-      //     tendangnhap === "" ||
-      //     tendangnhap === undefined ||
-      //     tendangnhap === null
-      //       ? userObj.tendangnhap
-      //       : tendangnhap,
-      //   thudientu:
-      //     thudientu === "" || thudientu === undefined || thudientu === null
-      //       ? userObj.thudientu
-      //       : thudientu,
-      //   loai:
-      //     loai === "" || loai === undefined || loai === null
-      //       ? userObj.loai
-      //       : loai,
-      // };
-
-      console.log("objUser", objUser);
-
+      //console.log("objUser", objUser);
       let jsonObj = JSON.stringify(objUser);
 
       let data = new FormData();
@@ -168,8 +137,6 @@ const EditUser = (props) => {
       }
       onHide(name);
     }
-
-    console.log("hoten", hoten);
   };
 
   const formValidation = () => {
@@ -185,23 +152,19 @@ const EditUser = (props) => {
     let isValid = true;
     // debugger;
 
-    //Khởi tạo giá trị cho các ô input
-    // setHoten(userObj.hoten);
-    // setDiachi(userObj.diachi);
-
     if (hoten === "") {
-      hotenErrors.hotenRequired = "Không được bỏ trống";
+      hotenErrors.hotenRequired = MESSAGE_REQUIRE;
       isValid = false;
     }
 
     if (diachi === "") {
-      diachiErrors.hotenRequired = "Không được bỏ trống";
+      diachiErrors.hotenRequired = MESSAGE_REQUIRE;
       isValid = false;
     }
     //=====================
 
     if (sodienthoai === "") {
-      sodienthoaiErrors.hotenRequired = "Không được bỏ trống";
+      sodienthoaiErrors.hotenRequired = MESSAGE_REQUIRE;
       isValid = false;
     }
     // else if (String(sodienthoai).length < 0 && String(sodienthoai).length > 10) {
@@ -215,15 +178,15 @@ const EditUser = (props) => {
     // }
 
     if (thudientu === "") {
-      thudientuErrors.thudientuRequired = "Không được bỏ trống";
+      thudientuErrors.thudientuRequired = MESSAGE_REQUIRE;
       isValid = false;
     } else if (EMAIL_REGEX.test(thudientu) === false) {
-      thudientuErrors.emailIsvalid = "Không đúng định dạng email";
+      thudientuErrors.emailIsvalid = MESSAGE_EMAIL_FORMAT_ERROR;
       isValid = false;
     }
 
     if (loai === "") {
-      loaiErrors.hotenRequired = "Không được bỏ trống";
+      loaiErrors.hotenRequired = MESSAGE_REQUIRE;
       isValid = false;
     }
 
@@ -252,7 +215,7 @@ const EditUser = (props) => {
         if (value.length > 0) {
           setHotenErrors("");
         } else {
-          setHotenErrors("Không được bỏ trống");
+          setHotenErrors(MESSAGE_REQUIRE);
         }
         setHoten(value);
         break;
@@ -260,7 +223,7 @@ const EditUser = (props) => {
         if (value.length > 0) {
           setDiachiErrors("");
         } else {
-          setDiachiErrors("Không được bỏ trống");
+          setDiachiErrors(MESSAGE_REQUIRE);
         }
         setDiachi(value);
         break;
@@ -269,25 +232,17 @@ const EditUser = (props) => {
         if (value.length > 0) {
           setSodienthoaiErrors("");
         } else {
-          setSodienthoaiErrors("Không được bỏ trống");
+          setSodienthoaiErrors(MESSAGE_REQUIRE);
         }
         setSodienthoai(value);
         break;
-      // case "tendangnhap":
-      //   if (value.length > 0) {
-      //     setTendangnhapErrors("");
-      //   } else {
-      //     setTendangnhapErrors("Không được bỏ trống");
-      //   }
-      //   setTendangnhap(value);
-      //   break;
       case "thudientu":
         if (value.length > 0) {
           setThudientuErrors("");
         } else if (!EMAIL_REGEX.test(value)) {
-          setThudientuErrors("Không đúng định dạng email");
+          setThudientuErrors(MESSAGE_EMAIL_FORMAT_ERROR);
         } else {
-          setThudientuErrors("Không được bỏ trống");
+          setThudientuErrors(MESSAGE_REQUIRE);
         }
         setThudientu(value);
         break;
@@ -295,7 +250,7 @@ const EditUser = (props) => {
         if (value.length > 0) {
           setLoaiErrors("");
         } else {
-          setLoaiErrors("Không được bỏ trống");
+          setLoaiErrors(MESSAGE_REQUIRE);
         }
         setLoai(value);
         break;
@@ -328,7 +283,7 @@ const EditUser = (props) => {
 
     let value = e.target.files[0];
     if (value === null) {
-      setFileErrors("Không được bỏ trống");
+      setFileErrors(MESSAGE_REQUIRE);
     } else {
       setFileErrors("");
     }
@@ -503,13 +458,6 @@ const EditUser = (props) => {
                   onChange={(e) => onHandleSelectedFile(e)}
                   name="base64anh"
                 />
-                {/* {Object.keys(fileErrors).map((keyIndex, key) => {
-              return (
-                <span className="errorMessage" key={key}>
-                  {fileErrors[keyIndex]}
-                </span>
-              );
-            })} */}
               </div>
             </div>
           </AccordionTab>

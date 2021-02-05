@@ -9,7 +9,7 @@ import { Toolbar } from "primereact/toolbar";
 import React, { useEffect, useRef, useState } from "react";
 import Moment from "react-moment";
 import { withRouter } from "react-router-dom";
-import { EXPRITIME_HIDER_LOADER } from "../../constants/ConstantString";
+import { EXPRITIME_HIDER_LOADER, TIME_OUT_CLOSE_NOTIFY } from "../../constants/ConstantString";
 import {
   convertJsonToQueryString,
   queryStringToJSON,
@@ -32,7 +32,7 @@ const Role = (props) => {
       severity: "info",
       summary: "Info Message",
       detail: message,
-      life: 3000,
+      life: TIME_OUT_CLOSE_NOTIFY,
     });
   };
 
@@ -41,7 +41,7 @@ const Role = (props) => {
       severity: "error",
       summary: "Error Message",
       detail: message,
-      life: 3000,
+      life: TIME_OUT_CLOSE_NOTIFY,
     });
   };
 
@@ -96,16 +96,7 @@ const Role = (props) => {
     }
     hideLoader();
   };
-  // const searchRoleWithPaging = async () => {
-  //     // console.log('{ ...paginate, ...varSearch }', { ...paginate, ...varSearch })
-  //     const dataBody = { search: inputSearch };
-  //     const result = await service.getAllRoleWithPaging(dataBody);
-  //     if (result && result.status === 1000) {
-  //         setDataUser(result.object);
-  //         // setTotalRecord(result.totalItem);
-  //         // console.log('result searchRoleWithPaging: ', result)
-  //     }
-  // }
+ 
 
   useEffect(() => {
     fetDataUser();
@@ -113,9 +104,7 @@ const Role = (props) => {
   }, [props.location.search]); //props.location.search
 
   const onHandleChangeSearch = (e) => {
-    // console.log(e.target.value);
-    // console.log('search', search)
-    // console.log('onHandleChangeSearch: ', { ...search, search: e.target.value })
+   
     setInputSearch(e.target.value);
 
     console.log("{ ...search, search: e.target.value }", {
@@ -126,10 +115,7 @@ const Role = (props) => {
     setSearch({ ...search, search: e.target.value });
   };
 
-  // const onChangeStatus = (e) => {
-  //     setSelectedStatus(e.value);
-  //     setSearch({ ...search, trangthai: e.value ? e.value.code : "" });
-  // };
+  
 
   const onHandleRefresh = () => {
     props.history.push({
@@ -212,14 +198,6 @@ const Role = (props) => {
 
     setViewEditNhomQuyen(true);
 
-    //setIdCNCT(id)
-    // onClick('displayBasic')
-    // let name = 'displayBasic'
-    // dialogFuncMap[`${name}`](true);
-
-    // if (position) {
-    //     setPosition(position);
-    // }
   };
 
   const showDialog = () => {
@@ -323,7 +301,7 @@ const Role = (props) => {
     }); //getNhomQuyenCtByI
     if (result && result.status === 1000) {
       // setDatachucnangct(result.list);
-      // console.log('result.list', result.list)
+      // console.log('getListChucNangCt', result.list)
       setDatachucnangct(result.list);
     }
   };
@@ -332,7 +310,7 @@ const Role = (props) => {
     // const result = await nhomQuyenService.getDataNhomQuenCt({ ...paginate, ...search }); //getNhomQuyenCtById
     const result = await roleService.getNhomQuyenCtById(id);
     if (result && result.status === 1000) {
-      // console.log('result.list', result.list)
+      // console.log('getNhomQuyenById', result.list)
       setlistNhomQuyenView(result.list);
     }
   };
@@ -343,14 +321,6 @@ const Role = (props) => {
   const dialogFuncMap = {
     displayBasic: setDisplayBasic,
   };
-
-  // const onClick = (name, position) => {
-  //     dialogFuncMap[`${name}`](true);
-
-  //     if (position) {
-  //         setPosition(position);
-  //     }
-  // }
 
   const onHide = (name) => {
     dialogFuncMap[`${name}`](false);
@@ -375,15 +345,6 @@ const Role = (props) => {
     );
   };
 
-  // const renderFooterUpdate = (name) => {
-  //     return (
-  //         <div>
-  //             <Button label="No" icon="pi pi-times" onClick={() => onHide(name)} className="p-button-text" />
-  //             <Button label="Yes" icon="pi pi-check" onClick={() => onHide(name)} autoFocus />
-  //         </div>
-  //     );
-  // }
-
   return (
     <React.Fragment>
       <Toast ref={toast} position="top-right" />
@@ -397,10 +358,6 @@ const Role = (props) => {
       >
         <p>Bạn có chắc chắn muốn xóa không?</p>
       </Dialog>
-
-      {/* <Dialog header="Thông báo xác nhận" visible={displayBasic} style={{ width: '25vw' }} footer={renderFooterDelete('displayBasic')} onHide={() => onHide('displayBasic')}>
-                <p>Bạn có chắc chắn muốn cập nhập không?</p>
-            </Dialog> */}
 
       <div className={"card"}>
         <div className={"card-header"}>

@@ -10,6 +10,9 @@ import UserServices from "../../service/UserService";
 import {
   EMAIL_REGEX,
   EXPRITIME_HIDER_LOADER,
+  MESSAGE_EMAIL_FORMAT_ERROR,
+  MESSAGE_REQUIRE,
+  MESSAGE_PHONE_FORMAT_ERROR,
   TIME_OUT_CLOSE_NOTIFY,
 } from "../../constants/ConstantString";
 
@@ -49,39 +52,42 @@ const AddUser = (props) => {
     let isValid = true;
 
     if (hoten === "") {
-      hotenErrors.hotenRequired = "Không được bỏ trống";
+      hotenErrors.hotenRequired = MESSAGE_REQUIRE;
       isValid = false;
     }
 
     if (diachi === "") {
-      diachiErrors.diachiRequired = "Không được bỏ trống";
+      diachiErrors.diachiRequired = MESSAGE_REQUIRE;
       isValid = false;
     }
     //=====================
 
     if (sodienthoai === "") {
-      sodienthoaiErrors.sodienthoaiRequired = "Không được bỏ trống";
+      sodienthoaiErrors.sodienthoaiRequired = MESSAGE_REQUIRE;
       isValid = false;
-    } else if (String(sodienthoai).length < 0 && String(sodienthoai).length > 10) {
-      sodienthoaiErrors.sodienthoaiLength = "Số điện thoại phải gồm có 10 số";
+    } else if (
+      String(sodienthoai).length < 0 &&
+      String(sodienthoai).length > 10
+    ) {
+      sodienthoaiErrors.sodienthoaiLength = MESSAGE_PHONE_FORMAT_ERROR;
       isValid = false;
     }
 
     if (tendangnhap === "") {
-      tendangnhapErrors.tendangnhapRequired = "Không được bỏ trống";
+      tendangnhapErrors.tendangnhapRequired = MESSAGE_REQUIRE;
       isValid = false;
     }
 
     if (thudientu === "") {
-      thudientuErrors.thudientuRequired = "Không được bỏ trống";
+      thudientuErrors.thudientuRequired = MESSAGE_REQUIRE;
       isValid = false;
     } else if (EMAIL_REGEX.test(thudientu) === false) {
-      thudientuErrors.emailIsvalid = "Không đúng định dạng email";
+      thudientuErrors.emailIsvalid = MESSAGE_EMAIL_FORMAT_ERROR;
       isValid = false;
     }
 
     if (loai === "") {
-      loaiErrors.loaiRequired = "Không được bỏ trống";
+      loaiErrors.loaiRequired = MESSAGE_REQUIRE;
       isValid = false;
     }
 
@@ -158,12 +164,12 @@ const AddUser = (props) => {
       let data = new FormData();
       let result;
       if (file != null) {
-        console.log('co file ')
+        console.log("co file ");
         data.append("file", file);
         data.append("nguoidung", jsonObj);
         result = await userService.saveUserHasFile(data);
       } else {
-        console.log('khong co file ')
+        console.log("khong co file ");
         data.append("nguoidung", jsonObj);
         result = await userService.saveUserDontHasFile(data);
       }
@@ -176,7 +182,7 @@ const AddUser = (props) => {
         onResetFormInputErrors();
         setTimeout(function () {
           props.fetDataUser();
-        },EXPRITIME_HIDER_LOADER)
+        }, EXPRITIME_HIDER_LOADER);
       } else {
         console.log("result", result);
         let message = result.message;
@@ -184,7 +190,7 @@ const AddUser = (props) => {
         return;
       }
     } else {
-      console.error("FORM INVALID - DISPLAY ERROR MESSAGE");
+      console.log("Error submit!");
       return;
     }
 
@@ -226,7 +232,7 @@ const AddUser = (props) => {
         if (value.length > 0) {
           setHotenErrors("");
         } else {
-          setHotenErrors("Không được bỏ trống");
+          setHotenErrors(MESSAGE_REQUIRE);
         }
         setHoten(value);
 
@@ -235,7 +241,7 @@ const AddUser = (props) => {
         if (value.length > 0) {
           setDiachiErrors("");
         } else {
-          setDiachiErrors("Không được bỏ trống");
+          setDiachiErrors(MESSAGE_REQUIRE);
         }
         setDiachi(value);
         break;
@@ -243,7 +249,7 @@ const AddUser = (props) => {
         if (value.length > 0) {
           setSodienthoaiErrors("");
         } else {
-          setSodienthoaiErrors("Không được bỏ trống");
+          setSodienthoaiErrors(MESSAGE_REQUIRE);
         }
         setSodienthoai(value);
         break;
@@ -251,7 +257,7 @@ const AddUser = (props) => {
         if (value.length > 0) {
           setTendangnhapErrors("");
         } else {
-          setTendangnhapErrors("Không được bỏ trống");
+          setTendangnhapErrors(MESSAGE_REQUIRE);
         }
         setTendangnhap(value);
         break;
@@ -259,9 +265,9 @@ const AddUser = (props) => {
         if (value.length > 0) {
           setThudientuErrors("");
         } else if (!EMAIL_REGEX.test(value)) {
-          setThudientuErrors("Không đúng định dạng email");
+          setThudientuErrors(MESSAGE_EMAIL_FORMAT_ERROR);
         } else {
-          setThudientuErrors("Không được bỏ trống");
+          setThudientuErrors(MESSAGE_REQUIRE);
         }
         setThudientu(value);
         break;
@@ -269,7 +275,7 @@ const AddUser = (props) => {
         if (value.length > 0) {
           setLoaiErrors("");
         } else {
-          setLoaiErrors("Không được bỏ trống");
+          setLoaiErrors(MESSAGE_REQUIRE);
         }
         setLoai(value);
         break;
@@ -463,13 +469,6 @@ const AddUser = (props) => {
               onChange={(e) => onHandleSelectedFile(e)}
               name="base64anh"
             />
-            {/* {Object.keys(fileErros).map((keyIndex, key) => {
-              return (
-                <span className="errorMessage" key={key}>
-                  {fileErros[keyIndex]}
-                </span>
-              );
-            })} */}
           </div>
         </div>
       </Dialog>
