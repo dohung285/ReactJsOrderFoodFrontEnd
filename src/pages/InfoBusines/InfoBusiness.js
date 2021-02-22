@@ -126,7 +126,7 @@ const ThongTinDoanhNghiep = (props) => {
           search: "",
         });
         setSearch({
-          trangthai: "",
+          trangthai: "" ,
           search: "",
         });
     
@@ -206,14 +206,14 @@ const ThongTinDoanhNghiep = (props) => {
             search: queryString
         });
     };
-    const onHandleDelete = (event) => {
-        confirmPopup({
-            target: event.currentTarget,
-            message: 'Do you want to delete this record?',
-            icon: 'pi pi-info-circle',
-            acceptClassName: 'p-button-danger',
-        });
-    };
+    // const onHandleDelete = (event) => {
+    //     confirmPopup({
+    //         target: event.currentTarget,
+    //         message: 'Do you want to delete this record?',
+    //         icon: 'pi pi-info-circle',
+    //         acceptClassName: 'p-button-danger',
+    //     });
+    // };
 
 
     const renderRowIndex = (rowData, column) => {

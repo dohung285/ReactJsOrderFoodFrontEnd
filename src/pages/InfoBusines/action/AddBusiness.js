@@ -7,6 +7,7 @@ import { RadioButton } from 'primereact/radiobutton';
 import './errors.css'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { EXPRITIME_HIDER_LOADER, MESSAGE_EMAIL_FORMAT_ERROR, MESSAGE_PHONE_FORMAT_ERROR, MESSAGE_REQUIRE, TIME_OUT_CLOSE_NOTIFY } from '../../../constants/ConstantString';
 
 const AddBusiness = (props) => {
     const {
@@ -27,7 +28,7 @@ const AddBusiness = (props) => {
     const notifySuccess = (message) => {
         toast.success(`✔👌👌😘😘😘 ${message}`, {
             position: "top-right",
-            autoClose: 2000,
+            autoClose: TIME_OUT_CLOSE_NOTIFY,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
@@ -39,7 +40,7 @@ const AddBusiness = (props) => {
     const notifyError = (message) => {
         toast.error(`😢😢😢😢😢😢 ${message}`, {
             position: "top-right",
-            autoClose: 2000,
+            autoClose: TIME_OUT_CLOSE_NOTIFY,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
@@ -56,6 +57,10 @@ const AddBusiness = (props) => {
         const thudientuErrors = {}
         const tendoanhnghiepErrors = {}
         const tencoquanthueErrors = {}
+        const sodienthoaiErrors = {}
+
+
+
         let isValid = true;
 
         if (
@@ -64,7 +69,7 @@ const AddBusiness = (props) => {
             || adData.mst === undefined
         ) {
 
-            mstErrors.mstRequired = "Không được bỏ trống";
+            mstErrors.mstRequired = MESSAGE_REQUIRE;
             isValid = false;
         }
 
@@ -72,7 +77,7 @@ const AddBusiness = (props) => {
             || adData.thudientu == null
             || adData.thudientu == undefined
         ) {
-            thudientuErrors.thudientuRequired = "Không được bỏ trống";
+            thudientuErrors.thudientuRequired = MESSAGE_REQUIRE;
             isValid = false;
         }
         //=====================
@@ -82,7 +87,7 @@ const AddBusiness = (props) => {
             || adData.tendoanhnghiep == null
             || adData.tendoanhnghiep == undefined
         ) {
-            tendoanhnghiepErrors.tendoanhnghiepRequired = "Không được bỏ trống";
+            tendoanhnghiepErrors.tendoanhnghiepRequired = MESSAGE_REQUIRE;
             isValid = false;
         }
 
@@ -91,7 +96,7 @@ const AddBusiness = (props) => {
             || adData.tencoquanthue == null
             || adData.tencoquanthue == undefined
         ) {
-            tencoquanthueErrors.tencoquanthueRequired = "Không được bỏ trống";
+            tencoquanthueErrors.tencoquanthueRequired = MESSAGE_REQUIRE;
             isValid = false;
         }
 
@@ -100,7 +105,7 @@ const AddBusiness = (props) => {
             || adData.sodienthoai == null
             || adData.sodienthoai == undefined
         ) {
-            sodienthoaiErrors.sodienthoaiRequired = "Không được bỏ trống";
+            sodienthoaiErrors.sodienthoaiRequired = MESSAGE_REQUIRE;
             isValid = false;
         }
         setMstErrors(mstErrors);
@@ -138,7 +143,7 @@ const AddBusiness = (props) => {
                 if (data.trim().length > 0 && data !== null) {
                     setMstErrors("");
                 } else {
-                    setMstErrors("Không được bỏ trống");
+                    setMstErrors(MESSAGE_REQUIRE);
                 }
                 break;
 
@@ -147,7 +152,7 @@ const AddBusiness = (props) => {
 
                     setThudientuErrors("");
                 } else {
-                    setThudientuErrors("Vui lòng nhập đúng định dạng Email !");
+                    setThudientuErrors(MESSAGE_EMAIL_FORMAT_ERROR);
                 }
                 break;
 
@@ -155,7 +160,7 @@ const AddBusiness = (props) => {
                 if (data.trim().length > 0 && data !== null) {
                     setTendoanhnghiepErrors("");
                 } else {
-                    setTendoanhnghiepErrors("Không được bỏ trống");
+                    setTendoanhnghiepErrors(MESSAGE_REQUIRE);
                 }
                 break;
 
@@ -163,7 +168,7 @@ const AddBusiness = (props) => {
                 if (is_phonenumber(data) && data !== null) {
                     setSodienthoaiErrors("");
                 } else {
-                    setSodienthoaiErrors("không đúng định dạng");
+                    setSodienthoaiErrors(MESSAGE_PHONE_FORMAT_ERROR);
                 }
                 break;
 
@@ -171,7 +176,7 @@ const AddBusiness = (props) => {
                 if (data.trim().length > 0 && data !== null) {
                     setTencoquanthueErrors("");
                 } else {
-                    setTencoquanthueErrors("Không được bỏ trống");
+                    setTencoquanthueErrors(MESSAGE_REQUIRE);
                 }
                 break;
 
@@ -190,6 +195,14 @@ const AddBusiness = (props) => {
                 : e.target.files[0];
         setFile(fileName);
     }
+    async function onHideOnNoDialog(){
+        setMstErrors("");
+        setTendoanhnghiepErrors("");
+        setThudientuErrors("");
+        setTencoquanthueErrors("")
+        setSodienthoaiErrors("")
+        onHideDialog();
+    }
 
     async function handleOnYesDialog() {
         //convert object to json
@@ -203,8 +216,8 @@ const AddBusiness = (props) => {
                 // function save
                 const result = await service.saveInfoBusiness(data);
                 if (result && result.status === 1000) {
-                    setTimeout(fetDataInfoBusiness, 1000); // đợi 0.5s sau mới gọi hàm fetData()
-                    onHideDialog();
+                    setTimeout(fetDataInfoBusiness, EXPRITIME_HIDER_LOADER); // đợi 0.5s sau mới gọi hàm fetData()
+                    onHideOnNoDialog();
                     let message = result.message;
                     notifySuccess(message)
                 } else {
@@ -215,8 +228,8 @@ const AddBusiness = (props) => {
                 // function update
                 const result = await service.updateInfoBusiness(adData.id, data)
                 if (result && result.status === 1000) {
-                    setTimeout(fetDataInfoBusiness, 500); // đợi 0.5s sau mới gọi hàm fetData()
-                    onHideDialog();
+                    setTimeout(fetDataInfoBusiness, EXPRITIME_HIDER_LOADER); // đợi 0.5s sau mới gọi hàm fetData()
+                    onHideOnNoDialog();
                     let message = result.message;
                     notifySuccess(message)
                 } else {
@@ -234,7 +247,7 @@ const AddBusiness = (props) => {
                 <Button
                     label="No"
                     icon="pi pi-times"
-                    onClick={onHideDialog}
+                    onClick={onHideOnNoDialog}
                     className="p-button-text"
                 />
                 <Button
@@ -251,7 +264,7 @@ const AddBusiness = (props) => {
         <div>
             <ToastContainer
                 position="top-right"
-                autoClose={5000}
+                autoClose={TIME_OUT_CLOSE_NOTIFY}
                 hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick
@@ -264,7 +277,7 @@ const AddBusiness = (props) => {
             <Dialog
                 header="Khởi tạo doanh nghiệp"
                 visible={visible}
-                onHide={onHideDialog}
+               onHide={onHideOnNoDialog}
                 footer={renderFooter} >
                 <form onSubmit={handleOnYesDialog}>
                     <div className="p-fluid p-formgrid p-grid">
