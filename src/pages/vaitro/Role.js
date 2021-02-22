@@ -33,6 +33,7 @@ const Role = (props) => {
       summary: "Info Message",
       detail: message,
       life: TIME_OUT_CLOSE_NOTIFY,
+      
     });
   };
 
