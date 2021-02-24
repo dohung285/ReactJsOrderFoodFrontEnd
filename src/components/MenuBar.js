@@ -54,6 +54,41 @@ export const MenuBar = () => {
         },
       ],
     },
+    {
+      label: "Nộp tờ khai",
+      icon: "pi pi-fw pi-desktop",
+      items: [
+        {
+          label: "Đăng ký hồ sơ",
+          icon: "pi pi-fw pi-user-plus",
+
+          permission: "",
+          command: () => history.push('/nguoi-dung')
+        },
+        {
+          label: "Trình ký hồ sơ",
+          icon: "pi pi-fw pi-user-plus",
+
+          permission: "",
+          command: () => history.push('/vai-tro')
+        },
+        {
+          label: "Đăng ký ngừng hô sơ",
+          icon: "pi pi-fw pi-user-plus",
+
+          permission: "",
+          command: () => history.push('/chung-thu-so')
+        },
+        {
+          label: "Tra cứu hồ sơ",
+          icon: "pi pi-fw pi-user-plus",
+
+          permission: "",
+          command: () => history.push('/chung-thu-so')
+        }
+
+      ],
+    }
   ];
   // const {keycloak} = useKeycloak();
   const [keycloak] = useKeycloak();
