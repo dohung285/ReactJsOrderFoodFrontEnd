@@ -6,7 +6,7 @@ import InfoBusiness from './pages/InfoBusines/InfoBusiness';
 import NotFound from "./pages/NotFound";
 import User from "./pages/nguoidung/User";
 import Role from './pages/vaitro/Role';
-import Dangkyhoso from './pages/dangkynophoso/Dangkyhoso';
+import DoanhNghiep from './pages/doanh-nghiep/DoanhNghiep';
 
 
 
@@ -55,10 +55,9 @@ const routes=[
 
     },
     {
-        path: '/dang-ky-nhop-ho-so',
+        path: '/ho-so',
         exact: true,
-        main: () => <Dangkyhoso />
-
+        main: () => <DoanhNghiep />
     },
     {
         path: '',
