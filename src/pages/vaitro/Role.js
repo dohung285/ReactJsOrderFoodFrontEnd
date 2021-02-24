@@ -196,6 +196,7 @@ const Role = (props) => {
     setObjRoleTranfer(objRoleTranfer);
     getNhomQuyenById(id);
     getListChucNangCt();
+    
 
     setViewEditNhomQuyen(true);
 
@@ -297,8 +298,8 @@ const Role = (props) => {
 
   const getListChucNangCt = async () => {
     const result = await nhomQuyenService.getDataNhomQuenCt({
-      ...paginate,
-      ...search,
+      // ...paginate,
+      // ...search,
     }); //getNhomQuyenCtByI
     if (result && result.status === 1000) {
       // setDatachucnangct(result.list);

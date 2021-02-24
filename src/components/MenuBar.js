@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Menubar } from "primereact/menubar";
 import { useKeycloak } from "@react-keycloak/web";
 import logo from "../asset/images/cybertax_logo2.png";
 import { Link, useHistory } from "react-router-dom";
 export const MenuBar = () => {
-
   let history = useHistory();
   function handleLogout() {
     history.push("/");
@@ -12,6 +11,9 @@ export const MenuBar = () => {
   }
 
   const [active, setActive] = useState(false);
+
+  const roleOfUser = ["a", "c", "d", "e", "f", "g", "h", "i"]; // fake "f", "g", "h", "i"
+
   const items = [
     {
       label: "Hệ thống",
@@ -20,40 +22,39 @@ export const MenuBar = () => {
         {
           label: "Người dùng",
           icon: "pi pi-fw pi-user-plus",
-
-          permission: "",
-          command: () => history.push('/nguoi-dung')
+          permission: "a",
+          command: () => history.push("/nguoi-dung"),
         },
         {
           label: "Vai trò",
           icon: "pi pi-fw pi-user-plus",
-
-          permission: "",
-          command: () => history.push('/vai-tro')
+          permission: "b",
+          command: () => history.push("/vai-tro"),
         },
         {
           label: "Chứng thư số",
           icon: "pi pi-fw pi-user-plus",
 
-          permission: "",
-          command: () => history.push('/chung-thu-so')
+          permission: "c",
+          command: () => history.push("/chung-thu-so"),
         },
         {
           label: "Quản lý đăng ký",
           icon: "pi pi-fw pi-user-plus",
 
-          permission: "",
-          command: () => history.push('/qldk')
+          permission: "d",
+          command: () => history.push("/qldk"),
         },
         {
           label: "Thông tin doanh nghiệp",
           icon: "pi pi-fw pi-user-plus",
 
-          permission: "",
-          command: () => history.push('/thong-tin-doanh-nghiep')
+          permission: "e",
+          command: () => history.push("/thong-tin-doanh-nghiep"),
         },
       ],
     },
+
     {
       label: "Nộp tờ khai",
       icon: "pi pi-fw pi-desktop",
@@ -61,35 +62,80 @@ export const MenuBar = () => {
         {
           label: "Đăng ký hồ sơ",
           icon: "pi pi-fw pi-user-plus",
-
-          permission: "",
-          command: () => history.push('/dang-ky-nhop-ho-so')
+          permission: "f",
+          command: () => history.push("/nguoi-dung"),
         },
         {
           label: "Trình ký hồ sơ",
           icon: "pi pi-fw pi-user-plus",
-
-          permission: "",
-          command: () => history.push('/vai-tro')
+          permission: "g",
+          command: () => history.push("/vai-tro"),
         },
         {
           label: "Đăng ký ngừng hô sơ",
           icon: "pi pi-fw pi-user-plus",
-
-          permission: "",
-          command: () => history.push('/chung-thu-so')
+          permission: "h",
+          command: () => history.push("/chung-thu-so"),
         },
         {
           label: "Tra cứu hồ sơ",
           icon: "pi pi-fw pi-user-plus",
-
-          permission: "",
-          command: () => history.push('/chung-thu-so')
-        }
-
+          permission: "i",
+          command: () => history.push("/chung-thu-so"),
+        },
       ],
-    }
+    },
   ];
+
+  function removeRoleDontHas(items, roleOfUser) {
+    // debugger
+    let arrayTempl = [];
+    const arrayIndex = [];
+
+    // console.log('items', [...items])
+    const iterator = items.values();
+    for (const x of iterator) {
+
+
+
+      console.log("x", x);
+
+
+      arrayTempl = arrayTempl.concat(x.items);
+      // for (let index = 0; index < Object.values(x)[2].length; index++) {
+      //   // console.log(Object.values(x)[2][index]);
+      //   if (!roleOfUser.includes(Object.values(x)[2][index].permission)) {
+      //     console.log("=Remove=: ", index, Object.values(x)[2][index]);
+      //     arrayIndex.push(index);
+      //     // Object.values(x)[2].splice(index, 1);
+      //   }
+      // }
+
+      //=========================
+      // for (let index = arrayIndex - 1; index >= 0; index--) {
+
+      //   // console.log('arrayIndex[index]', arrayIndex[index])
+      //   console.log('index', index , arrayIndex[index])
+      //   Object.values(x)[2].splice(arrayIndex[index], 1);
+      // }
+    }
+
+ 
+
+    for (let index = 0; index < arrayTempl.length; index++) {
+      console.log('arrayTempl', arrayTempl[index].permission)
+      
+    }
+
+    // for (const x of iterator) {
+    //   console.log('x', x)
+    // }
+  }
+
+  useEffect(() => {
+    removeRoleDontHas(items, roleOfUser);
+  }, []);
+
   // const {keycloak} = useKeycloak();
   const [keycloak] = useKeycloak();
   const onMouseOver = () => {
