@@ -62,14 +62,16 @@ export const MenuBar = () => {
         {
           label: "Đăng ký hồ sơ",
           icon: "pi pi-fw pi-user-plus",
-          permission: "f",
-          command: () => history.push("/nguoi-dung"),
+
+          permission: "",
+          command: () => history.push('/dang-ky-nhop-ho-so')
         },
         {
           label: "Trình ký hồ sơ",
           icon: "pi pi-fw pi-user-plus",
-          permission: "g",
-          command: () => history.push("/vai-tro"),
+
+          permission: "",
+          command: () => history.push('/trinh-ky-ho-so')
         },
         {
           label: "Đăng ký ngừng hô sơ",
