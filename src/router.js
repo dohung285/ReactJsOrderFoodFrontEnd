@@ -6,6 +6,7 @@ import InfoBusiness from './pages/InfoBusines/InfoBusiness';
 import NotFound from "./pages/NotFound";
 import User from "./pages/nguoidung/User";
 import Role from './pages/vaitro/Role';
+import Dangkyhoso from './pages/dangkynophoso/Dangkyhoso';
 
 
 
@@ -51,6 +52,12 @@ const routes=[
         path: '/thong-tin-doanh-nghiep',
         exact: true,
         main: () => <InfoBusiness />
+
+    },
+    {
+        path: '/dang-ky-nhop-ho-so',
+        exact: true,
+        main: () => <Dangkyhoso />
 
     },
     {

@@ -63,7 +63,7 @@ export const MenuBar = () => {
           icon: "pi pi-fw pi-user-plus",
 
           permission: "",
-          command: () => history.push('/nguoi-dung')
+          command: () => history.push('/dang-ky-nhop-ho-so')
         },
         {
           label: "Trình ký hồ sơ",
