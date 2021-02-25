@@ -290,6 +290,7 @@ const User = (props) => {
     return <Tag severity="info" value={status} />;
   };
   const actionBodyTemplate = (rowData) => {
+    // console.log('rowData', rowData)
     return (
       <React.Fragment>
         <i
@@ -298,6 +299,7 @@ const User = (props) => {
           style={{ color: "blue", cursor: "pointer" }}
           onClick={() => onHandleEdit(rowData)}
         />
+
         <i
           className="pi pi-trash icon-medium"
           style={{ color: "red", cursor: "pointer" }}

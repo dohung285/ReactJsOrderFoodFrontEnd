@@ -3,6 +3,7 @@ import { Menubar } from "primereact/menubar";
 import { useKeycloak } from "@react-keycloak/web";
 import logo from "../asset/images/cybertax_logo2.png";
 import { Link, useHistory } from "react-router-dom";
+import { useRole } from "../hooks/useRole";
 export const MenuBar = () => {
   let history = useHistory();
   function handleLogout() {
@@ -12,7 +13,7 @@ export const MenuBar = () => {
 
   const [active, setActive] = useState(false);
 
-  const roleOfUser = ["a", "c", "d", "e", "f", "g", "h", "i"]; // fake "f", "g", "h", "i"
+  // const roleOfUser = ["a", "c", "d", "e", "f", "g", "h", "i"]; // fake "f", "g", "h", "i"
 
   const items = [
     {
@@ -63,14 +64,14 @@ export const MenuBar = () => {
           label: "Đăng ký hồ sơ",
           icon: "pi pi-fw pi-user-plus",
 
-          permission: "",
+          permission: "f",
           command: () => history.push('/dang-ky-nhop-ho-so')
         },
         {
           label: "Trình ký hồ sơ",
           icon: "pi pi-fw pi-user-plus",
 
-          permission: "",
+          permission: "g",
           command: () => history.push('/trinh-ky-ho-so')
         },
         {
@@ -89,50 +90,24 @@ export const MenuBar = () => {
     },
   ];
 
+  const roleOfUser = useRole();
+
+  // const roleOfUser = ["a", "c", "d", "e", "f", "h", "i"];
+
+
   function removeRoleDontHas(items, roleOfUser) {
-    // debugger
-    let arrayTempl = [];
-    const arrayIndex = [];
-
-    // console.log('items', [...items])
-    const iterator = items.values();
-    for (const x of iterator) {
-
-
-
-      console.log("x", x);
-
-
-      arrayTempl = arrayTempl.concat(x.items);
-      // for (let index = 0; index < Object.values(x)[2].length; index++) {
-      //   // console.log(Object.values(x)[2][index]);
-      //   if (!roleOfUser.includes(Object.values(x)[2][index].permission)) {
-      //     console.log("=Remove=: ", index, Object.values(x)[2][index]);
-      //     arrayIndex.push(index);
-      //     // Object.values(x)[2].splice(index, 1);
-      //   }
-      // }
-
-      //=========================
-      // for (let index = arrayIndex - 1; index >= 0; index--) {
-
-      //   // console.log('arrayIndex[index]', arrayIndex[index])
-      //   console.log('index', index , arrayIndex[index])
-      //   Object.values(x)[2].splice(arrayIndex[index], 1);
-      // }
-    }
-
- 
-
-    for (let index = 0; index < arrayTempl.length; index++) {
-      console.log('arrayTempl', arrayTempl[index].permission)
-      
-    }
-
-    // for (const x of iterator) {
-    //   console.log('x', x)
-    // }
+    console.log('roleOfUser', roleOfUser)
+    // console.log('Before', items)
+    items.forEach(element => {
+      for (let index = 0; index < element.items.length; index++) {
+        if (!roleOfUser.includes(element.items[index].permission)) {
+          element.items.splice(index, 1)
+        }
+      }
+    });
+    // console.log('After', items)
   }
+
 
   useEffect(() => {
     removeRoleDontHas(items, roleOfUser);
