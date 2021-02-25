@@ -15,10 +15,16 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { EXPRITIME_HIDER_LOADER } from "../../constants/ConstantString";
 import {
+  PERMISSION_ADD,
+  PERMISSION_DELETE,
+  PERMISSION_EDIT,
+} from "../../constants/PermissionString";
+import {
   convertJsonToQueryString,
   queryStringToJSON,
 } from "../../helper/CyberTaxHelper";
 import useFullPageLoader from "../../hooks/useFullPageLoader";
+import { useRole } from "../../hooks/useRole";
 import UserServices from "../../service/UserService";
 import AddUser from "./AddUser";
 import EditUser from "./EditUser";
@@ -26,6 +32,8 @@ import EditUser from "./EditUser";
 const User = (props) => {
   const [visibleAddUser, setVisibleAddUser] = useState(false);
   const [visibleEditUser, setVisibleEditUser] = useState(false);
+
+  const roleOfUser = useRole();
 
   const [userObj, setUserObj] = useState({
     hoten: "",
@@ -293,19 +301,23 @@ const User = (props) => {
     // console.log('rowData', rowData)
     return (
       <React.Fragment>
-        <i
-          className="pi pi-pencil p-mr-2 icon-medium"
-          title={"Sửa"}
-          style={{ color: "blue", cursor: "pointer" }}
-          onClick={() => onHandleEdit(rowData)}
-        />
+        {roleOfUser.includes(PERMISSION_EDIT) && (
+          <i
+            className="pi pi-pencil p-mr-2 icon-medium"
+            title={"Sửa"}
+            style={{ color: "blue", cursor: "pointer" }}
+            onClick={() => onHandleEdit(rowData)}
+          />
+        )}
 
-        <i
-          className="pi pi-trash icon-medium"
-          style={{ color: "red", cursor: "pointer" }}
-          title={"Xóa"}
-          onClick={() => onHandleDelete(rowData)}
-        />
+        {roleOfUser.includes(PERMISSION_DELETE) && (
+          <i
+            className="pi pi-trash icon-medium"
+            style={{ color: "red", cursor: "pointer" }}
+            title={"Xóa"}
+            onClick={() => onHandleDelete(rowData)}
+          />
+        )}
       </React.Fragment>
     );
   };

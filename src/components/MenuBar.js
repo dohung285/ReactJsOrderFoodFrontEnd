@@ -88,6 +88,58 @@ export const MenuBar = () => {
         },
       ],
     },
+
+    {
+      label: "Nộp thuế",
+      icon: "pi pi-fw pi-desktop",
+      items: [
+        {
+          label: "Lập giấy nộp tiền",
+          icon: "pi pi-fw pi-user-plus",
+          permission: "f",
+          command: () => history.push('/lap-giay-nop-tien')
+        },
+        {
+          label: "Lập giấy nộp tiền thay",
+          icon: "pi pi-fw pi-user-plus",
+          permission: "g",
+          command: () => history.push('/lap-giay-nop-tien-thay')
+        },
+        {
+          label: "Tra cứu giấy nộp tiền",
+          icon: "pi pi-fw pi-user-plus",
+          permission: "h",
+          command: () => history.push("/tra-cuu-giay-nop-tien"),
+        },
+        {
+          label: "Tra cứu thông báo",
+          icon: "pi pi-fw pi-user-plus",
+          permission: "i",
+          command: () => history.push("/tra-cuu-thong-bao"),
+        },
+        {
+          label: "Lập thư tra soát",
+          icon: "pi pi-fw pi-user-plus",
+          permission: "i",
+          command: () => history.push("/lap-thu-tra-soat"),
+        },
+        {
+          label: "Tra cứu thư tra soát",
+          icon: "pi pi-fw pi-user-plus",
+          permission: "i",
+          command: () => history.push("/tra-cuu-thu-tra-soat"),
+        }
+        
+      ],
+    },
+
+
+
+
+
+
+
+
   ];
 
   const roleOfUser = useRole();
