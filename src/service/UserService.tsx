@@ -1,4 +1,5 @@
 import {
+  PREFIX_URL_NHOMQUYEN,
   PREFIX_URL_USER_ADD_EDIT_DELETE,
   PREFIX_URL_USER_SEARCH,
 } from "../constants/ConstantUrlAPI";
@@ -41,6 +42,14 @@ class UserServices extends FetchAPI {
     let url = `${PREFIX_URL_USER_ADD_EDIT_DELETE}/suafile/${id}`;
     return await this.request(url, formData, TypeMethodConstantEnum.POST);
   }
+
+  public async getAllPermissionByUser() {
+    let url = `${PREFIX_URL_NHOMQUYEN}/ndnq/getNdNq`;
+    return await this.request(url, {}, TypeMethodConstantEnum.GET);
+  }
+
+
+
 
 
 

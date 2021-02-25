@@ -301,7 +301,23 @@ const User = (props) => {
     // console.log('rowData', rowData)
     return (
       <React.Fragment>
-        {roleOfUser.includes(PERMISSION_EDIT) && (
+
+          <i
+            className="pi pi-pencil p-mr-2 icon-medium"
+            title={"Sửa"}
+            style={{ color: "blue", cursor: "pointer" }}
+            onClick={() => onHandleEdit(rowData)}
+          />
+
+          <i
+            className="pi pi-trash icon-medium"
+            style={{ color: "red", cursor: "pointer" }}
+            title={"Xóa"}
+            onClick={() => onHandleDelete(rowData)}
+          />
+
+
+        {/* {roleOfUser.includes(PERMISSION_EDIT) && (
           <i
             className="pi pi-pencil p-mr-2 icon-medium"
             title={"Sửa"}
@@ -317,7 +333,8 @@ const User = (props) => {
             title={"Xóa"}
             onClick={() => onHandleDelete(rowData)}
           />
-        )}
+        )} */}
+
       </React.Fragment>
     );
   };

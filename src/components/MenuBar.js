@@ -133,13 +133,6 @@ export const MenuBar = () => {
       ],
     },
 
-
-
-
-
-
-
-
   ];
 
   const roleOfUser = useRole();
@@ -148,7 +141,7 @@ export const MenuBar = () => {
 
 
   function removeRoleDontHas(items, roleOfUser) {
-    console.log('roleOfUser', roleOfUser)
+    // console.log('roleOfUser', roleOfUser)
     // console.log('Before', items)
     items.forEach(element => {
       for (let index = 0; index < element.items.length; index++) {

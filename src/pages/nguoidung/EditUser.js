@@ -12,6 +12,7 @@ import {
   MESSAGE_REQUIRE,
   TIME_OUT_CLOSE_NOTIFY,
 } from "../../constants/ConstantString";
+import { useRole } from "../../hooks/useRole";
 import UserServices from "../../service/UserService";
 import "./user.css";
 
@@ -322,6 +323,22 @@ const EditUser = (props) => {
     setThudientu(userObj.thudientu);
     setLoai(userObj.loai);
   }
+
+
+  // const getAllPermission = async () => {
+  //  const result = await userService.getAllPermissionByUser()
+  //  Object.values(result.list).forEach(x =>{
+  //    for (let index = 0; index < x.chucNangChiTietTrees.length; index++) {
+  //     console.log('x.chucNangChiTietTrees[i]',x.chucNangChiTietTrees[index].key )  
+  //    }
+  //  })
+  // };
+
+  // getAllPermission();
+  const x = useRole();
+  // console.log('x', x)
+
+  
 
   return (
     <div>
