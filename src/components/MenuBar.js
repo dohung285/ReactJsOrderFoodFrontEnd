@@ -4,6 +4,8 @@ import { useKeycloak } from "@react-keycloak/web";
 import logo from "../asset/images/cybertax_logo2.png";
 import { Link, useHistory } from "react-router-dom";
 import { useRole } from "../hooks/useRole";
+import { PERMISSION_ND, PERMISSION_QLDK, PERMISSION_VT, PERMISSION_TTDN, PERMISSION_CTS } from "../constants/PermissionString";
+import PermissionService from "../service/PermissionService";
 export const MenuBar = () => {
   let history = useHistory();
   function handleLogout() {
@@ -23,34 +25,31 @@ export const MenuBar = () => {
         {
           label: "Người dùng",
           icon: "pi pi-fw pi-user-plus",
-          permission: "a",
+          permission: PERMISSION_ND,
           command: () => history.push("/nguoi-dung"),
         },
         {
           label: "Vai trò",
           icon: "pi pi-fw pi-user-plus",
-          permission: "b",
+          permission: PERMISSION_VT,
           command: () => history.push("/vai-tro"),
         },
         {
           label: "Chứng thư số",
           icon: "pi pi-fw pi-user-plus",
-
-          permission: "c",
+          permission: PERMISSION_CTS,
           command: () => history.push("/chung-thu-so"),
         },
         {
           label: "Quản lý đăng ký",
           icon: "pi pi-fw pi-user-plus",
-
-          permission: "d",
+          permission: PERMISSION_QLDK,
           command: () => history.push("/qldk"),
         },
         {
           label: "Thông tin doanh nghiệp",
           icon: "pi pi-fw pi-user-plus",
-
-          permission: "e",
+          permission: PERMISSION_TTDN,
           command: () => history.push("/thong-tin-doanh-nghiep"),
         },
       ],
@@ -129,33 +128,64 @@ export const MenuBar = () => {
           permission: "i",
           command: () => history.push("/tra-cuu-thu-tra-soat"),
         }
-        
+
       ],
     },
 
   ];
 
-  const roleOfUser = useRole();
+
+
+  let arrayRole = [];
+  let roleOfUser = [];
+  const fetPermission = async () => {
+
+    const service = new PermissionService();
+
+    const result = await service.getAllPermissionByUser();
+    Object.values(result.list).forEach(x => {
+      for (let index = 0; index < x.chucNangChiTietTrees.length; index++) {
+        // console.log('CNCT',x.chucNangChiTietTrees[index] )  
+        console.log('x.chucNangChiTietTrees[i]', x.chucNangChiTietTrees[index].key, x.chucNangChiTietTrees[index].label)
+        arrayRole.push(x.chucNangChiTietTrees[index].key)
+        x.chucNangChiTietTrees[index].children.forEach(element => {
+          console.log('element', element.key, element.label)
+          arrayRole.push(element.key)
+        });
+      }
+      console.log("===================================================")
+    })
+    console.log('arrayRole', arrayRole, arrayRole.length)
+    // return arrayRole;
+
+  };
+
+
+
+  // const roleOfUser = fetPermission();
 
   // const roleOfUser = ["a", "c", "d", "e", "f", "h", "i"];
 
 
   function removeRoleDontHas(items, roleOfUser) {
-    // console.log('roleOfUser', roleOfUser)
+    console.log('roleOfUser', roleOfUser)
     // console.log('Before', items)
     items.forEach(element => {
       for (let index = 0; index < element.items.length; index++) {
+        // debugger
         if (!roleOfUser.includes(element.items[index].permission)) {
+          console.log('co vao day', index, element.items[index].permission)
           element.items.splice(index, 1)
         }
       }
     });
-    // console.log('After', items)
+    console.log('After', items)
   }
 
 
   useEffect(() => {
     removeRoleDontHas(items, roleOfUser);
+    fetPermission();
   }, []);
 
   // const {keycloak} = useKeycloak();
