@@ -31,13 +31,9 @@ const emptyData = {
 }
 function ThongTinNguoiNopThue() {
     const service = new InfoBusinessService();
-    const [adData, setAdData] = useState({});
+    const [adData, setAdData] = useState({emptyData});
+    const [tencoquanthue,setTencoquanthue] = useState("Australia")
     // state check errors
-    const [mstErrors, setMstErrors] = useState({})
-    const [thudientuErrors, setThudientuErrors] = useState({})
-    const [tendoanhnghiepErrors, setTendoanhnghiepErrors] = useState({})
-    const [tencoquanthueErrors, setTencoquanthueErrors] = useState({})
-    const [sodienthoaiErrors, setSodienthoaiErrors] = useState({})
     const [products, setProducts] = useState([
         { stt: "1", hoten: "Cyber Tax", email: "cybertax@gamim.com" }
     ])
@@ -48,6 +44,8 @@ function ThongTinNguoiNopThue() {
             [field]: data,
         });
     }
+
+
     const fetDataInfoBusinessById = async () => {
         const result = await service.getDataInfoBusinessById("721029f6-7663-427c-950c-8bbabf426481")
         if (result && result.status === 1000) {
@@ -75,9 +73,6 @@ function ThongTinNguoiNopThue() {
                                 disabled
                                 onChange={(e) => updateField(e.target.value, 'mst')}
                             />
-                            {Object.keys(mstErrors).map((keyIndex, key) => {
-                                return <span className="errorMessage" key={key} >{mstErrors[keyIndex]}</span>
-                            })}
                         </div>
 
                         <div className="p-field p-col">
@@ -105,16 +100,13 @@ function ThongTinNguoiNopThue() {
                                 disabled
                                 onChange={(e) => updateField(e.target.value, 'tennguoinopthue')}
                             />
-                            {Object.keys(tendoanhnghiepErrors).map((keyIndex, key) => {
-                                return <span className="errorMessage" key={key} >{tendoanhnghiepErrors[keyIndex]}</span>
-                            })}
                         </div>
 
                         <div className="p-field p-col">
                             <label htmlFor="matinh" >Tỉnh /TP</label>
                             <Dropdown id="matinh"
                                 className="dropdowCus"
-                                placeholder="Tỉnh /TP"
+                                placeholder="Tỉnh/TP"
                                 name="matinh"
                                 disabled
                                 value={adData.matinh || ""}
@@ -136,9 +128,6 @@ function ThongTinNguoiNopThue() {
                                 onChange={(e) => updateField(e.target.value, 'diachi')}
                             />
                         </div>
-                        {Object.keys(thudientuErrors).map((keyIndex, key) => {
-                            return <span className="errorMessage" key={key} >{thudientuErrors[keyIndex]}</span>
-                        })}
                     </div>
 
 
@@ -154,10 +143,6 @@ function ThongTinNguoiNopThue() {
                                 onChange={(e) => updateField(e.target.value, 'tencoquanthue')}
                             />
                         </div>
-
-                        {Object.keys(tencoquanthueErrors).map((keyIndex, key) => {
-                            return <span className="errorMessage" key={key} >{tencoquanthueErrors[keyIndex]}</span>
-                        })}
                     </div>
 
 
@@ -167,12 +152,11 @@ function ThongTinNguoiNopThue() {
                             <Dropdown id="maquanhuyen"
                                 className="dropdowCus"
                                 placeholder="Quận /Huyện"
-                                name="fax"
+                                name="maquanhuyen"
                                 disabled
                                 value={adData.maquanhuyen || ""}
                                 onChange={(e) => updateField(e.target.value, 'maquanhuyen')}
                             />
-
                         </div>
 
                         <div className="p-field p-col">
@@ -201,10 +185,6 @@ function ThongTinNguoiNopThue() {
                                 disabled
                                 onChange={(e) => updateField(e.target.value, 'sodienthoai')}
                                 value={adData.sodienthoai || ""} />
-                            {Object.keys(sodienthoaiErrors).map((keyIndex, key) => {
-                                return <span className="errorMessage" key={key} >{sodienthoaiErrors[keyIndex]}</span>
-                            })}
-
                         </div>
 
                         <div className="p-field p-col">
@@ -223,13 +203,13 @@ function ThongTinNguoiNopThue() {
 
                 </form>
 
-                <div className="card">
+                {/* <div className="card">
                     <DataTable value={products} >
                         <Column field="stt" header="STT"></Column>
                         <Column field="hoten" header="Họ Tên"></Column>
                         <Column field="email" header="Email"></Column>
                     </DataTable>
-                </div>
+                </div> */}
             </div>
             <button type='button' onClick={fetDataInfoBusinessById}>Click for Data</button>
         </div>

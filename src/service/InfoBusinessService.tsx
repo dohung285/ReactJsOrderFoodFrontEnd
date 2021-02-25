@@ -13,11 +13,11 @@ class InfoBusinessService extends FetchAPI {
             TypeMethodConstantEnum.GET
         );
     }
-    public async getDataInfoBusinessByID(id:any ,databody:any) {
+    public async getDataInfoBusinessById(id :any) {
         let url = `${PREFIX_ADD}/details/${id}`;
         return await this.request(
             url,
-            databody,
+            {},
             TypeMethodConstantEnum.GET
         );
     }

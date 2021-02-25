@@ -8,6 +8,7 @@ import User from "./pages/nguoidung/User";
 import Role from './pages/vaitro/Role';
 import Dangkyhoso from './pages/dangkynophoso/Dangkyhoso';
 import TrinhKyHoSo from './pages/trinhkyhoso/TrinhKyHoSo';
+import DoanhNghiep from './pages/doanh-nghiep/DoanhNghiep';
 
 
 
@@ -65,6 +66,12 @@ const routes=[
         path: '/trinh-ky-ho-so',
         exact: true,
         main: () => <TrinhKyHoSo />
+
+    },
+    {
+        path: '/ho-so',
+        exact: true,
+        main: () => <DoanhNghiep />
 
     },
     {
