@@ -136,30 +136,7 @@ export const MenuBar = () => {
 
 
 
-  let arrayRole = [];
-  let roleOfUser = [];
-  const fetPermission = async () => {
-
-    const service = new PermissionService();
-
-    const result = await service.getAllPermissionByUser();
-    Object.values(result.list).forEach(x => {
-      for (let index = 0; index < x.chucNangChiTietTrees.length; index++) {
-        // console.log('CNCT',x.chucNangChiTietTrees[index] )  
-        console.log('x.chucNangChiTietTrees[i]', x.chucNangChiTietTrees[index].key, x.chucNangChiTietTrees[index].label)
-        arrayRole.push(x.chucNangChiTietTrees[index].key)
-        x.chucNangChiTietTrees[index].children.forEach(element => {
-          console.log('element', element.key, element.label)
-          arrayRole.push(element.key)
-        });
-      }
-      console.log("===================================================")
-    })
-    console.log('arrayRole', arrayRole, arrayRole.length)
-    // return arrayRole;
-
-  };
-
+ 
 
 
   // const roleOfUser = fetPermission();
@@ -167,26 +144,45 @@ export const MenuBar = () => {
   // const roleOfUser = ["a", "c", "d", "e", "f", "h", "i"];
 
 
-  function removeRoleDontHas(items, roleOfUser) {
-    console.log('roleOfUser', roleOfUser)
+
+  
+
+
+  //hardcode
+//   const roleOfUser = [
+//   'a5d1645c-773b-11eb-9439-0242ac130002', //Chứng thư số
+//  'd3c64a62-773b-11eb-9439-0242ac130002', // Quản lý đăng kí
+//  '3fa54130-5871-4536-b699-f4ddbff4566a', //vai trò
+//  '4bd89a24-773b-11eb-9439-0242ac130002', // người dùng
+//  ]
+  // const [permission, setPermission] = useState([]);
+  let roleOfUser = useRole();
+
+  function removeRoleDontHas(items,roleOfUser) {
+    console.log("removeRoleDontHas function")
+    console.log(roleOfUser);
+    // console.log('roleOfUser', roleOfUser)
     // console.log('Before', items)
-    items.forEach(element => {
-      for (let index = 0; index < element.items.length; index++) {
-        // debugger
-        if (!roleOfUser.includes(element.items[index].permission)) {
-          console.log('co vao day', index, element.items[index].permission)
-          element.items.splice(index, 1)
+    if(roleOfUser){
+      items.forEach(element => {
+        for (let index = 0; index < element.items.length; index++) {
+          // debugger
+          if (!roleOfUser.includes(element.items[index].permission)) {
+            console.log('co vao day', index, element.items[index].permission)
+            element.items.splice(index, 1)
+          }
         }
-      }
-    });
+      });
+    }
+    
     console.log('After', items)
   }
 
 
   useEffect(() => {
     removeRoleDontHas(items, roleOfUser);
-    fetPermission();
-  }, []);
+    // fetPermission();
+  }, [roleOfUser]);
 
   // const {keycloak} = useKeycloak();
   const [keycloak] = useKeycloak();

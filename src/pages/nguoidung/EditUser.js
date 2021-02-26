@@ -325,17 +325,9 @@ const EditUser = (props) => {
   }
 
 
-  // const getAllPermission = async () => {
-  //  const result = await userService.getAllPermissionByUser()
-  //  Object.values(result.list).forEach(x =>{
-  //    for (let index = 0; index < x.chucNangChiTietTrees.length; index++) {
-  //     console.log('x.chucNangChiTietTrees[i]',x.chucNangChiTietTrees[index].key )  
-  //    }
-  //  })
-  // };
-
-  // getAllPermission();
-  const x = useRole();
+  
+  
+  // const x = useRole();
   // console.log('x', x)
 
   

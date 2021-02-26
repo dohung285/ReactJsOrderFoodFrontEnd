@@ -33,7 +33,7 @@ const User = (props) => {
   const [visibleAddUser, setVisibleAddUser] = useState(false);
   const [visibleEditUser, setVisibleEditUser] = useState(false);
 
-  const roleOfUser = useRole();
+  // const roleOfUser = useRole();
 
   const [userObj, setUserObj] = useState({
     hoten: "",

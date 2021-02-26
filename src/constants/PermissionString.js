@@ -15,11 +15,11 @@ export const PERMISSION_QLDN_DELETE = "2ad5814c-773c-11eb-9439-0242ac130002" // 
 
 
 export const PERMISSION_QLDK = "d3c64a62-773b-11eb-9439-0242ac130002" // Quản lý đăng ký 					
-export const PERMISSION_QLDK_ADD = "e6f38a00-773b-11eb-9439-0242ac130002" // Thêm 					
+export const PERMISSION_QLDK_ADD = "e6f38a00-773b-11eb-9439-0242ac130002" // Thêm 					PERMISSION_TTDN
 export const PERMISSION_QLDK_DELETE = "fa2b1f98-773b-11eb-9439-0242ac130002" // Xóa 					
 export const PERMISSION_QLDK_EDIT = "f34fe960-773b-11eb-9439-0242ac130002" // Sửa					
 
-export const PERMISSION_VT = "3fa54130-5871-4536-b699-f4ddbff4566a==================" // Vai trò 					
+export const PERMISSION_VT = "3fa54130-5871-4536-b699-f4ddbff4566a" // Vai trò 					
 export const PERMISSION_VT_ADD = "3fa54130-5871-4536-b699-f4ddbff4566a" // Thêm 					
 export const PERMISSION_VT_EDIT = "f744a6a8-7751-11eb-9439-0242ac130002" // Sửa 					
 export const PERMISSION_VT_DELETE = "fbd43f6c-7751-11eb-9439-0242ac130002" // Xóa					

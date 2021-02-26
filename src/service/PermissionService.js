@@ -1,9 +1,8 @@
 import {
-    PREFIX_URL_NHOMQUYEN,
-    PREFIX_URL_NHOMQUYEN_PAGING,
-  } from "../constants/ConstantUrlAPI";
-  import { TypeMethodConstantEnum } from "../helper/MethodAPIConstant";
-  import FetchAPI from "./FetchAPI";
+  PREFIX_URL_NHOMQUYEN
+} from "../constants/ConstantUrlAPI";
+import { TypeMethodConstantEnum } from "../helper/MethodAPIConstant";
+import FetchAPI from "./FetchAPI";
   
   class PermissionService extends FetchAPI {
 

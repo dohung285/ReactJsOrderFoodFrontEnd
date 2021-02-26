@@ -2,31 +2,34 @@ import React, { useEffect, useState } from "react";
 import { PERMISSION_EDIT } from "../constants/PermissionString";
 import PermissionService from "../service/PermissionService";
 
-export const useRole = () => {
+export const useRole =  () => {
     const [arrayRoles, setarrayRoles] = useState([])
 
     let arrayRole = [];
 
+    const service = new PermissionService();
+
     const fetPermission = async () => {
-
-        const service = new PermissionService();
-
         const result = await service.getAllPermissionByUser();
         Object.values(result.list).forEach(x => {
             for (let index = 0; index < x.chucNangChiTietTrees.length; index++) {
                 // console.log('CNCT',x.chucNangChiTietTrees[index] )  
-                console.log('x.chucNangChiTietTrees[i]', x.chucNangChiTietTrees[index].key, x.chucNangChiTietTrees[index].label)
+                // console.log('x.chucNangChiTietTrees[i]', x.chucNangChiTietTrees[index].key, x.chucNangChiTietTrees[index].label)
                 arrayRole.push(x.chucNangChiTietTrees[index].key)
                 x.chucNangChiTietTrees[index].children.forEach(element => {
-                    console.log('element', element.key, element.label)
+                    // console.log('element', element.key, element.label)
                     arrayRole.push(element.key)
                 });
             }
-            console.log("===================================================")
+            // console.log("===================================================")
+            // console.log("UseRole")
         })
-        console.log('arrayRole', arrayRole, arrayRole.length)
+        // console.log('arrayRole', arrayRole)
         setarrayRoles(arrayRole)
     };
+ 
+
+    // await fetPermission();
 
     useEffect(() => {
         fetPermission();
