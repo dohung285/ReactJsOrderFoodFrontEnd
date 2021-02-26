@@ -312,7 +312,7 @@ const Role = (props) => {
     }); //getNhomQuyenCtByI
     if (result && result.status === 1000) {
       // setDatachucnangct(result.list);
-      // console.log('getListChucNangCt', result.list)
+      console.log('getListChucNangCt', result.list)
       setDatachucnangct(result.list);
     }
   };

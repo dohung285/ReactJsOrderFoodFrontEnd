@@ -49,6 +49,13 @@ class UserServices extends FetchAPI {
   }
 
 
+  public async getAllGroupRole() {
+    let url = `${PREFIX_URL_NHOMQUYEN}/nhomquyen/getallnq`;
+    return await this.request(url, {}, TypeMethodConstantEnum.GET);
+  }
+
+
+
 
 
 

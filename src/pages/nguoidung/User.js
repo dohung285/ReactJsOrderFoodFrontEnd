@@ -98,6 +98,7 @@ const User = (props) => {
   const [first, setFirst] = useState(0);
   const [totalRecord, setTotalRecord] = useState();
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [listGroupRole, setListGroupRole] = useState();
 
   const [idUser, setIdUser] = useState("");
 
@@ -132,8 +133,15 @@ const User = (props) => {
     hideLoader();
   };
 
+  const getAllGroupRole = async ()=>{
+    const result = await service.getAllGroupRole();
+    // console.log('result', result.list)
+    setListGroupRole(result.list);
+  }
+
   useEffect(() => {
     fetDataUser();
+    getAllGroupRole();
     // eslint-disable-next-line
   }, [props.location.search]);
   const onHandleChangeSearch = (e) => {
@@ -491,6 +499,7 @@ const User = (props) => {
           visible={visibleAddUser}
           onHide={handleHideAddUser}
           fetDataUser={fetDataUser}
+          listGroupRole={listGroupRole}
         />
         <EditUser
           visible={visibleEditUser}
