@@ -7,6 +7,7 @@ export const useRole =  () => {
 
     let arrayRole = [];
 
+    
     const service = new PermissionService();
 
     const fetPermission = async () => {
