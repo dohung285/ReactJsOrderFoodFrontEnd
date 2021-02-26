@@ -2,7 +2,7 @@ import "primeflex/primeflex.css";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -18,11 +18,44 @@ import {
 
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import { Tree } from "primereact/tree";
+import { MultiSelect } from 'primereact/multiselect';
 
 const AddUser = (props) => {
   // console.log("props", props);
   const { visible, onHide, listGroupRole } = props;
-  console.log('listGroupRole', listGroupRole)
+  // console.log('listGroupRole', listGroupRole)
+
+  const [selectedGroupRole, setSelectedGroupRole] = useState(null);
+
+  // const arrayValueHardCode = [
+  //   { name: "TestRole", code: "68a7f023-06cd-4aaa-9262-1a466223f846" },
+  //   { name: "Admin", code: "68a7f023-06cd-4aaa-9999-1a466223f846" }
+  // ]
+
+  let arrayReturn = [];
+  function processData(listGroupRole) {
+
+    // console.log("processData()")
+    // console.log('listGroupRole', listGroupRole)
+    if (listGroupRole != undefined) {
+      listGroupRole.forEach(element => {
+        // console.log('element', element.key, element.label)
+        let objTmp = {
+          name: element.label,
+          code: element.key
+        }
+        arrayReturn.push(objTmp);
+      });
+    }
+    // console.log('arrayReturn', arrayReturn)
+  }
+
+  processData(listGroupRole);
+
+  // useEffect(() => {
+  //   processData(listGroupRole);
+  // }, [listGroupRole])
+
 
   const [file, setFile] = useState(null);
 
@@ -147,10 +180,14 @@ const AddUser = (props) => {
   }
 
   const handleOnYesDialog = async (name) => {
-    // if (file === null) {
-    //   notifyError("Chưa chọn File");
-    //   return;
-    // }
+    let dsNhomQuyens = []
+    if (selectedGroupRole != undefined || selectedGroupRole != null) {
+      selectedGroupRole.forEach(e => {
+        dsNhomQuyens.push(e.code)
+      })
+    }
+    console.log('dsNhomQuyens', dsNhomQuyens)
+
     let isValid = formValidation();
     if (isValid) {
       console.log(` --SUBMITTING-- `);
@@ -162,8 +199,10 @@ const AddUser = (props) => {
         tendangnhap: tendangnhap,
         thudientu: thudientu,
         loai: loai,
+        dsNhomQuyen: dsNhomQuyens
       };
       let jsonObj = JSON.stringify(objUser);
+      console.log('jsonObj', jsonObj)
 
       let data = new FormData();
       let result;
@@ -336,6 +375,17 @@ const AddUser = (props) => {
   }
 
 
+  const handleOnChangeMultiSelect = (e) => {
+    // console.log('e', e)
+    // console.log('Object.values(e.value)', Object.values(e.value))
+    Object.values(e.value).forEach(element => {
+      // console.log('element', element.code)
+    })
+
+    setSelectedGroupRole(e.value)
+  }
+
+  console.log('selectedGroupRole', selectedGroupRole)
 
 
   return (
@@ -355,7 +405,7 @@ const AddUser = (props) => {
       <Dialog
         header="Thêm mới người dùng"
         visible={visible}
-        style={{ width: "50vw" }}
+        style={{ width: "50vw", heigh: "80vh" }}
         onHide={() => handleOnCloseXDialog()}
         footer={renderFooter("displayBasic")}
       >
@@ -495,8 +545,16 @@ const AddUser = (props) => {
           </div>
         </div>
 
+        <MultiSelect
+          value={selectedGroupRole}
+          options={arrayReturn}
+          // onChange={(e) => setSelectedGroupRole(e.value)}
+          onChange={handleOnChangeMultiSelect}
+          optionLabel="name"
+          placeholder="Chọn nhóm quyền" />
 
-        <Accordion activeIndex={activeIndex}
+
+        {/* <Accordion activeIndex={activeIndex}
           onChange={handleOnChangeAccordion}
         >
           <AccordionTab header="Danh sách nhóm quyền">
@@ -508,7 +566,7 @@ const AddUser = (props) => {
             // onUnselect={handOnUnSelected}
             />
           </AccordionTab>
-        </Accordion>
+        </Accordion> */}
 
 
       </Dialog>

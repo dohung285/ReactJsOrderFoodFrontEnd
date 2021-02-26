@@ -66,6 +66,18 @@ export default UserServices;
 
 
 // {
+//   "hoten": "fgdfgdfg",
+//   "diachi": "sdfsdfsdf",
+//   "sodienthoai": "0865478911",
+//   "tendangnhap": "quytd123",
+//   "thudientu": "qcfsd41@gmail.com",
+//   "dsNhomQuyen": [
+//       "df9d2001-6ac9-46b9-9c4d-edb61ac80ae6",
+//       "ba5022e8-76bc-458d-86c4-0e9c3c9c51fb"
+//   ],loai":"1"}
+
+
+// {
 //   "hoten":"fgdfgdfg",
 //   "diachi":"sdfsdfsdf",
 //   "sodienthoai":"0865478911",
