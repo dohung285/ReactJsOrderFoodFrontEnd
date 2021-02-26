@@ -12,13 +12,14 @@ export const useRole =  () => {
 
     const fetPermission = async () => {
         const result = await service.getAllPermissionByUser();
+    //    console.log('result', result)
         Object.values(result.list).forEach(x => {
             for (let index = 0; index < x.chucNangChiTietTrees.length; index++) {
                 // console.log('CNCT',x.chucNangChiTietTrees[index] )  
-                // console.log('x.chucNangChiTietTrees[i]', x.chucNangChiTietTrees[index].key, x.chucNangChiTietTrees[index].label)
+            //    console.log('x.chucNangChiTietTrees[i]', x.chucNangChiTietTrees[index].key, x.chucNangChiTietTrees[index].label)
                 arrayRole.push(x.chucNangChiTietTrees[index].key)
                 x.chucNangChiTietTrees[index].children.forEach(element => {
-                    // console.log('element', element.key, element.label)
+                //    console.log('element', element.key, element.label)
                     arrayRole.push(element.key)
                 });
             }
@@ -27,6 +28,7 @@ export const useRole =  () => {
         })
         // console.log('arrayRole', arrayRole)
         setarrayRoles(arrayRole)
+        
     };
  
 

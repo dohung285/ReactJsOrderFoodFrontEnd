@@ -16,6 +16,9 @@ import {
   TIME_OUT_CLOSE_NOTIFY,
 } from "../../constants/ConstantString";
 
+import { Accordion, AccordionTab } from 'primereact/accordion';
+import { Tree } from "primereact/tree";
+
 const AddUser = (props) => {
   // console.log("props", props);
   const { visible, onHide } = props;
@@ -316,6 +319,24 @@ const AddUser = (props) => {
     setFile(file);
   };
 
+
+
+  const [activeIndex, setActiveIndex] = useState(null);
+
+  const [selectedKeys, setSelectedKeys] = useState([]);
+
+  function handleOnChangeSelectedKey(e) {
+    // console.log("e", e.value);
+    // console.log('selectedKeys', selectedKeys)
+    setSelectedKeys(e.value);
+  }
+  function handleOnChangeAccordion(e) {
+    setActiveIndex(e.index);
+  }
+
+
+
+
   return (
     <div>
       <ToastContainer
@@ -329,7 +350,7 @@ const AddUser = (props) => {
         draggable
         pauseOnHover
       />
-      
+
       <Dialog
         header="Thêm mới người dùng"
         visible={visible}
@@ -472,6 +493,26 @@ const AddUser = (props) => {
             />
           </div>
         </div>
+
+
+        <Accordion activeIndex={activeIndex}
+         onChange={handleOnChangeAccordion}
+          >
+          <AccordionTab header="Danh sách nhóm quyền">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+            ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            <Tree
+                // value={datachucnangct}
+                selectionMode="checkbox"
+                selectionKeys={selectedKeys}
+                onSelectionChange={handleOnChangeSelectedKey}
+                // onUnselect={handOnUnSelected}
+              />
+          </AccordionTab>
+        </Accordion>
+
+
       </Dialog>
     </div>
   );

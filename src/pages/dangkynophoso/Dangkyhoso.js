@@ -188,7 +188,7 @@ const Dangkyhoso = (props) => {
                     <div className="p-lg-4">
 
                     </div>
-                    <div style={{ textAlign: 'center' }} classname="p-lg-4">
+                    <div style={{ textAlign: 'center' }} className="p-lg-4">
                         <div>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
                         <div>Độc lập-Tự do-Hạnh phúc</div>
                         <div>----------oOo----------</div>

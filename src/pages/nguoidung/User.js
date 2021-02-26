@@ -18,6 +18,8 @@ import {
   PERMISSION_ADD,
   PERMISSION_DELETE,
   PERMISSION_EDIT,
+  PERMISSION_ND_DELETE,
+  PERMISSION_ND_EDIT,
 } from "../../constants/PermissionString";
 import {
   convertJsonToQueryString,
@@ -33,7 +35,7 @@ const User = (props) => {
   const [visibleAddUser, setVisibleAddUser] = useState(false);
   const [visibleEditUser, setVisibleEditUser] = useState(false);
 
-  // const roleOfUser = useRole();
+  const roleOfUser = useRole();
 
   const [userObj, setUserObj] = useState({
     hoten: "",
@@ -99,7 +101,23 @@ const User = (props) => {
 
   const [idUser, setIdUser] = useState("");
 
+
+  // const [roleOfUser, setRoleOfUser] = useState();
+
   const [loader, showLoader, hideLoader] = useFullPageLoader();
+
+
+  // const fetAllRoles = async () => {
+  
+ 
+  //   const result = await service.getAllRoleWithPaging();
+  //   console.log('result', result)
+  //   if (result && result.status === 1000) {
+  //   //  setRoleOfUser(result)
+  //   }
+  // };
+
+
 
   const fetDataUser = async () => {
     showLoader();
@@ -301,23 +319,7 @@ const User = (props) => {
     // console.log('rowData', rowData)
     return (
       <React.Fragment>
-
-          <i
-            className="pi pi-pencil p-mr-2 icon-medium"
-            title={"Sửa"}
-            style={{ color: "blue", cursor: "pointer" }}
-            onClick={() => onHandleEdit(rowData)}
-          />
-
-          <i
-            className="pi pi-trash icon-medium"
-            style={{ color: "red", cursor: "pointer" }}
-            title={"Xóa"}
-            onClick={() => onHandleDelete(rowData)}
-          />
-
-
-        {/* {roleOfUser.includes(PERMISSION_EDIT) && (
+        {roleOfUser.includes(PERMISSION_ND_EDIT) && (
           <i
             className="pi pi-pencil p-mr-2 icon-medium"
             title={"Sửa"}
@@ -325,16 +327,14 @@ const User = (props) => {
             onClick={() => onHandleEdit(rowData)}
           />
         )}
-
-        {roleOfUser.includes(PERMISSION_DELETE) && (
+        {roleOfUser.includes(PERMISSION_ND_DELETE) && (
           <i
             className="pi pi-trash icon-medium"
             style={{ color: "red", cursor: "pointer" }}
             title={"Xóa"}
             onClick={() => onHandleDelete(rowData)}
           />
-        )} */}
-
+        )}
       </React.Fragment>
     );
   };

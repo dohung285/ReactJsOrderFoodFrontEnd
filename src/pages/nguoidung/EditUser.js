@@ -324,14 +324,6 @@ const EditUser = (props) => {
     setLoai(userObj.loai);
   }
 
-
-  
-  
-  // const x = useRole();
-  // console.log('x', x)
-
-  
-
   return (
     <div>
       <ToastContainer

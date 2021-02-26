@@ -10,11 +10,13 @@ import React, { useEffect, useRef, useState } from "react";
 import Moment from "react-moment";
 import { withRouter } from "react-router-dom";
 import { EXPRITIME_HIDER_LOADER, TIME_OUT_CLOSE_NOTIFY } from "../../constants/ConstantString";
+import { PERMISSION_VT_DELETE, PERMISSION_VT_EDIT } from "../../constants/PermissionString";
 import {
   convertJsonToQueryString,
   queryStringToJSON,
 } from "../../helper/CyberTaxHelper";
 import useFullPageLoader from "../../hooks/useFullPageLoader";
+import { useRole } from "../../hooks/useRole";
 import NhomQuyenService from "../../service/NhomQuyenService";
 import RoleService from "../../service/RoleService";
 import Add from "./action/Add";
@@ -22,6 +24,8 @@ import { Edit } from "./action/Edit";
 import { ViewRole } from "./ViewRole";
 
 const Role = (props) => {
+
+  const roleOfUser = useRole();
   //==================================================================================
   const [loader, showLoader, hideLoader] = useFullPageLoader();
 
@@ -280,18 +284,23 @@ const Role = (props) => {
   const actionBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
+        {roleOfUser.includes(PERMISSION_VT_EDIT) && (
         <i
           className="pi pi-pencil p-mr-2 icon-medium"
           title={"Sửa"}
           style={{ color: "blue", cursor: "pointer" }}
           onClick={() => handleEditNhomQuyen(rowData)}
         />
-        <i
-          className="pi pi-trash icon-medium"
-          style={{ color: "red", cursor: "pointer" }}
-          title={"Xóa"}
-          onClick={() => handleDeleteNhomQuyen(rowData.id)}
-        />
+        )}
+
+        {roleOfUser.includes(PERMISSION_VT_DELETE) && (
+                <i
+                  className="pi pi-trash icon-medium"
+                  style={{ color: "red", cursor: "pointer" }}
+                  title={"Xóa"}
+                  onClick={() => handleDeleteNhomQuyen(rowData.id)}
+                />
+        )}
       </React.Fragment>
     );
   };

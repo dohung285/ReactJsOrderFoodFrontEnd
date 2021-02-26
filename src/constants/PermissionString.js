@@ -30,11 +30,32 @@ export const PERMISSION_QLCH_ADD = "32845256-766f-11eb-9439-0242ac130002" // Th�
 export const PERMISSION_QLCH_DELETE = "fe3e8926-c8d5-45cf-8d2c-dd0b949c52f3" // Xóa					
 
 export const PERMISSION_ND = "4bd89a24-773b-11eb-9439-0242ac130002" // Người dùng 					
-export const PERMISSION_ND_EDIT = "7102f448-773b-11eb-9439-0242ac130002" // Sửa 					
+export const PERMISSION_ND_EDIT = "7102f448-773b-11eb-9439-0242ac130002" // Sửa 
+export const PERMISSION_ND_ADD = "5d90f4ea-777d-11eb-9439-0242ac130002" // Thêm 
+export const PERMISSION_ND_DELETE = "6338832c-777d-11eb-9439-0242ac130002" // Xóa 
+
+
 
 export const PERMISSION_QTHT = "9f0fb98b-7766-41fb-8a1f-9d1ad5aa66ea" // Quản trị hệ thống 					
 export const PERMISSION_QTHT_EDIT = "8f1ec869-abf4-42d1-bba2-33bd2604e86c" // Sửa 					
 // export const PERMISSION_QTHT_ADD = "e32ea907-60eb-4999-939f-3dd6cdb86d3a" // Thêm		
 
 
+
+// ===================================== FAKE ====================================================
+
 export const PERMISSION_TTDN = "e32ea907-60eb-4999-939f-3dd6cdb86d3a" // TTDN Fake
+
+export const PERMISSION_NTK_DKHS = "e32ea907-60eb-4999-939f-3dd6cdb86d3a" // NTK Fake
+export const PERMISSION_NTK_TKHS = "e32ea907-60eb-4999-939f-3dd6cdb86d3a" // NTK Fake
+export const PERMISSION_NTK_DKNHS = "e32ea907-60eb-4999-939f-3dd6cdb86d3a" // NTK Fake
+export const PERMISSION_NTK_TCHS = "e32ea907-60eb-4999-939f-3dd6cdb86d3a" // NTK Fake
+
+
+
+export const PERMISSION_NT_LGNT = "e32ea907-60eb-4999-939f-3dd6cdb86d3a" // NTK Fake
+export const PERMISSION_NT_LGNTT = "e32ea907-60eb-4999-939f-3dd6cdb86d3a" // NTK Fake
+export const PERMISSION_NT_TCGNT = "e32ea907-60eb-4999-939f-3dd6cdb86d3a" // NTK Fake
+export const PERMISSION_NT_TCTB = "e32ea907-60eb-4999-939f-3dd6cdb86d3a" // NTK Fake
+export const PERMISSION_NT_LTTS = "e32ea907-60eb-4999-939f-3dd6cdb86d3a" // NTK Fake
+export const PERMISSION_NT_TCTTS = "e32ea907-60eb-4999-939f-3dd6cdb86d3a" // NTK Fake

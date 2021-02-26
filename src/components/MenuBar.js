@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Menubar } from "primereact/menubar";
 import { useKeycloak } from "@react-keycloak/web";
-import logo from "../asset/images/cybertax_logo2.png";
+import { Menubar } from "primereact/menubar";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import logo from "../asset/images/cybertax_logo2.png";
+import { PERMISSION_CTS, PERMISSION_ND, PERMISSION_NTK_DKHS, PERMISSION_NTK_DKNHS, PERMISSION_NTK_TCHS, PERMISSION_NTK_TKHS, PERMISSION_NT_LGNT, PERMISSION_NT_LGNTT, PERMISSION_NT_LTTS, PERMISSION_NT_TCGNT, PERMISSION_NT_TCTB, PERMISSION_NT_TCTTS, PERMISSION_QLDK, PERMISSION_TTDN, PERMISSION_VT } from "../constants/PermissionString";
 import { useRole } from "../hooks/useRole";
-import { PERMISSION_ND, PERMISSION_QLDK, PERMISSION_VT, PERMISSION_TTDN, PERMISSION_CTS } from "../constants/PermissionString";
-import PermissionService from "../service/PermissionService";
 export const MenuBar = () => {
   let history = useHistory();
   function handleLogout() {
@@ -63,26 +62,26 @@ export const MenuBar = () => {
           label: "Đăng ký hồ sơ",
           icon: "pi pi-fw pi-user-plus",
 
-          permission: "f",
+          permission: PERMISSION_NTK_DKHS,
           command: () => history.push('/dang-ky-nhop-ho-so')
         },
         {
           label: "Trình ký hồ sơ",
           icon: "pi pi-fw pi-user-plus",
 
-          permission: "g",
+          permission: PERMISSION_NTK_TKHS,
           command: () => history.push('/trinh-ky-ho-so')
         },
         {
           label: "Đăng ký ngừng hô sơ",
           icon: "pi pi-fw pi-user-plus",
-          permission: "h",
+          permission: PERMISSION_NTK_DKNHS,
           command: () => history.push("/chung-thu-so"),
         },
         {
           label: "Tra cứu hồ sơ",
           icon: "pi pi-fw pi-user-plus",
-          permission: "i",
+          permission: PERMISSION_NTK_TCHS,
           command: () => history.push("/chung-thu-so"),
         },
       ],
@@ -95,37 +94,37 @@ export const MenuBar = () => {
         {
           label: "Lập giấy nộp tiền",
           icon: "pi pi-fw pi-user-plus",
-          permission: "f",
+          permission: PERMISSION_NT_LGNT,
           command: () => history.push('/lap-giay-nop-tien')
         },
         {
           label: "Lập giấy nộp tiền thay",
           icon: "pi pi-fw pi-user-plus",
-          permission: "g",
+          permission: PERMISSION_NT_LGNTT,
           command: () => history.push('/lap-giay-nop-tien-thay')
         },
         {
           label: "Tra cứu giấy nộp tiền",
           icon: "pi pi-fw pi-user-plus",
-          permission: "h",
+          permission: PERMISSION_NT_TCGNT,
           command: () => history.push("/tra-cuu-giay-nop-tien"),
         },
         {
           label: "Tra cứu thông báo",
           icon: "pi pi-fw pi-user-plus",
-          permission: "i",
+          permission: PERMISSION_NT_TCTB,
           command: () => history.push("/tra-cuu-thong-bao"),
         },
         {
           label: "Lập thư tra soát",
           icon: "pi pi-fw pi-user-plus",
-          permission: "i",
+          permission: PERMISSION_NT_LTTS,
           command: () => history.push("/lap-thu-tra-soat"),
         },
         {
           label: "Tra cứu thư tra soát",
           icon: "pi pi-fw pi-user-plus",
-          permission: "i",
+          permission: PERMISSION_NT_TCTTS,
           command: () => history.push("/tra-cuu-thu-tra-soat"),
         }
 
@@ -159,8 +158,6 @@ export const MenuBar = () => {
   let roleOfUser = useRole();
 
   function removeRoleDontHas(items,roleOfUser) {
-    console.log("removeRoleDontHas function")
-    console.log(roleOfUser);
     // console.log('roleOfUser', roleOfUser)
     // console.log('Before', items)
     if(roleOfUser){
@@ -168,14 +165,14 @@ export const MenuBar = () => {
         for (let index = 0; index < element.items.length; index++) {
           // debugger
           if (!roleOfUser.includes(element.items[index].permission)) {
-            console.log('co vao day', index, element.items[index].permission)
+            // console.log('co vao day', index, element.items[index].permission)
             element.items.splice(index, 1)
           }
         }
       });
     }
     
-    console.log('After', items)
+    // console.log('After', items)
   }
 
 

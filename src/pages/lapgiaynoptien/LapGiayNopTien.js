@@ -116,13 +116,13 @@ const LapGiayNopTien = () => {
 
 				{/* Chọn ngân hàng */}
 
-				<div className="container center">
+				{/* <div className="container center">
 					<div className="card-select">
 						<h2>Chọn ngân hàng nộp thuế</h2>
 						<hr />
 						<div className="p-fluid">
 							<div className="p-field p-grid" style={{ marginTop: '35px' }}>
-								<label htmlFor="firstname4" className="p-col-12 p-md-3" style={{ fontSize: '18px' }}>
+								<label htmlFor="firstname4" className="p-col-12 p-md-3" >
 									Ngân hàng
 								</label>
 								<div className="p-col-12 p-md-9">
@@ -140,100 +140,65 @@ const LapGiayNopTien = () => {
 							Tiếp theo
 						</button>
 					</div>
-				</div>
+				</div> */}
 
 
 				<div className="parent">
+					<div className="item item1">
+						<h1>Thông tin người nộp thuế</h1>
+						<div>Ngày: </div>
+						<div>Mã số thuế: </div>
+						<div>Tên người nộp thuế: </div>
+						<div>Địa chỉ: </div>
+					</div>
 
 
-
-
-
-					<h1>Thông tin người nộp thuế</h1>
-					<div>Ngày: </div>
-					<div>Mã số thuế: </div>
-					<div>Tên người nộp thuế: </div>
-					<div>Địa chỉ: </div>
 
 					<h1>Thông tin ngân hàng</h1>
-					<div className="p-field p-grid">
-						<label htmlFor="firstname4" className="p-col-12 p-md-3" style={{ fontSize: '18px' }}>
-							Đề nghị NH <span>*</span>
-						</label>
-						<div className="p-col-12 p-md-9">
-							<Dropdown
-								value={selectedBank}
-								options={banks}
-								onChange={onChangeBank}
-								optionLabel="name"
-								editable
-							/>
+					<div className="item item2 p-grid">
+
+						<div className="p-col-12 p-md-6" style={{ background: "red" }}>
+							<label htmlFor="firstname4" className="p-col-6 p-md-3">
+								Đề nghị NH <span>*</span>
+							</label>
+							<div className="p-col-12 p-md-9">
+								<Dropdown
+									value={selectedBank}
+									options={banks}
+									onChange={onChangeBank}
+									optionLabel="name"
+									editable
+								/>
+							</div>
 						</div>
-						<label htmlFor="firstname4" className="p-col-12 p-md-3" style={{ fontSize: '18px' }}>
-							Trích TK số <span>*</span>
-						</label>
-						<div className="p-col-12 p-md-9">
-							<Dropdown
-								value={selectedBank}
-								options={banks}
-								onChange={onChangeBank}
-								optionLabel="name"
-								editable
-							/>
+
+						<div className="p-col-12 p-md-6" style={{ background: "blue" }}>
+							<label htmlFor="firstname4" className="p-col-6 p-md-3" >
+								Trích TK số <span>*</span>
+							</label>
+							<div className="p-col-12 p-md-9">
+								<Dropdown
+									value={selectedBank}
+									options={banks}
+									onChange={onChangeBank}
+									optionLabel="name"
+									editable
+								/>
+							</div>
 						</div>
+
+
+
 					</div>
 
 
-					<h1>Thông tin cơ quan quản lý thu</h1>
-					<div className="p-field p-grid">
-						<label htmlFor="firstname4" className="p-col-12 p-md-3" style={{ fontSize: '18px' }}>
-							Tỉnh/TP <span>*</span>
-						</label>
-						<div className="p-col-12 p-md-9">
-							<Dropdown
-								value={selectedBank}
-								options={banks}
-								onChange={onChangeBank}
-								optionLabel="name"
-								editable
-							/>
-						</div>
-						<label htmlFor="firstname4" className="p-col-12 p-md-3" style={{ fontSize: '18px' }}>
-							Cơ quan quản lý thu <span>*</span>
-						</label>
-						<div className="p-col-12 p-md-9">
-							<Dropdown
-								value={selectedBank}
-								options={banks}
-								onChange={onChangeBank}
-								optionLabel="name"
-								editable
-							/>
-						</div>
-					</div>
 
-
-					<h1>Thông tin nơi phát sinh khoản thu</h1>
-					<div className="p-field p-grid">
-						<div className="p-field-radiobutton">
-							<RadioButton inputId="city1" name="city" value="Chicago" />
-							<label htmlFor="city1">Tỉnh/TP</label>
-						</div>
-						<div className="p-field-radiobutton">
-							<RadioButton inputId="city2" name="city" value="Los Angeles" />
-							<label htmlFor="city2">Quận/Huyện</label>
-						</div>
-						<div className="p-field-radiobutton">
-							<RadioButton inputId="city3" name="city" value="New York" />
-							<label htmlFor="city3">Xã/Phường</label>
-						</div>
-
-						<div>Tỉnh/TP</div>
-
+					<div className="item3">
+						<h1>Thông tin cơ quan quản lý thu</h1>
 						<div className="p-field p-grid">
-							<label htmlFor="firstname4" className="p-col-12 p-md-3" style={{ fontSize: '18px' }}>
-								Quận/Huyện
-								</label>
+							<label htmlFor="firstname4" className="p-col-12 p-md-3" >
+								Tỉnh/TP <span>*</span>
+							</label>
 							<div className="p-col-12 p-md-9">
 								<Dropdown
 									value={selectedBank}
@@ -243,9 +208,9 @@ const LapGiayNopTien = () => {
 									editable
 								/>
 							</div>
-							<label htmlFor="firstname4" className="p-col-12 p-md-3" style={{ fontSize: '18px' }}>
-								Xã/Phường
-								</label>
+							<label htmlFor="firstname4" className="p-col-12 p-md-3" >
+								Cơ quan quản lý thu <span>*</span>
+							</label>
 							<div className="p-col-12 p-md-9">
 								<Dropdown
 									value={selectedBank}
@@ -261,62 +226,83 @@ const LapGiayNopTien = () => {
 
 
 
-					<h1>Thông tin kho bạc</h1>
-					<div className="p-field p-grid">
-						<label htmlFor="firstname4" className="p-col-12 p-md-3" style={{ fontSize: '18px' }}>
-							Tỉnh/TP <span>*</span>
-						</label>
-						<div className="p-col-12 p-md-9">
-							<Dropdown
-								value={selectedBank}
-								options={banks}
-								onChange={onChangeBank}
-								optionLabel="name"
-								editable
-							/>
+					<div className="item4">
+						<h1>Thông tin nơi phát sinh khoản thu</h1>
+						<div className="p-field p-grid">
+							<div className="p-field-radiobutton">
+								<RadioButton inputId="city1" name="city" value="Chicago" />
+								<label htmlFor="city1">Tỉnh/TP</label>
+							</div>
+							<div className="p-field-radiobutton">
+								<RadioButton inputId="city2" name="city" value="Los Angeles" />
+								<label htmlFor="city2">Quận/Huyện</label>
+							</div>
+							<div className="p-field-radiobutton">
+								<RadioButton inputId="city3" name="city" value="New York" />
+								<label htmlFor="city3">Xã/Phường</label>
+							</div>
+
+							<div>Tỉnh/TP</div>
+
+							<div className="p-field p-grid">
+								<label htmlFor="firstname4" className="p-col-12 p-md-3" >
+									Quận/Huyện
+								</label>
+								<div className="p-col-12 p-md-9">
+									<Dropdown
+										value={selectedBank}
+										options={banks}
+										onChange={onChangeBank}
+										optionLabel="name"
+										editable
+									/>
+								</div>
+								<label htmlFor="firstname4" className="p-col-12 p-md-3" >
+									Xã/Phường
+								</label>
+								<div className="p-col-12 p-md-9">
+									<Dropdown
+										value={selectedBank}
+										options={banks}
+										onChange={onChangeBank}
+										optionLabel="name"
+										editable
+									/>
+								</div>
+							</div>
 						</div>
-						<label htmlFor="firstname4" className="p-col-12 p-md-3" style={{ fontSize: '18px' }}>
-							Ngân hàng ủy nhiệm thu <span>*</span>
-						</label>
-						<div className="p-col-12 p-md-9">
-							<Dropdown
-								value={selectedBank}
-								options={banks}
-								onChange={onChangeBank}
-								optionLabel="name"
-								editable
-							/>
-						</div>
-						<div className="p-field-radiobutton">
-							<RadioButton inputId="city1" name="city" value="Chicago" />
-							<label htmlFor="city1">Nộp vào NSNN(TK 7111)</label>
-						</div>
-						<div className="p-field-radiobutton">
-							<RadioButton inputId="city2" name="city" value="Los Angeles" />
-							<label htmlFor="city2">Thu hồi hoàn (TK 8993)</label>
-						</div>
+
 					</div>
 
 
 
-					<h1>Thông tin loại thuế</h1>
-					<div className="p-field p-grid">
-						<label htmlFor="firstname4" className="p-col-12 p-md-3" style={{ fontSize: '18px' }}>
-							Loại thuế <span>*</span>
-						</label>
-						<div className="p-col-12 p-md-9">
-							<Dropdown
-								value={selectedBank}
-								options={banks}
-								onChange={onChangeBank}
-								optionLabel="name"
-								editable
-							/>
-						</div>
-						<label htmlFor="firstname4" className="p-col-12 p-md-3" style={{ fontSize: '18px' }}>
-							Loại tiền <span>*</span>
-						</label>
-						<div className="p-col-12 p-md-9">
+					<div className="item5">
+						<h1>Thông tin kho bạc</h1>
+						<div className="p-field p-grid">
+							<label htmlFor="firstname4" className="p-col-12 p-md-3" >
+								Tỉnh/TP <span>*</span>
+							</label>
+							<div className="p-col-12 p-md-9">
+								<Dropdown
+									value={selectedBank}
+									options={banks}
+									onChange={onChangeBank}
+									optionLabel="name"
+									editable
+								/>
+							</div>
+							<label htmlFor="firstname4" className="p-col-12 p-md-3" >
+								Ngân hàng ủy nhiệm thu <span>*</span>
+							</label>
+							<div className="p-col-12 p-md-9">
+								<Dropdown
+									value={selectedBank}
+									options={banks}
+									onChange={onChangeBank}
+									optionLabel="name"
+									editable
+								/>
+							</div>
 							<div className="p-field-radiobutton">
 								<RadioButton inputId="city1" name="city" value="Chicago" />
 								<label htmlFor="city1">Nộp vào NSNN(TK 7111)</label>
@@ -326,24 +312,71 @@ const LapGiayNopTien = () => {
 								<label htmlFor="city2">Thu hồi hoàn (TK 8993)</label>
 							</div>
 						</div>
-						<h1>Nộp theo văn bản cơ quan có thẩm quyền</h1>
-						<div className="p-field-radiobutton">
-							<RadioButton inputId="city1" name="city" value="Chicago" />
-							<label htmlFor="city1">Kiểm toán nhà nước</label>
-						</div>
-						<div className="p-field-radiobutton">
-							<RadioButton inputId="city2" name="city" value="Los Angeles" />
-							<label htmlFor="city2">Thanh tra tài chính</label>
-						</div>
-						<div className="p-field-radiobutton">
-							<RadioButton inputId="city1" name="city" value="Chicago" />
-							<label htmlFor="city1">Thanh tra chính phủ</label>
-						</div>
-						<div className="p-field-radiobutton">
-							<RadioButton inputId="city2" name="city" value="Los Angeles" />
-							<label htmlFor="city2">Cơ quan có thẩm quyền khác</label>
-						</div>
 					</div>
+
+					<div className="item6">
+						<h1>Thông tin loại thuế</h1>
+						<div className="p-field p-grid">
+							<label htmlFor="firstname4" className="p-col-12 p-md-3" >
+								Loại thuế <span>*</span>
+							</label>
+							<div className="p-col-12 p-md-9">
+								<Dropdown
+									value={selectedBank}
+									options={banks}
+									onChange={onChangeBank}
+									optionLabel="name"
+									editable
+								/>
+							</div>
+							<label htmlFor="firstname4" className="p-col-12 p-md-3" >
+								Loại tiền <span>*</span>
+							</label>
+							<div className="p-col-12 p-md-9">
+								<div className="p-field-radiobutton">
+									<RadioButton inputId="city1" name="city" value="Chicago" />
+									<label htmlFor="city1">Nộp vào NSNN(TK 7111)</label>
+								</div>
+								<div className="p-field-radiobutton">
+									<RadioButton inputId="city2" name="city" value="Los Angeles" />
+									<label htmlFor="city2">Thu hồi hoàn (TK 8993)</label>
+								</div>
+							</div>
+							<h1>Nộp theo văn bản cơ quan có thẩm quyền</h1>
+							<div className="p-field-radiobutton">
+								<RadioButton inputId="city1" name="city" value="Chicago" />
+								<label htmlFor="city1">Kiểm toán nhà nước</label>
+							</div>
+							<div className="p-field-radiobutton">
+								<RadioButton inputId="city2" name="city" value="Los Angeles" />
+								<label htmlFor="city2">Thanh tra tài chính</label>
+							</div>
+							<div className="p-field-radiobutton">
+								<RadioButton inputId="city1" name="city" value="Chicago" />
+								<label htmlFor="city1">Thanh tra chính phủ</label>
+							</div>
+							<div className="p-field-radiobutton">
+								<RadioButton inputId="city2" name="city" value="Los Angeles" />
+								<label htmlFor="city2">Cơ quan có thẩm quyền khác</label>
+							</div>
+						</div>
+
+					</div>
+
+
+
+
+
+					<div className="item7"></div>
+					<div className="item8"></div>
+
+
+
+
+
+
+
+
 
 
 					<div>
