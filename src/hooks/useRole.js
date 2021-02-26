@@ -14,11 +14,11 @@ export const useRole =  () => {
         const result = await service.getAllPermissionByUser();
     //    console.log('result', result)
         Object.values(result.list).forEach(x => {
-            for (let index = 0; index < x.chucNangChiTietTrees.length; index++) {
-                // console.log('CNCT',x.chucNangChiTietTrees[index] )  
+            for (let index = 0; index < x.children.length; index++) {
+                // console.log('CNCT',x.children[index] )  
             //    console.log('x.chucNangChiTietTrees[i]', x.chucNangChiTietTrees[index].key, x.chucNangChiTietTrees[index].label)
-                arrayRole.push(x.chucNangChiTietTrees[index].key)
-                x.chucNangChiTietTrees[index].children.forEach(element => {
+                arrayRole.push(x.children[index].key)
+                x.children[index].children.forEach(element => {
                 //    console.log('element', element.key, element.label)
                     arrayRole.push(element.key)
                 });
