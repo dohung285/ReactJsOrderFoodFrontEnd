@@ -8,27 +8,46 @@
   .infoUser {
     margin: 0 20% 0 20%;
     height: 80%;
+    
   }
+
   .inputCus {
     outline-style: none;
     border-radius: 5px;
     height: 35px;
-    
+    opacity: 100%;
   }
-  .dropdowCus{
+  .dropdowCus {
     outline-style: none;
     border-radius: 5px;
     height: 35px;
   }
-
-  .ThongTinNguoiNopThue {
- 
+  .buttonright{
+    float: right;
+    a{
+      text-decoration: none;
+    }
   }
+
   .ChungThuSoTab {
-    .chungthusotab{
+    .chungthusotab {
       display: inline;
     }
   }
   .TaiKhoanNganHang {
+    .dropdowCusNH {
+      outline-style: none;
+      width: 100%;
+    }
+  }
+}
+.ThemChungThuSoChoUser {
+  .centers{
+    margin: 2% 20% 0 20%;
+    height: 80%;
+  }
+  .buttonCenter{
+    display: flex;
+    justify-content: center;
   }
 }

@@ -30,7 +30,7 @@ function DoanhNghiep() {
                     </TabPanel>
 
 
-                    <TabPanel header="Tài khoản ngân hàng" leftIcon="pi pi-cog" className="space" >
+                    <TabPanel header="Tài khoản ngân hàng" leftIcon="pi pi-home" className="space" >
                         <TaiKhoanNganHang></TaiKhoanNganHang>
                     </TabPanel>
 

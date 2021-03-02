@@ -1,10 +1,15 @@
+import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { RadioButton } from 'primereact/radiobutton';
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { CLIENT_RENEG_LIMIT } from 'tls';
+import { TIME_OUT_CLOSE_NOTIFY } from '../../../constants/ConstantString';
 import InfoBusinessService from '../../../service/InfoBusinessService';
+import ThemChungThuSoChoUser from './ThemChungThuSoChoUser';
 const emptyData = {
     mst: "",
     fax: "",
@@ -29,14 +34,13 @@ const emptyData = {
     tennguoinopthue: "",
     sodienthoai: ""
 }
+
 function ThongTinNguoiNopThue() {
     const service = new InfoBusinessService();
-    const [adData, setAdData] = useState({emptyData});
-    const [tencoquanthue,setTencoquanthue] = useState("Australia")
-    // state check errors
-    const [products, setProducts] = useState([
-        { stt: "1", hoten: "Cyber Tax", email: "cybertax@gamim.com" }
-    ])
+    const [adData, setAdData] = useState({ emptyData });
+    const [first, setFirst] = useState(0);
+    const [products, setProducts] = useState([])
+
 
     const updateField = (data, field) => {
         setAdData({
@@ -45,20 +49,64 @@ function ThongTinNguoiNopThue() {
         });
     }
 
+    const updateFieldProduct = (data, field) => {
+        console.log('data: ', data)
+        console.log('field', field)
+        setProducts({
+            ...products,
+            [field]: data,
+        });
+    }
+
+    useEffect(() => {
+        fetDataInfoBusinessById();
+    }, [])
 
     const fetDataInfoBusinessById = async () => {
-        const result = await service.getDataInfoBusinessById("721029f6-7663-427c-950c-8bbabf426481")
+        const result = await service.getDataInfoBusinessById();
         if (result && result.status === 1000) {
             setAdData(result.object);
             // setTotalRecord(result.totalItem);
-            console.log(result.object)
         }
+    };
+    const onEditorValueChange = (props, value) => {
+        let updatedProducts = [...props.value];
+        updatedProducts[props.rowIndex][props.field] = value;
+        setProducts(updatedProducts);
+    }
+    
+    const inputTextEditor = (props, field) => {
+        return <InputText type="text" value={props.rowData[field]} onChange={(e) => onEditorValueChange(props, e.target.value)} />;
+    }
+
+    const nameEditor  = (props) => {
+        return inputTextEditor(props, 'hoten');
+    }
+
+    const emailEditor = (props) => {
+        return inputTextEditor(props, 'email');
+    }
+
+    const renderRowIndex = (products, column) => {
+        return column.rowIndex + 1 + first;
     };
 
 
+    const addRow = async e => {
+        var obj = {
+            hoten: "",
+            email: ""
+        };
+       let data = products;
+       data.push(obj)
+        console.log('[...data]', [...data])
+        setProducts([...data])
+        console.log(products)
+    };
+
     return (
 
-        <div className=" ThongTinNguoiNopThue p-fluid">
+        <div className=" ThongTinNguoiNopThue">
             <div className="infoUser">
                 <form>
                     <div className="p-fluid p-formgrid p-grid">
@@ -92,7 +140,7 @@ function ThongTinNguoiNopThue() {
 
                         <div className="p-field p-col">
                             <label htmlFor="tennguoidaidien">Tên người đại diện</label>
-                            <InputText id="tennguoinopthue"
+                            <InputText id="tennguoidaidien"
                                 placeholder="Tên người nộp"
                                 className="inputCus"
                                 value={adData.tennguoinopthue || ""}
@@ -104,8 +152,8 @@ function ThongTinNguoiNopThue() {
 
                         <div className="p-field p-col">
                             <label htmlFor="matinh" >Tỉnh /TP</label>
-                            <Dropdown id="matinh"
-                                className="dropdowCus"
+                            <InputText id="matinh"
+                                className="inputCus"
                                 placeholder="Tỉnh/TP"
                                 name="matinh"
                                 disabled
@@ -134,8 +182,8 @@ function ThongTinNguoiNopThue() {
                     <div className="p-fluid p-formgrid p-grid">
                         <div className="p-field p-col">
                             <label htmlFor="tencoquanthue" >Tên cơ quan thuế</label>
-                            <Dropdown id="tencoquanthue"
-                                className="dropdowCus"
+                            <InputText id="tencoquanthue"
+                                className="inputCus"
                                 placeholder="Tên cơ quan thuế"
                                 name="tencoquanthue"
                                 disabled
@@ -149,8 +197,8 @@ function ThongTinNguoiNopThue() {
                     <div className="p-fluid p-formgrid p-grid">
                         <div className="p-field p-col">
                             <label htmlFor="maquanhuyen" >Quận /Huyện</label>
-                            <Dropdown id="maquanhuyen"
-                                className="dropdowCus"
+                            <InputText id="maquanhuyen"
+                                className="inputCus"
                                 placeholder="Quận /Huyện"
                                 name="maquanhuyen"
                                 disabled
@@ -161,8 +209,8 @@ function ThongTinNguoiNopThue() {
 
                         <div className="p-field p-col">
                             <label htmlFor="maphuongxa">Phường /Xã</label>
-                            <Dropdown id="maphuongxa"
-                                className="dropdowCus"
+                            <InputText id="maphuongxa"
+                                className="inputCus"
                                 placeholder="Phường /Xã"
                                 name="maphuongxa"
                                 disabled
@@ -203,15 +251,35 @@ function ThongTinNguoiNopThue() {
 
                 </form>
 
-                {/* <div className="card">
-                    <DataTable value={products} >
-                        <Column field="stt" header="STT"></Column>
-                        <Column field="hoten" header="Họ Tên"></Column>
-                        <Column field="email" header="Email"></Column>
+                <div className="card">
+                    <DataTable
+                        value={products}
+                        // value={data}
+                        editMode="cell"
+                        className="editable-cells-table"
+                    >
+                        <Column body={renderRowIndex} header="STT" headerStyle={{ width: '4rem' }}
+                            className="p-text-center" />
+                        <Column
+                            field="hoten"
+                            header="Họ tên"
+                            editor={nameEditor}
+                        ></Column>
+                        <Column
+                            field="email"
+                            header="Email"
+                            editor={emailEditor}
+                        ></Column>
                     </DataTable>
-                </div> */}
+                </div>
+                <Button label="Thêm dòng" className="p-button-success" onClick={addRow} />
+
+                <div className="buttonright">
+                    <Link to="/tao-chung-thu-so-cho-user" >
+                        <Button className="p-button-success" label="Tiếp tục" />
+                    </Link>
+                </div>
             </div>
-            <button type='button' onClick={fetDataInfoBusinessById}>Click for Data</button>
         </div>
     )
 }
