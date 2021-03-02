@@ -18,6 +18,7 @@ const LapGiayNopTien = () => {
 	const toast = useRef(null);
 	const [selectedStep, setSelectedStep] = useState(null);
 	const [selectedBank, setSelectedBank] = useState(null);
+	
 
 
 	const items = [
@@ -96,15 +97,18 @@ const LapGiayNopTien = () => {
 
 	//End Dialog
 
-
-	const testTable = [
-		{ stt: '1', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' },
-		{ stt: '2', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' },
-		{ stt: '3', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' },
-		{ stt: '4', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' },
-		{ stt: '5', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' },
-
-	];
+	const renderTacVu = () => {
+		return (
+			<div>
+				<i
+					className="pi pi-trash icon-medium"
+					style={{ color: "red", cursor: "pointer", textAlign: "center" }}
+					title={"Xóa"}
+					onClick={(e) => console.log('listData', listData,e.target) }
+				/>
+			</div>
+		);
+	}
 
 	let headerGroup = <ColumnGroup>
 
@@ -138,22 +142,43 @@ const LapGiayNopTien = () => {
 	};
 
 	const onEditorValueChange = (productKey, props, value) => {
-		console.log('productKey', productKey)
-		console.log('props', props)
-		console.log('value', value)
+		// console.log('productKey', productKey)
+		// console.log('props', props)
+		// console.log('value', value)
 
 		let updatedProducts = [...props.value];
-		console.log('Before: updatedProducts', updatedProducts)
+		// console.log('Before: updatedProducts', updatedProducts)
 		updatedProducts[props.rowIndex][props.field] = value;
-		console.log('After: updatedProducts', updatedProducts)
+		// console.log('After: updatedProducts', updatedProducts)
 		// dataTableFuncMap[`${productKey}`](updatedProducts);
 		setStt(updatedProducts)
 	}
 
 	const codeEditor = (productKey, props) => {
-		// console.log('productKey', productKey)
-		// console.log('props', props)
-		return inputTextEditor(productKey, props, 'stt');
+
+		// console.log('props', props.field)
+
+		if (props.field === 'sqdtb') {
+			return inputTextEditor(productKey, props, 'sqdtb');
+		}
+		if (props.field === 'ktnqdtb') {
+			return inputTextEditor(productKey, props, 'ktnqdtb');
+		}
+		if (props.field === 'ndcknnsnn') {
+			return inputTextEditor(productKey, props, 'ndcknnsnn');
+		}
+		if (props.field === 'snt') {
+			return inputTextEditor(productKey, props, 'snt');
+		}
+		if (props.field === 'stVND') {
+			return inputTextEditor(productKey, props, 'stVND');
+		}
+		if (props.field === 'mc') {
+			return inputTextEditor(productKey, props, 'mc');
+		}
+		if (props.field === 'mtm') {
+			return inputTextEditor(productKey, props, 'mtm');
+		}
 	}
 
 	const inputTextEditor = (productKey, props, field) => {
@@ -166,14 +191,15 @@ const LapGiayNopTien = () => {
 		};
 		let data = listData;
 		data.push(obj)
-		console.log('[...data]', [...data])
+		// console.log('[...data]', [...data])
 		setListData([...data])
-		console.log(listData)
+		// console.log(listData)
 	};
 
-	// const renderRowIndex = (listData, column) => {
-    //     return column.rowIndex + 1 + first;
-    // };
+	const renderRowIndex = (listData, column) => {
+		// console.log('column', column)
+		return column.rowIndex + 1;
+	};
 
 
 	return (
@@ -507,28 +533,24 @@ const LapGiayNopTien = () => {
 					</div>
 
 
-					{/* { stt: '1', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' },
-		{ stt: '2', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' },
-		{ stt: '3', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' },
-		{ stt: '4', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' },
-		{ stt: '5', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' }, */}
+
 
 					<h1 className="item-title">Truy vấn số thuế PN</h1>
-					<div className="item-table">
+					<div className="item-table" >
 						<div className="card" style={{ width: "90vw" }}>
 							<DataTable value={listData} headerColumnGroup={headerGroup} >
-								<Column  field="stt" editor={(props) => codeEditor('stt', props)} />
-								<Column field="sqdtb" />
-								<Column field="ktnqdtb" />
-								<Column field="ndcknnsnn" />
-								<Column field="snt" />
-								<Column field="stVND" />
-								<Column field="mc" />
-								<Column field="mtm" />
-								<Column field="tv" />
+								<Column field="stt" body={renderRowIndex} />
+								<Column field="sqdtb" editor={(props) => codeEditor('sqdtb', props)} />
+								<Column field="ktnqdtb" editor={(props) => codeEditor('ktnqdtb', props)} />
+								<Column field="ndcknnsnn" editor={(props) => codeEditor('ndcknnsnn', props)} />
+								<Column field="snt" editor={(props) => codeEditor('snt', props)} />
+								<Column field="stVND" editor={(props) => codeEditor('stVND', props)} />
+								<Column field="mc" editor={(props) => codeEditor('mc', props)} />
+								<Column field="mtm" editor={(props) => codeEditor('mtm', props)} />
+								<Column field="tv" body={renderTacVu} />
 							</DataTable>
 						</div>
-						<Button label="Thêm dòng" className="p-button-success" onClick={addRow}/>
+						<Button label="Thêm dòng" className="p-button-success" onClick={addRow} />
 						<div>Tổng cộng: </div>
 						<div>Tổng tiền ghi bằng chữ: </div>
 						<div>Tổng số ký hiện tại: </div>
