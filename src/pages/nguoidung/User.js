@@ -118,6 +118,29 @@ const User = (props) => {
   //   }
   // };
 
+  const [arrayPermissionSelected, setArrayPermissionSelected] = useState([])
+  const getAllPermissionSelected = async (id) => {
+    console.log('co chay',id)
+    let arrayPermissionSelectedsssssss = [];
+    // console.log('co chay vao day')
+    const result = await service.getAllPermissionSelected(id)
+    // console.log('result: ', result)
+    if (result.status === 1000) {
+      const array = result.list;
+      // console.log('array', array)
+      array.forEach(element => {
+        // console.log('element: ', element.key, element.label);
+        let objPer = {
+          name: element.label,
+          code: element.key
+        }
+        arrayPermissionSelectedsssssss.push(objPer)
+      });
+    }
+    console.log('arrayPermissionSelectedsssssss',arrayPermissionSelectedsssssss )
+    setArrayPermissionSelected(arrayPermissionSelectedsssssss)
+  }
+
 
 
   const fetDataUser = async () => {
@@ -143,6 +166,7 @@ const User = (props) => {
     fetDataUser();
     getAllGroupRole();
     // eslint-disable-next-line
+    // getAllPermissionSelected();
   }, [props.location.search]);
   
   const onHandleChangeSearch = (e) => {
@@ -230,7 +254,7 @@ const User = (props) => {
     setTimeout(function () {
       setVisibleEditUser(true);
     }, 2000);
-
+    getAllPermissionSelected(event.id);
     setVisibleEditUser(true);
   };
 
@@ -507,6 +531,7 @@ const User = (props) => {
           onHide={() => setVisibleEditUser(false)}
           userObj={userObj}
           fetDataUser={fetDataUser}
+          arrayPermissionSelected={arrayPermissionSelected}
         />
       </div>
       {loader}

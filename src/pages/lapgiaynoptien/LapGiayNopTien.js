@@ -5,8 +5,13 @@ import { RadioButton } from 'primereact/radiobutton';
 import { Steps } from 'primereact/steps';
 import { Toast } from 'primereact/toast';
 import React, { useRef, useState } from 'react';
+import { Column } from 'primereact/column';
+import { ColumnGroup } from 'primereact/columngroup';
+import { Row } from 'primereact/row';
 import './lapgiaynoptien.css';
 import './lapgiaynoptien.scss';
+import { DataTable } from 'primereact/datatable';
+import { InputText } from 'primereact/inputtext';
 
 const LapGiayNopTien = () => {
 	const [activeIndex, setActiveIndex] = useState(0);
@@ -90,6 +95,86 @@ const LapGiayNopTien = () => {
 	};
 
 	//End Dialog
+
+
+	const testTable = [
+		{ stt: '1', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' },
+		{ stt: '2', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' },
+		{ stt: '3', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' },
+		{ stt: '4', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' },
+		{ stt: '5', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' },
+
+	];
+
+	let headerGroup = <ColumnGroup>
+
+		<Row>
+			<Column header="Phần dành cho NNT ghi" colSpan={6} style={{ textAlign: "center" }} />
+			<Column header="Phần dành cho NH ủy nhiệm thu / NH phối hợp thu / KBNN ghi" colSpan={3} style={{ textAlign: "center" }} />
+		</Row>
+
+		<Row>
+			<Column header="STT" field="stt" style={{ textAlign: "center" }} />
+			<Column header="Số quyết định/thông báo" field="sqdtb" style={{ textAlign: "center" }} />
+			<Column header="Kỳ thuế/Ngày quyết định/Thông báo" field="ktnqdtb" style={{ textAlign: "center" }} />
+			<Column header="Nội dung các khoản NSNN" field="ndcknnsnn" style={{ textAlign: "center" }} />
+			<Column header="Số nguyên tệ" field="snt" style={{ textAlign: "center" }} />
+			<Column header="Số tiền VNĐ" field="stVND" style={{ textAlign: "center" }} />
+			<Column header="Mã chương" field="mc" style={{ textAlign: "center" }} />
+			<Column header="Mã tiểu mục" field="mtm" style={{ textAlign: "center" }} />
+			<Column header="Tác vụ" field="tv" style={{ textAlign: "center" }} />
+		</Row>
+	</ColumnGroup>;
+
+
+
+	//edit table 
+	const [listData, setListData] = useState([]);
+	const [stt, setStt] = useState(null);
+
+
+	const dataTableFuncMap = {
+		'stt': setStt,
+	};
+
+	const onEditorValueChange = (productKey, props, value) => {
+		console.log('productKey', productKey)
+		console.log('props', props)
+		console.log('value', value)
+
+		let updatedProducts = [...props.value];
+		console.log('Before: updatedProducts', updatedProducts)
+		updatedProducts[props.rowIndex][props.field] = value;
+		console.log('After: updatedProducts', updatedProducts)
+		// dataTableFuncMap[`${productKey}`](updatedProducts);
+		setStt(updatedProducts)
+	}
+
+	const codeEditor = (productKey, props) => {
+		// console.log('productKey', productKey)
+		// console.log('props', props)
+		return inputTextEditor(productKey, props, 'stt');
+	}
+
+	const inputTextEditor = (productKey, props, field) => {
+		return <InputText type="text" value={props.rowData[field]} onChange={(e) => onEditorValueChange(productKey, props, e.target.value)} />;
+	}
+
+	const addRow = async e => {
+		var obj = {
+			stt: '', sqdtb: '', ktnqdtb: '', ndcknnsnn: '', snt: '', stVND: '', mc: '', mtm: '', tv: ''
+		};
+		let data = listData;
+		data.push(obj)
+		console.log('[...data]', [...data])
+		setListData([...data])
+		console.log(listData)
+	};
+
+	// const renderRowIndex = (listData, column) => {
+    //     return column.rowIndex + 1 + first;
+    // };
+
 
 	return (
 		<div>
@@ -301,10 +386,11 @@ const LapGiayNopTien = () => {
 
 					<h1 className="item-title">Thông tin kho bạc</h1>
 					<div className="item p-grid">
+
 						<div className="p-col-12 p-md-6 p-lg-6" >
 							<div className="p-grid">
 								<label htmlFor="firstname4" className="p-col-4 p-md-3">
-									Tỉnh/TP <span>*</span>
+									Chuyển cho KBNN <span>*</span>
 								</label>
 								<div className="p-col-8 p-md-9">
 									<Dropdown
@@ -317,6 +403,7 @@ const LapGiayNopTien = () => {
 								</div>
 							</div>
 						</div>
+
 						<div className="p-col-12 p-md-6 p-lg-6">
 							<div className="p-grid">
 								<label htmlFor="firstname4" className="p-col-4 p-md-3" >
@@ -333,6 +420,27 @@ const LapGiayNopTien = () => {
 								</div>
 							</div>
 						</div>
+
+						<div className="p-col-12 p-md-6 p-lg-6">
+							<div className="p-grid">
+
+								<div className="p-field-radiobutton ">
+									<RadioButton inputId="city1" name="city" value="Chicago" />
+									<label htmlFor="city1">Nộp vào NSNN(TK 7111)</label>
+								</div>
+
+								<div className="p-field-radiobutton ">
+									<RadioButton inputId="city2" name="city" value="Los Angeles" />
+									<label htmlFor="city2">Thu hồi hoàn (TK 8993)</label>
+								</div>
+
+							</div>
+						</div>
+
+
+
+
+
 					</div>
 
 
@@ -355,23 +463,12 @@ const LapGiayNopTien = () => {
 								</div>
 							</div>
 						</div>
-						<div className="p-col-12 p-md-6 p-lg-6">
-							<div className="p-grid">
-								<div className="p-field-radiobutton">
-									<RadioButton inputId="city1" name="city" value="Chicago" />
-									<label htmlFor="city1">Nộp vào NSNN(TK 7111)</label>
-								</div>
-								<div className="p-field-radiobutton">
-									<RadioButton inputId="city2" name="city" value="Los Angeles" />
-									<label htmlFor="city2">Thu hồi hoàn (TK 8993)</label>
-								</div>
-							</div>
-						</div>
+
 
 						<div className="p-col-12 p-md-6 p-lg-6">
 							<div className="p-grid">
 								<label htmlFor="firstname4" className="p-col-4 p-md-3" >
-									Ngân hàng ủy nhiệm thu<span>*</span>
+									Loại tiền<span>*</span>
 								</label>
 								<div className="p-col-8 p-md-9">
 									<Dropdown
@@ -409,49 +506,37 @@ const LapGiayNopTien = () => {
 						</div>
 					</div>
 
-					<h1 className="item-title">Truy vấn số thuế PN</h1>
-					<div className="item">
-						<table className="table-lgnt">
-							<thead>
-								<tr>
-									<th colSpan="6">Phần dành cho NNT ghi</th>
-									<th colSpan="3">Phần dành cho NH ủy nhiệm thu/NH phối hợp thu/KBNN ghi</th>
-								</tr>
-								<tr>
-									<th>STT</th>
-									<th>Số quyết định/thông báo</th>
-									<th>Kỳ thuế/Ngày quyết định/thông báo</th>
-									<th>Nội dung các Khoản nộp NSNN</th>
-									<th>Số nguyên tệ</th>
-									<th>Số tiền VND</th>
-									<th>Mã chương</th>
-									<th>Mã tiểu mục</th>
-									<th>Hành động</th>
-								</tr>
-							</thead>
-							<tbody>
 
-							</tbody>
-						</table>
-						<button>Thêm dòng</button>
+					{/* { stt: '1', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' },
+		{ stt: '2', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' },
+		{ stt: '3', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' },
+		{ stt: '4', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' },
+		{ stt: '5', sqdtb: 'test', ktnqdtb: 'test', ndcknnsnn: 'test', snt: 'test', stVND: 'test', mc: 'test', mtm: 'test', tv: 'test' }, */}
+
+					<h1 className="item-title">Truy vấn số thuế PN</h1>
+					<div className="item-table">
+						<div className="card" style={{ width: "90vw" }}>
+							<DataTable value={listData} headerColumnGroup={headerGroup} >
+								<Column  field="stt" editor={(props) => codeEditor('stt', props)} />
+								<Column field="sqdtb" />
+								<Column field="ktnqdtb" />
+								<Column field="ndcknnsnn" />
+								<Column field="snt" />
+								<Column field="stVND" />
+								<Column field="mc" />
+								<Column field="mtm" />
+								<Column field="tv" />
+							</DataTable>
+						</div>
+						<Button label="Thêm dòng" className="p-button-success" onClick={addRow}/>
 						<div>Tổng cộng: </div>
 						<div>Tổng tiền ghi bằng chữ: </div>
 						<div>Tổng số ký hiện tại: </div>
 					</div>
-
 					<div className="item">
 						<button>Lập mới</button>
 						<button>Hoàn thành</button>
 					</div>
-
-
-
-
-
-
-
-
-
 				</div>
 			</div>
 		</div>

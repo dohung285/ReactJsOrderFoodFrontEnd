@@ -40,33 +40,38 @@ const EditUser = (props) => {
 
 
   // console.log("props", props);
-  const { visible, onHide, userObj } = props;
+  const { visible, onHide, userObj,getAllPermissionSelected } = props;
   // console.log("userObj", userObj);
+  console.log('getAllPermissionSelected', getAllPermissionSelected)
 
   const userService = new UserServices();
 
-  let arrayPermissionSelected = [];
 
-  const getAllPermissionSelected = async () => {
-    // console.log('co chay vao day')
-    const result = await userService.getAllPermissionSelected(userObj.id)
-    // console.log('result: ', result)
-    if (result.status === 1000) {
-      const array = result.list;
-      // console.log('array', array)
-      array.forEach(element => {
-        // console.log('element: ', element.key, element.label);
-        let objPer = {
-          name: element.label,
-          code: element.key
-        }
-        arrayPermissionSelected.push(objPer)
-      });
-    }
-    // setSelectedGroupRole(arrayPermissionSelected)
-    // console.log('arrayPermissionSelected', arrayPermissionSelected)
-  }
-  getAllPermissionSelected();
+
+  // const [arrayPermissionSelected, setArrayPermissionSelected] = useState([])
+  // const getAllPermissionSelected = async () => {
+  //   console.log('co chay')
+  //   let arrayPermissionSelectedsssssss = [];
+  //   // console.log('co chay vao day')
+  //   const result = await userService.getAllPermissionSelected(userObj.id)
+  //   // console.log('result: ', result)
+  //   if (result.status === 1000) {
+  //     const array = result.list;
+  //     // console.log('array', array)
+  //     array.forEach(element => {
+  //       // console.log('element: ', element.key, element.label);
+  //       let objPer = {
+  //         name: element.label,
+  //         code: element.key
+  //       }
+  //       arrayPermissionSelectedsssssss.push(objPer)
+  //     });
+  //   }
+  //   setArrayPermissionSelected(arrayPermissionSelectedsssssss)
+  //   // setSelectedGroupRole(arrayPermissionSelected)
+  //   // console.log('arrayPermissionSelected', arrayPermissionSelected)
+  // }
+  // getAllPermissionSelected();
 
 
 
@@ -99,6 +104,7 @@ const EditUser = (props) => {
 
   useEffect(() => {
     getAllGroupRole();
+    // getAllPermissionSelected();
   }, [])
 
 
@@ -165,6 +171,8 @@ const EditUser = (props) => {
     console.log('object', selectedGroupRole)
     selectedGroupRole.forEach(e => listDsNQ.push(e.code))
 
+    // console.log('object', object)
+
     let isValid = formValidation();
     if (isValid) {
       console.log(` --SUBMITTING-- `);
@@ -178,8 +186,10 @@ const EditUser = (props) => {
         dsNhomQuyen: listDsNQ
       };
       console.log("objUser", objUser);
-      let jsonObj = JSON.stringify(objUser);
 
+
+      
+      let jsonObj = JSON.stringify(objUser);
       let data = new FormData();
       let result;
       let id = userObj.id;
@@ -396,7 +406,7 @@ const EditUser = (props) => {
 
 
 
-    setSelectedGroupRole(arrayPermissionSelected)
+    // setSelectedGroupRole(arrayPermissionSelected)
   }
 
   return (

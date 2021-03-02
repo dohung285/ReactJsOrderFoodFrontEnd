@@ -79,3 +79,10 @@
 .item-title {
     margin-left:50px;
 }
+
+.item-table{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
