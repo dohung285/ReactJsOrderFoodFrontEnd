@@ -55,6 +55,13 @@ class UserServices extends FetchAPI {
   }
 
 
+  //  lấy ra danh sách các nhóm quyền đã chọn ở bước thêm user
+  public async getAllPermissionSelected(id:any){
+    let url = `${PREFIX_URL_NHOMQUYEN}/ndnq/getnqbyidnd/${id}`;
+    return await this.request(url, {}, TypeMethodConstantEnum.GET);
+  }
+
+
 
 
 

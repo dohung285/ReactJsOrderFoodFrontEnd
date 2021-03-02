@@ -376,7 +376,7 @@ const AddUser = (props) => {
 
 
   const handleOnChangeMultiSelect = (e) => {
-    // console.log('e', e)
+    console.log('e', e.value)
     // console.log('Object.values(e.value)', Object.values(e.value))
     Object.values(e.value).forEach(element => {
       // console.log('element', element.code)
@@ -385,7 +385,7 @@ const AddUser = (props) => {
     setSelectedGroupRole(e.value)
   }
 
-  console.log('selectedGroupRole', selectedGroupRole)
+  // console.log('selectedGroupRole', selectedGroupRole)
 
 
   return (

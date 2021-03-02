@@ -2,7 +2,9 @@ import { Accordion, AccordionTab } from "primereact/accordion";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import React, { useState } from "react";
+import { MultiSelect } from "primereact/multiselect";
+import { Tree } from "primereact/tree";
+import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import {
@@ -33,11 +35,73 @@ const EditUser = (props) => {
   const [loaiErrors, setLoaiErrors] = useState({});
   const [fileErrors, setFileErrors] = useState({});
 
+
+  const [selectedGroupRole, setSelectedGroupRole] = useState(null);
+
+
   // console.log("props", props);
   const { visible, onHide, userObj } = props;
   // console.log("userObj", userObj);
 
   const userService = new UserServices();
+
+  let arrayPermissionSelected = [];
+
+  const getAllPermissionSelected = async () => {
+    // console.log('co chay vao day')
+    const result = await userService.getAllPermissionSelected(userObj.id)
+    // console.log('result: ', result)
+    if (result.status === 1000) {
+      const array = result.list;
+      // console.log('array', array)
+      array.forEach(element => {
+        // console.log('element: ', element.key, element.label);
+        let objPer = {
+          name: element.label,
+          code: element.key
+        }
+        arrayPermissionSelected.push(objPer)
+      });
+    }
+    // setSelectedGroupRole(arrayPermissionSelected)
+    // console.log('arrayPermissionSelected', arrayPermissionSelected)
+  }
+  getAllPermissionSelected();
+
+
+
+  const [allPermission, setAllPermission] = useState([])
+  const getAllGroupRole = async () => {
+    let arrayPermissionAll = [];
+    const result = await userService.getAllGroupRole();
+    if (result.status === 1000) {
+      let array = result.list;
+      // console.log('result.list', result)
+
+      array.forEach(element => {
+        // console.log('element', element.key, element.label)
+        let objTmp = {
+          name: element.label,
+          code: element.key
+        }
+        arrayPermissionAll.push(objTmp)
+      });
+    }
+    // console.log(arrayPermissionAll);
+    setAllPermission(arrayPermissionAll);
+    // console.log('arrayPermissionAll', arrayPermissionAll)
+  }
+
+
+  const handleOnChangeMultiSelect = (e) => {
+    setSelectedGroupRole(e.value)
+  }
+
+  useEffect(() => {
+    getAllGroupRole();
+  }, [])
+
+
 
   // console.log('process.env.REACT_APP_BASE_API_URL', process.env.REACT_APP_BASE_API_URL);
 
@@ -95,6 +159,12 @@ const EditUser = (props) => {
   const handleOnYesDialog = async (name) => {
     //khởi tạo giá trị cho các ô input
 
+    let listDsNQ = [];
+
+
+    console.log('object', selectedGroupRole)
+    selectedGroupRole.forEach(e => listDsNQ.push(e.code))
+
     let isValid = formValidation();
     if (isValid) {
       console.log(` --SUBMITTING-- `);
@@ -105,8 +175,9 @@ const EditUser = (props) => {
         sodienthoai: sodienthoai,
         thudientu: thudientu,
         loai: loai,
+        dsNhomQuyen: listDsNQ
       };
-      //console.log("objUser", objUser);
+      console.log("objUser", objUser);
       let jsonObj = JSON.stringify(objUser);
 
       let data = new FormData();
@@ -322,6 +393,10 @@ const EditUser = (props) => {
     setTendangnhap(userObj.tendangnhap);
     setThudientu(userObj.thudientu);
     setLoai(userObj.loai);
+
+
+
+    setSelectedGroupRole(arrayPermissionSelected)
   }
 
   return (
@@ -461,6 +536,14 @@ const EditUser = (props) => {
                 />
               </div>
             </div>
+
+            <MultiSelect
+              value={selectedGroupRole}
+              options={allPermission}
+              onChange={handleOnChangeMultiSelect}
+              optionLabel="name"
+              placeholder="Chọn nhóm quyền" />
+
           </AccordionTab>
         </Accordion>
       </Dialog>

@@ -144,6 +144,7 @@ const User = (props) => {
     getAllGroupRole();
     // eslint-disable-next-line
   }, [props.location.search]);
+  
   const onHandleChangeSearch = (e) => {
     let valueSearch = e.target.value;
     // console.log("{...search, [e.target.name]:e.target.value}", {
