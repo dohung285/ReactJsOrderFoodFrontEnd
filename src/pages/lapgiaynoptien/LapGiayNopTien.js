@@ -18,7 +18,7 @@ const LapGiayNopTien = () => {
 	const toast = useRef(null);
 	const [selectedStep, setSelectedStep] = useState(null);
 	const [selectedBank, setSelectedBank] = useState(null);
-	
+
 
 
 	const items = [
@@ -97,14 +97,18 @@ const LapGiayNopTien = () => {
 
 	//End Dialog
 
-	const renderTacVu = () => {
+	const renderTacVu = (listData, rowData) => {
+		// console.log('listData', listData)
+		// console.log('rowData', rowData.rowIndex)
+		let index = rowData.rowIndex;
 		return (
 			<div>
 				<i
 					className="pi pi-trash icon-medium"
 					style={{ color: "red", cursor: "pointer", textAlign: "center" }}
 					title={"Xóa"}
-					onClick={(e) => console.log('listData', listData,e.target) }
+					onClick={() => handleDeleteRow(index)}
+
 				/>
 			</div>
 		);
@@ -198,8 +202,39 @@ const LapGiayNopTien = () => {
 
 	const renderRowIndex = (listData, column) => {
 		// console.log('column', column)
-		return column.rowIndex + 1;
+		return column.rowIndex;
 	};
+
+	const handleDeleteRow = (index) => {
+		// debugger
+		console.log('listData', listData)
+		console.log('index', index)
+		// if (index === 0) {
+		// 	const arrayCopy = listData.splice(0, listData.length)
+		// 	setListData(arrayCopy)
+		// }
+
+		
+		delete listData[index];
+
+		console.log('listData', listData)
+
+		setListData(listData)
+
+
+
+		// let arrayCopy = listData.splice(index, 1)
+		// console.log(arrayCopy);
+		// console.log('After listData', arrayCopy)
+		// setListData(arrayCopy)
+
+		// let arrayCopy = listData;
+		// arrayCopy.splice(index,1)
+		// setListData(arrayCopy)
+		// console.log('After listData', arrayCopy)
+
+	}
+
 
 
 	return (
@@ -551,13 +586,19 @@ const LapGiayNopTien = () => {
 							</DataTable>
 						</div>
 						<Button label="Thêm dòng" className="p-button-success" onClick={addRow} />
+					</div>
+
+
+					<div className="item-total">
+
 						<div>Tổng cộng: </div>
 						<div>Tổng tiền ghi bằng chữ: </div>
 						<div>Tổng số ký hiện tại: </div>
 					</div>
-					<div className="item">
-						<button>Lập mới</button>
-						<button>Hoàn thành</button>
+
+					<div className="item-button">
+						<Button label="Lập mới" className="p-button-danger" onClick={() => console.log('listData', listData)} />
+						<Button label="Hoàn thành" className="p-button-warning" />
 					</div>
 				</div>
 			</div>
