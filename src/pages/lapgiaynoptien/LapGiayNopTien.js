@@ -12,6 +12,8 @@ import './lapgiaynoptien.css';
 import './lapgiaynoptien.scss';
 import { DataTable } from 'primereact/datatable';
 import { InputText } from 'primereact/inputtext';
+import { uuid } from 'uuidv4';
+import { v4 } from 'uuid';
 
 const LapGiayNopTien = () => {
 	const [activeIndex, setActiveIndex] = useState(0);
@@ -19,6 +21,13 @@ const LapGiayNopTien = () => {
 	const [selectedStep, setSelectedStep] = useState(null);
 	const [selectedBank, setSelectedBank] = useState(null);
 
+
+	const [disableSelectBank, setDisableSelectBank] = useState(false);
+
+
+	const [ttnpst, setTtnpst] = useState(null); //Thông tin nơi phát sinh khoản thu
+	const [radioTTKB, setRadioTTKB] = useState(null); // Thông tin kho bạc
+	const [radioNTVBCQCTQ, setRadioNTVBCQCTQ] = useState(null); //Nộp theo văn bản cơ quan có thẩm quyền
 
 
 	const items = [
@@ -53,7 +62,7 @@ const LapGiayNopTien = () => {
 	];
 
 	const onChangeBank = (e) => {
-		console.log(e.target.value.name)
+		// console.log(e.target.value.name)
 		setSelectedBank(e.value);
 
 	};
@@ -63,6 +72,7 @@ const LapGiayNopTien = () => {
 			onClick('displayBasic');
 			return;
 		}
+		setDisableSelectBank(true)
 
 	};
 
@@ -97,17 +107,18 @@ const LapGiayNopTien = () => {
 
 	//End Dialog
 
-	const renderTacVu = (listData, rowData) => {
+	const renderTacVu = (e) => {
 		// console.log('listData', listData)
 		// console.log('rowData', rowData.rowIndex)
-		let index = rowData.rowIndex;
+		let id = e.id;
 		return (
 			<div>
 				<i
 					className="pi pi-trash icon-medium"
 					style={{ color: "red", cursor: "pointer", textAlign: "center" }}
 					title={"Xóa"}
-					onClick={() => handleDeleteRow(index)}
+					// onClick={()=> console.log('e', e.id)}
+					onClick={() => handleDeleteRow(id)}
 
 				/>
 			</div>
@@ -191,48 +202,29 @@ const LapGiayNopTien = () => {
 
 	const addRow = async e => {
 		var obj = {
-			stt: '', sqdtb: '', ktnqdtb: '', ndcknnsnn: '', snt: '', stVND: '', mc: '', mtm: '', tv: ''
+			id: v4()
+			, stt: '', sqdtb: '', ktnqdtb: '', ndcknnsnn: '', snt: '', stVND: '', mc: '', mtm: '', tv: ''
 		};
 		let data = listData;
 		data.push(obj)
 		// console.log('[...data]', [...data])
+		// console.log('obj', obj)
 		setListData([...data])
 		// console.log(listData)
 	};
 
 	const renderRowIndex = (listData, column) => {
 		// console.log('column', column)
-		return column.rowIndex;
+		return column.rowIndex + 1;
 	};
 
-	const handleDeleteRow = (index) => {
-		// debugger
-		console.log('listData', listData)
-		console.log('index', index)
-		// if (index === 0) {
-		// 	const arrayCopy = listData.splice(0, listData.length)
-		// 	setListData(arrayCopy)
-		// }
-
-		
-		delete listData[index];
-
-		console.log('listData', listData)
-
-		setListData(listData)
 
 
-
-		// let arrayCopy = listData.splice(index, 1)
-		// console.log(arrayCopy);
-		// console.log('After listData', arrayCopy)
-		// setListData(arrayCopy)
-
-		// let arrayCopy = listData;
-		// arrayCopy.splice(index,1)
-		// setListData(arrayCopy)
-		// console.log('After listData', arrayCopy)
-
+	//
+	const handleDeleteRow = (id) => {
+		const list = listData.filter(item => item.id !== id);
+		// console.log('list', list)
+		setListData(list)
 	}
 
 
@@ -262,7 +254,7 @@ const LapGiayNopTien = () => {
 
 				{/* Chọn ngân hàng */}
 
-				{/* <div className="container center">
+				{disableSelectBank === false && <div className="container center">
 					<div className="card-select">
 						<h2>Chọn ngân hàng nộp thuế</h2>
 						<hr />
@@ -286,321 +278,320 @@ const LapGiayNopTien = () => {
 							Tiếp theo
 						</button>
 					</div>
-				</div> */}
-
-
-				<h1 className="item-title">Thông tin người nộp thuế</h1>
-				<div className="parent">
-					<div className="item item1">
-						<div>Ngày: </div>
-						<div>Mã số thuế: </div>
-						<div>Tên người nộp thuế: </div>
-						<div>Địa chỉ: </div>
-					</div>
-
-
-
-
-
-					<h1 className="item-title">Thông tin ngân hàng</h1>
-					<div className="item p-grid">
-
-						<div className="p-col-12 p-md-6 p-lg-6" >
-							<div className="p-grid">
-								<label htmlFor="firstname4" className="p-col-4 p-md-3">
-									Đề nghị NH <span>*</span>
-								</label>
-								<div className="p-col-8 p-md-9">
-									<Dropdown
-										value={selectedBank}
-										options={banks}
-										onChange={onChangeBank}
-										optionLabel="name"
-										editable
-									/>
-								</div>
-							</div>
-						</div>
-
-						<div className="p-col-12 p-md-6 p-lg-6">
-							<div className="p-grid">
-								<label htmlFor="firstname4" className="p-col-4 p-md-3" >
-									Trích TK số <span>*</span>
-								</label>
-								<div className="p-col-8 p-md-9">
-									<Dropdown
-										value={selectedBank}
-										options={banks}
-										onChange={onChangeBank}
-										optionLabel="name"
-										editable
-									/>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<h1 className="item-title">Thông tin cơ quan quản lý thu</h1>
-					<div className="item p-grid">
-						<div className="p-col-12 p-md-6 p-lg-6" >
-							<div className="p-grid">
-								<label htmlFor="firstname4" className="p-col-4 p-md-3">
-									Tỉnh/TP <span>*</span>
-								</label>
-								<div className="p-col-8 p-md-9">
-									<Dropdown
-										value={selectedBank}
-										options={banks}
-										onChange={onChangeBank}
-										optionLabel="name"
-										editable
-									/>
-								</div>
-							</div>
-						</div>
-						<div className="p-col-12 p-md-6 p-lg-6">
-							<div className="p-grid">
-								<label htmlFor="firstname4" className="p-col-4 p-md-3" >
-									Cơ quan quản lý thu <span>*</span>
-								</label>
-								<div className="p-col-8 p-md-9">
-									<Dropdown
-										value={selectedBank}
-										options={banks}
-										onChange={onChangeBank}
-										optionLabel="name"
-										editable
-									/>
-								</div>
-							</div>
-						</div>
-					</div>
-
-
-
-					<h1 className="item-title">Thông tin nơi phát sinh khoản thu</h1>
-					<div className="item">
-						<div className="p-grid">
-							<div className="p-col-12 p-md-3 p-lg-3">
-								<div className="p-field-radiobutton">
-									<RadioButton inputId="city1" name="city" value="Chicago" />
-									<label htmlFor="city1">Tỉnh/TP</label>
-								</div>
-							</div>
-
-							<div className="p-col-12 p-md-3 p-lg-3">
-								<div className="p-field-radiobutton">
-									<RadioButton inputId="city2" name="city" value="Los Angeles" />
-									<label htmlFor="city2">Quận/Huyện</label>
-								</div>
-							</div>
-
-							<div className="p-col-12 p-md-3 p-lg-3">
-								<div className="p-field-radiobutton">
-									<RadioButton inputId="city3" name="city" value="New York" />
-									<label htmlFor="city3">Xã/Phường</label>
-								</div>
-
-							</div>
-						</div>
-
-						<div className="item p-col-12 p-md-12 p-lg-12">Tỉnh/TP: </div>
-						<div className="item p-grid">
-							<div className="p-col-12 p-md-6">
-								<div className="p-grid">
-									<label htmlFor="firstname4" className="p-col-4 p-md-3" >
-										Quận/Huyện
-								</label>
-									<div className="p-col-8 p-md-9">
-										<Dropdown
-											value={selectedBank}
-											options={banks}
-											onChange={onChangeBank}
-											optionLabel="name"
-											editable
-										/>
-									</div>
-								</div>
-							</div>
-
-							<div className="p-col-12 p-md-6">
-								<div className="p-grid">
-									<label htmlFor="firstname4" className="p-col-4 p-md-3" >
-										Xã/Phường
-								</label>
-									<div className="p-col-8 p-md-9">
-										<Dropdown
-											value={selectedBank}
-											options={banks}
-											onChange={onChangeBank}
-											optionLabel="name"
-											editable
-										/>
-									</div>
-								</div>
-							</div>
-						</div>
-
-					</div>
-
-
-
-					<h1 className="item-title">Thông tin kho bạc</h1>
-					<div className="item p-grid">
-
-						<div className="p-col-12 p-md-6 p-lg-6" >
-							<div className="p-grid">
-								<label htmlFor="firstname4" className="p-col-4 p-md-3">
-									Chuyển cho KBNN <span>*</span>
-								</label>
-								<div className="p-col-8 p-md-9">
-									<Dropdown
-										value={selectedBank}
-										options={banks}
-										onChange={onChangeBank}
-										optionLabel="name"
-										editable
-									/>
-								</div>
-							</div>
-						</div>
-
-						<div className="p-col-12 p-md-6 p-lg-6">
-							<div className="p-grid">
-								<label htmlFor="firstname4" className="p-col-4 p-md-3" >
-									Ngân hàng ủy nhiệm thu<span>*</span>
-								</label>
-								<div className="p-col-8 p-md-9">
-									<Dropdown
-										value={selectedBank}
-										options={banks}
-										onChange={onChangeBank}
-										optionLabel="name"
-										editable
-									/>
-								</div>
-							</div>
-						</div>
-
-						<div className="p-col-12 p-md-6 p-lg-6">
-							<div className="p-grid">
-
-								<div className="p-field-radiobutton ">
-									<RadioButton inputId="city1" name="city" value="Chicago" />
-									<label htmlFor="city1">Nộp vào NSNN(TK 7111)</label>
-								</div>
-
-								<div className="p-field-radiobutton ">
-									<RadioButton inputId="city2" name="city" value="Los Angeles" />
-									<label htmlFor="city2">Thu hồi hoàn (TK 8993)</label>
-								</div>
-
-							</div>
-						</div>
-
-
-
-
-
-					</div>
-
-
-
-					<h1 className="item-title">Thông tin loại thuế</h1>
-					<div className="item p-grid">
-						<div className="p-col-12 p-md-6 p-lg-6" >
-							<div className="p-grid">
-								<label htmlFor="firstname4" className="p-col-4 p-md-3">
-									Loại thuế <span>*</span>
-								</label>
-								<div className="p-col-8 p-md-9">
-									<Dropdown
-										value={selectedBank}
-										options={banks}
-										onChange={onChangeBank}
-										optionLabel="name"
-										editable
-									/>
-								</div>
-							</div>
-						</div>
-
-
-						<div className="p-col-12 p-md-6 p-lg-6">
-							<div className="p-grid">
-								<label htmlFor="firstname4" className="p-col-4 p-md-3" >
-									Loại tiền<span>*</span>
-								</label>
-								<div className="p-col-8 p-md-9">
-									<Dropdown
-										value={selectedBank}
-										options={banks}
-										onChange={onChangeBank}
-										optionLabel="name"
-										editable
-									/>
-								</div>
-							</div>
-						</div>
-
-					</div>
-
-					<div className="item p-grid">
-						<div className="p-col-12 p-md-6 p-lg-6">
-							<div>Nộp theo văn bản cơ quan có thẩm quyền</div>
-							<div className="p-field-radiobutton">
-								<RadioButton inputId="city1" name="city" value="Chicago" />
-								<label htmlFor="city1">Kiểm toán nhà nước</label>
-							</div>
-							<div className="p-field-radiobutton">
-								<RadioButton inputId="city2" name="city" value="Los Angeles" />
-								<label htmlFor="city2">Thanh tra tài chính</label>
-							</div>
-							<div className="p-field-radiobutton">
-								<RadioButton inputId="city1" name="city" value="Chicago" />
-								<label htmlFor="city1">Thanh tra chính phủ</label>
-							</div>
-							<div className="p-field-radiobutton">
-								<RadioButton inputId="city2" name="city" value="Los Angeles" />
-								<label htmlFor="city2">Cơ quan có thẩm quyền khác</label>
-							</div>
-						</div>
-					</div>
-
-
-
-
-					<h1 className="item-title">Truy vấn số thuế PN</h1>
-					<div className="item-table" >
-						<div className="card" style={{ width: "90vw" }}>
-							<DataTable value={listData} headerColumnGroup={headerGroup} >
-								<Column field="stt" body={renderRowIndex} />
-								<Column field="sqdtb" editor={(props) => codeEditor('sqdtb', props)} />
-								<Column field="ktnqdtb" editor={(props) => codeEditor('ktnqdtb', props)} />
-								<Column field="ndcknnsnn" editor={(props) => codeEditor('ndcknnsnn', props)} />
-								<Column field="snt" editor={(props) => codeEditor('snt', props)} />
-								<Column field="stVND" editor={(props) => codeEditor('stVND', props)} />
-								<Column field="mc" editor={(props) => codeEditor('mc', props)} />
-								<Column field="mtm" editor={(props) => codeEditor('mtm', props)} />
-								<Column field="tv" body={renderTacVu} />
-							</DataTable>
-						</div>
-						<Button label="Thêm dòng" className="p-button-success" onClick={addRow} />
-					</div>
-
-
-					<div className="item-total">
-
-						<div>Tổng cộng: </div>
-						<div>Tổng tiền ghi bằng chữ: </div>
-						<div>Tổng số ký hiện tại: </div>
-					</div>
-
-					<div className="item-button">
-						<Button label="Lập mới" className="p-button-danger" onClick={() => console.log('listData', listData)} />
-						<Button label="Hoàn thành" className="p-button-warning" />
-					</div>
 				</div>
+				}
+
+				{disableSelectBank === true && <div>
+					<h1 className="item-title">Thông tin người nộp thuế</h1>
+					<div className="parent">
+						<div className="item item1">
+							<div>Ngày: </div>
+							<div>Mã số thuế: </div>
+							<div>Tên người nộp thuế: </div>
+							<div>Địa chỉ: </div>
+						</div>
+
+						<h1 className="item-title">Thông tin ngân hàng</h1>
+						<div className="item p-grid">
+
+							<div className="p-col-12 p-md-6 p-lg-6" >
+								<div className="p-grid">
+									<label htmlFor="firstname4" className="p-col-4 p-md-3">
+										Đề nghị NH <span>*</span>
+									</label>
+									<div className="p-col-8 p-md-9">
+										<Dropdown
+											value={selectedBank}
+											options={banks}
+											onChange={onChangeBank}
+											optionLabel="name"
+											editable
+										/>
+									</div>
+								</div>
+							</div>
+
+							<div className="p-col-12 p-md-6 p-lg-6">
+								<div className="p-grid">
+									<label htmlFor="firstname4" className="p-col-4 p-md-3" >
+										Trích TK số <span>*</span>
+									</label>
+									<div className="p-col-8 p-md-9">
+										<Dropdown
+											value={selectedBank}
+											options={banks}
+											onChange={onChangeBank}
+											optionLabel="name"
+											editable
+										/>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<h1 className="item-title">Thông tin cơ quan quản lý thu</h1>
+						<div className="item p-grid">
+							<div className="p-col-12 p-md-6 p-lg-6" >
+								<div className="p-grid">
+									<label htmlFor="firstname4" className="p-col-4 p-md-3">
+										Tỉnh/TP <span>*</span>
+									</label>
+									<div className="p-col-8 p-md-9">
+										<Dropdown
+											value={selectedBank}
+											options={banks}
+											onChange={onChangeBank}
+											optionLabel="name"
+											editable
+										/>
+									</div>
+								</div>
+							</div>
+							<div className="p-col-12 p-md-6 p-lg-6">
+								<div className="p-grid">
+									<label htmlFor="firstname4" className="p-col-4 p-md-3" >
+										Cơ quan quản lý thu <span>*</span>
+									</label>
+									<div className="p-col-8 p-md-9">
+										<Dropdown
+											value={selectedBank}
+											options={banks}
+											onChange={onChangeBank}
+											optionLabel="name"
+											editable
+										/>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+
+						<h1 className="item-title">Thông tin nơi phát sinh khoản thu</h1>
+						<div className="item">
+							<div className="p-grid">
+								<div className="p-col-12 p-md-3 p-lg-3">
+									<div className="p-field-radiobutton">
+										<RadioButton inputId="tinhtp" name="ttnpst" value="tinhtp" onChange={(e) => setTtnpst(e.target.value)} checked={ttnpst === 'tinhtp'} />
+										<label htmlFor="tinhtp">Tỉnh/TP</label>
+									</div>
+								</div>
+
+								<div className="p-col-12 p-md-3 p-lg-3">
+									<div className="p-field-radiobutton">
+										<RadioButton inputId="quanhuyen" name="ttnpst" value="quanhuyen" onChange={(e) => setTtnpst(e.target.value)} checked={ttnpst === 'quanhuyen'} />
+										<label htmlFor="quanhuyen">Quận/Huyện</label>
+									</div>
+								</div>
+
+								<div className="p-col-12 p-md-3 p-lg-3">
+									<div className="p-field-radiobutton">
+										<RadioButton inputId="xaphuong" name="ttnpst" value="xaphuong" onChange={(e) => setTtnpst(e.target.value)} checked={ttnpst === 'xaphuong'} />
+										<label htmlFor="xaphuong">Xã/Phường</label>
+									</div>
+
+								</div>
+							</div>
+
+							<div className="item p-col-12 p-md-12 p-lg-12">Tỉnh/TP: </div>
+							<div className="item p-grid">
+								<div className="p-col-12 p-md-6">
+									<div className="p-grid">
+										<label htmlFor="firstname4" className="p-col-4 p-md-3" >
+											Quận/Huyện
+								</label>
+										<div className="p-col-8 p-md-9">
+											<Dropdown
+												value={selectedBank}
+												options={banks}
+												onChange={onChangeBank}
+												optionLabel="name"
+												editable
+											/>
+										</div>
+									</div>
+								</div>
+
+								<div className="p-col-12 p-md-6">
+									<div className="p-grid">
+										<label htmlFor="firstname4" className="p-col-4 p-md-3" >
+											Xã/Phường
+								</label>
+										<div className="p-col-8 p-md-9">
+											<Dropdown
+												value={selectedBank}
+												options={banks}
+												onChange={onChangeBank}
+												optionLabel="name"
+												editable
+											/>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+
+
+
+						<h1 className="item-title">Thông tin kho bạc</h1>
+						<div className="item p-grid">
+
+							<div className="p-col-12 p-md-6 p-lg-6" >
+								<div className="p-grid">
+									<label htmlFor="firstname4" className="p-col-4 p-md-3">
+										Chuyển cho KBNN <span>*</span>
+									</label>
+									<div className="p-col-8 p-md-9">
+										<Dropdown
+											value={selectedBank}
+											options={banks}
+											onChange={onChangeBank}
+											optionLabel="name"
+											editable
+										/>
+									</div>
+								</div>
+							</div>
+
+							<div className="p-col-12 p-md-6 p-lg-6">
+								<div className="p-grid">
+									<label htmlFor="firstname4" className="p-col-4 p-md-3" >
+										Ngân hàng ủy nhiệm thu<span>*</span>
+									</label>
+									<div className="p-col-8 p-md-9">
+										<Dropdown
+											value={selectedBank}
+											options={banks}
+											onChange={onChangeBank}
+											optionLabel="name"
+											editable
+										/>
+									</div>
+								</div>
+							</div>
+
+							<div className="p-col-12 p-md-6 p-lg-6">
+								<div className="p-grid">
+
+									<div className="p-field-radiobutton ">
+										<RadioButton inputId="tk7111" name="radioTTKB" value="tk7111" onChange={(e) => setRadioTTKB(e.target.value)} checked={radioTTKB === 'tk7111'} />
+										<label htmlFor="city1">Nộp vào NSNN(TK 7111)</label>
+									</div>
+
+									<div className="p-field-radiobutton ">
+										<RadioButton inputId="tk8993" name="radioTTKB" value="tk8993" onChange={(e) => setRadioTTKB(e.target.value)} checked={radioTTKB === 'tk8993'} />
+										<label htmlFor="city2">Thu hồi hoàn (TK 8993)</label>
+									</div>
+
+								</div>
+							</div>
+
+
+
+
+
+						</div>
+
+
+
+						<h1 className="item-title">Thông tin loại thuế</h1>
+						<div className="item p-grid">
+							<div className="p-col-12 p-md-6 p-lg-6" >
+								<div className="p-grid">
+									<label htmlFor="firstname4" className="p-col-4 p-md-3">
+										Loại thuế <span>*</span>
+									</label>
+									<div className="p-col-8 p-md-9">
+										<Dropdown
+											value={selectedBank}
+											options={banks}
+											onChange={onChangeBank}
+											optionLabel="name"
+											editable
+										/>
+									</div>
+								</div>
+							</div>
+
+
+							<div className="p-col-12 p-md-6 p-lg-6">
+								<div className="p-grid">
+									<label htmlFor="firstname4" className="p-col-4 p-md-3" >
+										Loại tiền<span>*</span>
+									</label>
+									<div className="p-col-8 p-md-9">
+										<Dropdown
+											value={selectedBank}
+											options={banks}
+											onChange={onChangeBank}
+											optionLabel="name"
+											editable
+										/>
+									</div>
+								</div>
+							</div>
+
+						</div>
+
+						<div className="item p-grid">
+							<div className="p-col-12 p-md-6 p-lg-6">
+								<div>Nộp theo văn bản cơ quan có thẩm quyền</div>
+								<div className="p-field-radiobutton">
+									<RadioButton inputId="city1" name="radioNTVBCQCTQ" value="ktnn" onChange={(e) => setRadioNTVBCQCTQ(e.target.value)} checked={radioNTVBCQCTQ === 'ktnn'} />
+									<label htmlFor="city1">Kiểm toán nhà nước</label>
+								</div>
+								<div className="p-field-radiobutton">
+									<RadioButton inputId="city2" name="radioNTVBCQCTQ" value="tttc" onChange={(e) => setRadioNTVBCQCTQ(e.target.value)} checked={radioNTVBCQCTQ === 'tttc'} />
+									<label htmlFor="city2">Thanh tra tài chính</label>
+								</div>
+								<div className="p-field-radiobutton">
+									<RadioButton inputId="city1" name="radioNTVBCQCTQ" value="tccp" onChange={(e) => setRadioNTVBCQCTQ(e.target.value)} checked={radioNTVBCQCTQ === 'tccp'} />
+									<label htmlFor="city1">Thanh tra chính phủ</label>
+								</div>
+								<div className="p-field-radiobutton">
+									<RadioButton inputId="city2" name="radioNTVBCQCTQ" value="cqctq" onChange={(e) => setRadioNTVBCQCTQ(e.target.value)} checked={radioNTVBCQCTQ === 'cqctq'} />
+									<label htmlFor="city2">Cơ quan có thẩm quyền khác</label>
+								</div>
+							</div>
+						</div>
+
+
+
+
+						<Button label="Truy vấn số thuế PN" className="p-button-warning" className="item-title" />
+						<div className="item-table" >
+							<div className="card" style={{ width: "90vw" }}>
+								<DataTable value={listData} headerColumnGroup={headerGroup} >
+									<Column field="stt" body={renderRowIndex} />
+									<Column field="sqdtb" editor={(props) => codeEditor('sqdtb', props)} />
+									<Column field="ktnqdtb" editor={(props) => codeEditor('ktnqdtb', props)} />
+									<Column field="ndcknnsnn" editor={(props) => codeEditor('ndcknnsnn', props)} />
+									<Column field="snt" editor={(props) => codeEditor('snt', props)} />
+									<Column field="stVND" editor={(props) => codeEditor('stVND', props)} />
+									<Column field="mc" editor={(props) => codeEditor('mc', props)} />
+									<Column field="mtm" editor={(props) => codeEditor('mtm', props)} />
+									<Column field="tv" body={renderTacVu} />
+								</DataTable>
+							</div>
+							<Button label="Thêm dòng" className="p-button-success" onClick={addRow} />
+						</div>
+
+
+						<div className="item-total">
+
+							<div>Tổng cộng: </div>
+							<div>Tổng tiền ghi bằng chữ: </div>
+							<div>Tổng số ký hiện tại: </div>
+						</div>
+
+						<div className="item-button">
+							<Button label="Lập mới" className="p-button-danger" onClick={() => console.log('listData', listData)} />
+							<Button label="Hoàn thành" className="p-button-warning" />
+						</div>
+					</div>
+				</div>}
+
 			</div>
 		</div>
 
