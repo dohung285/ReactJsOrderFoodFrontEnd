@@ -487,7 +487,6 @@ const Dangkyhoso = (props) => {
     return (
 
         <React.Fragment>
-            <Toast ref={toastpri}></Toast>
             <div className={"card"}>
                 <div className={"card-header"}>
                     <h1>Đăng ký hồ sơ nộp qua mạng</h1>

@@ -14,6 +14,19 @@ class ThongTinNganHangService extends FetchAPI {
         let url = `${PREFIX_URL}/nh/save`;
         return await this.request(url, data, TypeMethodConstantEnum.POST)
     }
+    public async suaNganHang(id: string, data: any) {
+        let url = `${PREFIX_URL}/nh/update/${id}`;
+        return await this.request(url, data, TypeMethodConstantEnum.POST)
+    }
+    public async xoaNganHang(id:any) {
+        console.log(id)
+        let url = `${PREFIX_URL}/nh/delete/${id}`;
+        return await this.request(url, {}, TypeMethodConstantEnum.POST)
+    }
+    public async layNganHangTheoTen(name:string){
+        let url = `${PREFIX_URL}/nh/details/${name}`;
+        return await this.request(url, {}, TypeMethodConstantEnum.GET)
+    }
 }
 
 export default ThongTinNganHangService;

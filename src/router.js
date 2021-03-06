@@ -15,7 +15,6 @@ import TraCuuGiayNopTien from './pages/tracuugiaynoptien/TraCuuGiayNopTien';
 import TraCuuThongBao from './pages/tracuuthongbao/TraCuuThongBao';
 import LapThuTraSoat from './pages/lapthutrasoat/LapThuTraSoat';
 import TraCuuThuTraSoat from './pages/tracuuthutrasoat/TraCuuThuTraSoat';
-import ThemChungThuSoChoUser from './pages/doanh-nghiep/tab/ThemChungThuSoChoUser';
 
 
 
@@ -76,11 +75,6 @@ const routes=[
 
     },
     {
-        path: '/tao-chung-thu-so-cho-user',
-        exact: true,
-        main: () => <ThemChungThuSoChoUser />
-    },
-    {
         path: '/ho-so',
         exact: true,
         main: () => <DoanhNghiep />
@@ -125,7 +119,6 @@ const routes=[
         main: () => <TraCuuThuTraSoat />
 
     },
-
 
     {
         path: '',
