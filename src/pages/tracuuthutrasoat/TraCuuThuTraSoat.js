@@ -111,103 +111,105 @@ const TraCuuThuTraSoat = () => {
     return (
         <div className="card">
             <div className="card-body">
-                <h1>Tra cứu thư tra soát</h1>
+                {/* <h1>Tra cứu thư tra soát</h1> */}
 
-                <div className="p-grid nested-grid">
-                    <div className="p-col-6">
-                        <div className="p-field p-grid">
-                            <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Số tra soát</label>
-                            <div className="p-col">
-                                <InputText id="firstname3" type="text" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-                <div className="p-grid nested-grid">
-                    <div className="p-col-6">
-                        <div className="p-field p-grid">
-                            <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Ngày lập từ ngày</label>
-                            <div className="p-col">
-                                {/* <InputText id="firstname3" type="text" /> */}
-                                <Calendar id="time24" value={dateNLTN} onChange={(e) => setdateNLTN(e.value)} showTime showSeconds showIcon />
+                <fieldset>
+                    <legend>Tra cứu thư tra soát</legend>
+                    <div className="p-grid nested-grid">
+                        <div className="p-col-6">
+                            <div className="p-field p-grid">
+                                <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Số tra soát</label>
+                                <div className="p-col">
+                                    <InputText id="firstname3" type="text" />
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="p-col-6">
-                        <div className="p-field p-grid">
-                            <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Đến ngày</label>
-                            <div className="p-col">
-                                <Calendar id="time24" value={dateNLDN} onChange={(e) => setDateNLDN(e.value)} showTime showSeconds showIcon  />
+
+
+                    <div className="p-grid nested-grid">
+                        <div className="p-col-6">
+                            <div className="p-field p-grid">
+                                <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Ngày lập từ ngày</label>
+                                <div className="p-col">
+                                    {/* <InputText id="firstname3" type="text" /> */}
+                                    <Calendar id="time24" value={dateNLTN} onChange={(e) => setdateNLTN(e.value)} showTime showSeconds showIcon />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="p-col-6">
+                            <div className="p-field p-grid">
+                                <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Đến ngày</label>
+                                <div className="p-col">
+                                    <Calendar id="time24" value={dateNLDN} onChange={(e) => setDateNLDN(e.value)} showTime showSeconds showIcon />
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
 
-                <div className="p-grid nested-grid">
-                    <div className="p-col-6">
-                        <div className="p-field p-grid">
-                            <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Ngày gửi từ ngày</label>
-                            <div className="p-col">
-                                <Calendar id="time24" value={dateNGTN} onChange={(e) => setDateNGTN(e.value)} showTime showSeconds showIcon />
+                    <div className="p-grid nested-grid">
+                        <div className="p-col-6">
+                            <div className="p-field p-grid">
+                                <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Ngày gửi từ ngày</label>
+                                <div className="p-col">
+                                    <Calendar id="time24" value={dateNGTN} onChange={(e) => setDateNGTN(e.value)} showTime showSeconds showIcon />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="p-col-6">
+                            <div className="p-field p-grid">
+                                <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Đến ngày</label>
+                                <div className="p-col">
+                                    <Calendar id="time24" value={dateNGDN} onChange={(e) => setdateNGDN(e.value)} showTime showSeconds showIcon />
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="p-col-6">
-                        <div className="p-field p-grid">
-                            <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Đến ngày</label>
-                            <div className="p-col">
-                                <Calendar id="time24" value={dateNGDN} onChange={(e) => setdateNGDN(e.value)} showTime showSeconds showIcon />
+
+                    <div className="p-grid nested-grid">
+                        <div className="p-col-6">
+                            <div className="p-field p-grid">
+                                <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Trạng thái</label>
+                                <div className="p-col">
+                                    <Dropdown value={selectedCity1} options={cities} onChange={e => setSelectedCity1(e.value)} optionLabel="name" placeholder="Select a City" style={{ width: '219px' }} />
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
 
-                <div className="p-grid nested-grid">
-                    <div className="p-col-6">
-                        <div className="p-field p-grid">
-                            <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Trạng thái</label>
-                            <div className="p-col">
-                                <Dropdown value={selectedCity1} options={cities} onChange={e => setSelectedCity1(e.value)} optionLabel="name" placeholder="Select a City" style={{ width: '219px' }} />
+
+                    <div className="p-grid nested-grid">
+                        <div className="p-col-6">
+                            <div className="p-field p-grid">
+                                <Button label="Tra cứu" />
                             </div>
                         </div>
                     </div>
-                </div>
 
+                </fieldset>
 
+                <fieldset>
+                    <legend>Kết quả tra cứu</legend>
+                    <DataTable value={dataOfTable} headerColumnGroup={headerGroup}>
+                        <Column field="stt" />
+                        <Column field="sts" />
+                        <Column field="stcsgnt" />
+                        <Column field="sct" />
+                        <Column field="cqt" />
+                        <Column field="ng" />
+                        <Column field="tt" />
+                        <Column field="tb" body={renderThongBao} />
+                        <Column field="tv" body={renderTacVu} />
+                    </DataTable>
+                    <Button label="Xuất Excel" />
+                </fieldset>
 
-                <div className="p-grid nested-grid">
-                    <div className="p-col-6">
-                        <div className="p-field p-grid">
-                            <Button label="Tra cứu" />
-                        </div>
-                    </div>
-                </div>
-
-                {/* { stt: 1, sts: '', stcsgnt: '', sct: '', cqt: '', ng: '', tt: '', tb: '', tv: '' }, */}
-
-                <h1>Kết quả tra cứu</h1>
-                <DataTable value={dataOfTable} headerColumnGroup={headerGroup}>
-                    <Column field="stt" />
-                    <Column field="sts" />
-                    <Column field="stcsgnt" />
-                    <Column field="sct" />
-                    <Column field="cqt" />
-                    <Column field="ng" />
-                    <Column field="tt" />
-                    <Column field="tb" body={renderThongBao} />
-                    <Column field="tv" body={renderTacVu} />
-                </DataTable>
-
-
-
-                <Button label="Xuất Excel" />
 
 
 

@@ -78,8 +78,7 @@ const TraCuuGiayNopTien = () => {
             <div className="card ">
                 <h1> Tra cứu giấy nộp tiền</h1>
                 <div className="p-grid nested-grid card-body">
-                    {/* Phần bên trái className="card"*/}
-
+                  
                     <div className="p-col-4">
 
                         <div className="p-col-12">
