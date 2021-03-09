@@ -1,54 +1,63 @@
 body {
   margin: 0;
-  padding: 0!important;
+  padding: 0 !important;
   box-sizing: border-box;
-  font-family: "Roboto",sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 13px;
   line-height: 1.6;
 }
+
 * {
   box-sizing: border-box;
 }
-.layout-content{
+
+.layout-content {
   width: 100%;
   margin: 0 auto;
 }
-section{
-  background: #f2f4f7!important;
+
+section {
+  background: #f2f4f7 !important;
   min-height: 84.5vh;
-  .main-container{
+
+  .main-container {
     padding: 1.8rem;
     -webkit-transition: all ease-in .3s;
     transition: all ease-in .3s;
   }
 }
+
 footer {
   background-color: #777;
   padding: 10px;
   text-align: center;
   color: white;
 }
+
 .p-menubar {
   padding: 0.5rem;
   background: #ffffff;
   color: #333333;
-  border-radius: 0!important;
-  .p-menubar-start{
+  border-radius: 0 !important;
+
+  .p-menubar-start {
     border-right: 1px solid #c8c8c8;
     padding-right: 1rem;
   }
-  .p-menubar-end{
-    .menubar-right{
-      .p-submenu-list{
+
+  .p-menubar-end {
+    .menubar-right {
+      .p-submenu-list {
         margin-left: -6.3rem !important;
       }
     }
   }
 }
-.card{
+
+.card {
   border-radius: 5px;
-  -webkit-box-shadow: 0 1px 20px 0 rgba(69,90,100,.08);
-  box-shadow: 0 1px 20px 0 rgba(69,90,100,.08);
+  -webkit-box-shadow: 0 1px 20px 0 rgba(69, 90, 100, .08);
+  box-shadow: 0 1px 20px 0 rgba(69, 90, 100, .08);
   border: none;
   margin-bottom: 30px;
   position: relative;
@@ -60,38 +69,63 @@ footer {
   word-wrap: break-word;
   background-color: #fff;
   background-clip: border-box;
-  .card-header{
+
+  .card-header {
     background-color: transparent;
     border-bottom: none;
     padding-left: 25px;
     padding-right: 25px;
     padding-bottom: 25px;
+
     .p-toolbar {
       padding: 0.5rem !important;
     }
   }
-  .card-body{
+
+  .card-body {
     padding-left: 25px;
     padding-right: 25px;
     padding-bottom: 25px;
   }
+
   .p-datatable-thead tr th {
     background-color: #0a3d62 !important;
     border: solid 1px #e4dede !important;
     padding: 0.5rem !important;
     color: white !important;
   }
+
   .p-datatable-tbody tr td {
     border: solid 1px #e4dede !important;
     padding: 0.5rem !important;
   }
+
   .p-datepicker table td {
-     padding: 0 !important;
+    padding: 0 !important;
+  }
+
+  .item-required {
+    color: red;
+  }
+
+  .errorClass {
+    color: #bf1650;
+  }
+
+  .error {
+    border: 1px solid red;
+  }
+
+  .errorClass::before {
+    display: inline;
+    content: "⚠ ";
   }
 }
-.hide{
-  display: none!important;
+
+.hide {
+  display: none !important;
 }
-.show{
-  display: flex!important;
+
+.show {
+  display: flex !important;
 }

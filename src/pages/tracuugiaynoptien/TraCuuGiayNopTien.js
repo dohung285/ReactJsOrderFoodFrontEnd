@@ -77,196 +77,208 @@ const TraCuuGiayNopTien = () => {
         <React.Fragment>
             <div className="card ">
                 <h1> Tra cứu giấy nộp tiền</h1>
-                <div className="p-grid nested-grid card-body">
-                  
-                    <div className="p-col-4">
 
-                        <div className="p-col-12">
-                            <div className="p-field p-grid">
-                                <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Số chứng từ ngân hàng</label>
-                                <div className="p-col">
-                                    <InputText id="firstname3" type="text" />
-                                </div>
-                            </div>
-                        </div>
+                <fieldset>
+                    <legend>Nhập liệu</legend>
+                    <div className="p-grid nested-grid card-body">
 
-                        <div className="p-col-12">
-                            <div className="p-field p-grid">
-                                <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Ngân hàng</label>
-                                <div className="p-col">
-                                    <Dropdown value={selectedCity1} options={cities} onChange={e => setSelectedCity1(e.value)} optionLabel="name" placeholder="Select a City" style={{ width: '219px' }} />
-                                </div>
-                            </div>
-                        </div>
+                        <div className="p-col-4">
 
-                        <div className="p-col-12">
-                            <div className="p-field p-grid">
-                                <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Số tài khoản</label>
-                                <div className="p-col">
-                                    <InputText id="firstname3" type="text" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="p-col-12">
-                            <div className="p-field p-grid">
-                                <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Số GNT</label>
-                                <div className="p-col">
-                                    <InputText id="firstname3" type="text" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="p-col-12">
-                            <div className="p-field p-grid">
-                                <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Loại tiền</label>
-                                <div className="p-col">
-                                    <Dropdown value={selectedCity1} options={cities} onChange={e => setSelectedCity1(e.value)} optionLabel="name" placeholder="Select a City" style={{ width: '219px' }} />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="p-col-12">
-                            <div className="p-field p-grid">
-                                <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Số tham chiếu</label>
-                                <div className="p-col">
-                                    <InputText id="firstname3" type="text" />
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-
-
-                    {/* Phần bên phải */}
-                    <div className="p-col-8">
-                        <div className="p-grid">
-                            {/* Dong 1 */}
-                            <div className="p-col-6">
-                                <div className="p-col-12">
-                                    <div className="p-field p-grid">
-                                        <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Ngày nộp GNT từ ngày</label>
-                                        <div className="p-col">
-                                            {/* <InputText id="firstname3" type="text" /> */}
-                                            <Calendar id="time" value={date} onChange={(e) => setDate(e.value)} showTime showSeconds showIcon/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="p-col-6">
-                                <div className="p-col-12">
-                                    <div className="p-field p-grid">
-                                        <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Đến ngày</label>
-                                        <div className="p-col">
-                                            <Calendar id="time" value={date} onChange={(e) => setDate(e.value)} showTime showSeconds showIcon />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {/* End Dong 1 */}
-
-                            {/* Dong 2 */}
-                            <div className="p-col-6">
-                                <div className="p-col-12">
-                                    <div className="p-field p-grid">
-                                        <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Ngày nộp GNT từ ngày</label>
-                                        <div className="p-col">
-                                            <Calendar id="time" value={date} onChange={(e) => setDate(e.value)} showTime showSeconds showIcon/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="p-col-6">
-                                <div className="p-col-12">
-                                    <div className="p-field p-grid">
-                                        <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Đến ngày</label>
-                                        <div className="p-col">
-                                            <Calendar id="time" value={date} onChange={(e) => setDate(e.value)} showTime showSeconds showIcon/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {/* End Dong 2 */}
-
-                            {/* Dong 3 */}
-                            <div className="p-col-6">
-                                <div className="p-col-12">
-                                    <div className="p-field p-grid">
-                                        <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Ngày nộp thuế từ ngày</label>
-                                        <div className="p-col">
-                                            <Calendar id="time" value={date} onChange={(e) => setDate(e.value)} showTime showSeconds showIcon/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="p-col-6">
-                                <div className="p-col-12">
-                                    <div className="p-field p-grid">
-                                        <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Đến ngày</label>
-                                        <div className="p-col">
-                                            <Calendar id="time" value={date} onChange={(e) => setDate(e.value)} showTime showSeconds showIcon/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {/* End Dong 3 */}
-
-
-
-                            {/* Dong 4 */}
                             <div className="p-col-12">
-                                <div className="p-col-12">
-                                    <div className="p-field p-grid">
-                                        <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Trạng thái</label>
-                                        <div className="p-col">
-                                            <Dropdown value={selectedCity1} options={cities} onChange={e => setSelectedCity1(e.value)} optionLabel="name" placeholder="Select a City" style={{ width: '219px' }} />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {/* End dong 4 */}
-
-
-                            {/* Dong 5 */}
-                            <div className="p-col-6">
-                                <div className="p-col-12">
-                                    <div className="p-field p-grid">
-                                        <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Tổng tiền nộp từ</label>
-                                        <div className="p-col">
-                                            <InputText id="firstname3" type="text" />
-                                        </div>
+                                <div className="p-field p-grid">
+                                    <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Số chứng từ ngân hàng</label>
+                                    <div className="p-col">
+                                        <InputText id="firstname3" type="text" />
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="p-col-6">
-                                <div className="p-col-12">
-                                    <div className="p-field p-grid">
-                                        <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Đến</label>
-                                        <div className="p-col">
-                                            <InputText id="firstname3" type="text" />
-                                        </div>
+                            <div className="p-col-12">
+                                <div className="p-field p-grid">
+                                    <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Ngân hàng</label>
+                                    <div className="p-col">
+                                        <Dropdown value={selectedCity1} options={cities} onChange={e => setSelectedCity1(e.value)} optionLabel="name" placeholder="Select a City" style={{ width: '219px' }} />
                                     </div>
                                 </div>
                             </div>
-                            {/* End Dong 5 */}
+
+                            <div className="p-col-12">
+                                <div className="p-field p-grid">
+                                    <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Số tài khoản</label>
+                                    <div className="p-col">
+                                        <InputText id="firstname3" type="text" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="p-col-12">
+                                <div className="p-field p-grid">
+                                    <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Số GNT</label>
+                                    <div className="p-col">
+                                        <InputText id="firstname3" type="text" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="p-col-12">
+                                <div className="p-field p-grid">
+                                    <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Loại tiền</label>
+                                    <div className="p-col">
+                                        <Dropdown value={selectedCity1} options={cities} onChange={e => setSelectedCity1(e.value)} optionLabel="name" placeholder="Select a City" style={{ width: '219px' }} />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="p-col-12">
+                                <div className="p-field p-grid">
+                                    <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Số tham chiếu</label>
+                                    <div className="p-col">
+                                        <InputText id="firstname3" type="text" />
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
-                    </div>
-                    <div className="p-col-12 p-grid">
-                        <div className="p-col p-col-align-center">
-                            <Button label="Tra cứu" className="p-button-rounded p-button-success p-offset-4" />
+
+
+
+                        {/* Phần bên phải */}
+                        <div className="p-col-8">
+                            <div className="p-grid">
+                                {/* Dong 1 */}
+                                <div className="p-col-6">
+                                    <div className="p-col-12">
+                                        <div className="p-field p-grid">
+                                            <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Ngày nộp GNT từ ngày</label>
+                                            <div className="p-col">
+                                                {/* <InputText id="firstname3" type="text" /> */}
+                                                <Calendar id="time" value={date} onChange={(e) => setDate(e.value)} showTime showSeconds showIcon />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="p-col-6">
+                                    <div className="p-col-12">
+                                        <div className="p-field p-grid">
+                                            <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Đến ngày</label>
+                                            <div className="p-col">
+                                                <Calendar id="time" value={date} onChange={(e) => setDate(e.value)} showTime showSeconds showIcon />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* End Dong 1 */}
+
+                                {/* Dong 2 */}
+                                <div className="p-col-6">
+                                    <div className="p-col-12">
+                                        <div className="p-field p-grid">
+                                            <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Ngày nộp GNT từ ngày</label>
+                                            <div className="p-col">
+                                                <Calendar id="time" value={date} onChange={(e) => setDate(e.value)} showTime showSeconds showIcon />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="p-col-6">
+                                    <div className="p-col-12">
+                                        <div className="p-field p-grid">
+                                            <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Đến ngày</label>
+                                            <div className="p-col">
+                                                <Calendar id="time" value={date} onChange={(e) => setDate(e.value)} showTime showSeconds showIcon />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* End Dong 2 */}
+
+                                {/* Dong 3 */}
+                                <div className="p-col-6">
+                                    <div className="p-col-12">
+                                        <div className="p-field p-grid">
+                                            <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Ngày nộp thuế từ ngày</label>
+                                            <div className="p-col">
+                                                <Calendar id="time" value={date} onChange={(e) => setDate(e.value)} showTime showSeconds showIcon />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="p-col-6">
+                                    <div className="p-col-12">
+                                        <div className="p-field p-grid">
+                                            <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Đến ngày</label>
+                                            <div className="p-col">
+                                                <Calendar id="time" value={date} onChange={(e) => setDate(e.value)} showTime showSeconds showIcon />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* End Dong 3 */}
+
+
+
+                                {/* Dong 4 */}
+                                <div className="p-col-12">
+                                    <div className="p-col-12">
+                                        <div className="p-field p-grid">
+                                            <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Trạng thái</label>
+                                            <div className="p-col">
+                                                <Dropdown value={selectedCity1} options={cities} onChange={e => setSelectedCity1(e.value)} optionLabel="name" placeholder="Select a City" style={{ width: '219px' }} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* End dong 4 */}
+
+
+                                {/* Dong 5 */}
+                                <div className="p-col-6">
+                                    <div className="p-col-12">
+                                        <div className="p-field p-grid">
+                                            <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Tổng tiền nộp từ</label>
+                                            <div className="p-col">
+                                                <InputText id="firstname3" type="text" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="p-col-6">
+                                    <div className="p-col-12">
+                                        <div className="p-field p-grid">
+                                            <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Đến</label>
+                                            <div className="p-col">
+                                                <InputText id="firstname3" type="text" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* End Dong 5 */}
+
+                            </div>
                         </div>
+                    </div>
+                </fieldset>
 
+
+
+                <fieldset>
+                    <legend>Hành động</legend>
+                    <div className="p-grid">
+                        <div className="p-col">
+                            <Button label="Tra cứu" className="p-button-success" />
+                        </div>
                     </div>
 
+                </fieldset>
 
 
-                    <h1>Kết quả tra cứu</h1>
+                <fieldset>
+                    <legend>Kết quả tra cứu</legend>
+                    {/* <h1>Kết quả tra cứu</h1> */}
                     <DataTable value={dataOfTable} headerColumnGroup={headerGroup}>
                         <Column field="stt" />
                         <Column field="sct" />
@@ -283,10 +295,19 @@ const TraCuuGiayNopTien = () => {
                         <Column field="tv" body={renderTacVu} />
                     </DataTable>
 
-                    <div>Tổng tiền:...... VND,...... USD</div>
-                    <Button label="Kết xuất" className="p-button-rounded p-button-success p-offset-4" />
-                    
-                </div>
+                    <div style={{float:"right"}}>Tổng tiền:...... VND,...... USD</div>
+                </fieldset>
+
+                <fieldset>
+                    <legend></legend>
+                    <Button label="Kết xuất" className="p-button-success" />
+                </fieldset>
+
+
+
+
+
+
             </div>
         </React.Fragment>
     )

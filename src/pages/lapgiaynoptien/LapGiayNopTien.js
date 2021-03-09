@@ -10,6 +10,7 @@ import { Row } from 'primereact/row';
 import { Toast } from 'primereact/toast';
 import React, { useRef, useState } from 'react';
 import { v4 } from 'uuid';
+import { MESSAGE_REQUIRE } from '../../constants/ConstantString';
 import './lapgiaynoptien.css';
 import './lapgiaynoptien.scss';
 
@@ -26,6 +27,28 @@ const LapGiayNopTien = () => {
 	const [ttnpst, setTtnpst] = useState(null); //Thông tin nơi phát sinh khoản thu
 	const [radioTTKB, setRadioTTKB] = useState(null); // Thông tin kho bạc
 	const [radioNTVBCQCTQ, setRadioNTVBCQCTQ] = useState(null); //Nộp theo văn bản cơ quan có thẩm quyền
+	const [radioLoaiTien, setRadioLoaiTien] = useState(null)
+
+
+
+	const [trichTKso, setTrichTKso] = useState(null)
+	const [tinhTp, setTinhTp] = useState(null)
+	const [coquanQLthu, setCoquanQLthu] = useState(null)
+	const [quanHuyen, setQuanHuyen] = useState(null)
+	const [xaPhuong, setXaPhuong] = useState(null)
+	const [chuyenChoKBNN, setChuyenChoKBNN] = useState(null)
+	const [nganHangUNT, setNganHangUNT] = useState(null)
+	const [loaiThue, setLoaiThue] = useState(null)
+
+	const [disableQuanHuyenXaPhuong, setDisableQuanHuyenXaPhuong] = useState(false)
+	const [disableXaPhuong, setDisableXaPhuong] = useState(false)
+
+
+	const [trichTKSoErro, setTrichTKSoErro] = useState({});
+
+
+
+
 
 
 	const items = [
@@ -58,6 +81,66 @@ const LapGiayNopTien = () => {
 		{ name: 'MB', code: 'IST' },
 		{ name: 'TechCombank', code: 'PRS' },
 	];
+
+
+	const trichTKsos = [
+		{ name: 'Trích số TK A', code: 'A' },
+		{ name: 'Trích số TK B', code: 'B' },
+		{ name: 'Trích số tK C', code: 'C' },
+	];
+
+	const tinhTPs = [
+		{ name: 'Thành phố A', code: 'A' },
+		{ name: 'Thành phố B', code: 'B' },
+		{ name: 'Thành phố C', code: 'C' },
+	];
+
+	const coQuanQuanLyThus = [
+		{ name: 'Cơ quan quản lý thu A', code: 'A' },
+		{ name: 'Cơ quan quản lý thu B', code: 'B' },
+		{ name: 'Cơ quan quản lý thu C', code: 'C' },
+	];
+
+	const quanHuyens = [
+		{ name: 'Quận huyện A', code: 'A' },
+		{ name: 'Quận huyện B', code: 'B' },
+		{ name: 'Quận huyện C', code: 'C' },
+	];
+
+	const xaPhuongs = [
+		{ name: 'Xã phường A', code: 'A' },
+		{ name: 'Xã phường B', code: 'B' },
+		{ name: 'Xã phường C', code: 'C' },
+	];
+
+	const khoBacNNs = [
+		{ name: 'Kho bạc nhà nước A', code: 'A' },
+		{ name: 'Kho bạc nhà nước B', code: 'B' },
+		{ name: 'Kho bạc nhà nước C', code: 'C' },
+	];
+
+
+	const nganHangUNTs = [
+		{ name: 'Ngân hàng ủy nhiệm thu A', code: 'A' },
+		{ name: 'Ngân hàng ủy nhiệm thu B', code: 'B' },
+		{ name: 'Ngân hàng ủy nhiệm thu C', code: 'C' },
+	];
+
+	const loaiThues = [
+		{ name: 'Loại thuế A', code: 'A' },
+		{ name: 'Loại thuế B', code: 'B' },
+		{ name: 'Loại thuế C', code: 'C' },
+	];
+
+
+
+
+
+
+
+
+
+
 
 	const onChangeBank = (e) => {
 		// console.log(e.target.value.name)
@@ -225,6 +308,103 @@ const LapGiayNopTien = () => {
 		setListData(list)
 	}
 
+	const processHoanThanh = () => {
+		// alert('0k')
+		// const obj = {
+		// 	thongtinNganHang: {
+		// 		denghiNH: selectedBank.name,
+		// 		trichTKso: trichTKso.name
+		// 	},
+		// 	thongtinCoQuanQuanLyThu: {
+		// 		tinhTp: tinhTp.name,
+		// 		coquanQLthu: coquanQLthu.name
+		// 	},
+		// 	thongtinNoiPhatSinhKhoanThu: {
+		// 		diadiem: ttnpst,
+		// 		tinhTp: tinhTp,
+		// 		quanHuyen: quanHuyen.name,
+		// 		xaPhuong: xaPhuong.name
+		// 	},
+		// 	thongtinKhoBac: {
+		// 		chuyenChoKBNN: chuyenChoKBNN.name,
+		// 		loaiNop: radioTTKB,
+		// 		nganHangUNT: nganHangUNT.name
+		// 	},
+		// 	thongtinLoaiThue: {
+		// 		loaiThueL: loaiThue.name,
+		// 		loaiTien: radioLoaiTien,
+		// 		noptheoVanBanCoQuanCoThamQuyen: radioNTVBCQCTQ
+		// 	}
+		// }
+		// console.log(JSON.parse(obj))
+		console.log('result:', formValidation())
+	}
+
+	const handleOnChangeRadioButton = (e) => {
+		const { name, value } = e.target
+		// console.log('name', name);
+		// console.log('value', value);
+		if (name === 'ttnpst') {
+			if (value === 'tinhtp') {
+				setTtnpst(value)
+
+				setDisableQuanHuyenXaPhuong(true)
+				setDisableXaPhuong(true)
+			} else if (value === 'quanhuyen') {
+				setTtnpst(value)
+
+				setDisableQuanHuyenXaPhuong(false)
+				setDisableXaPhuong(true)
+			} else {
+				setTtnpst(value)
+				setDisableQuanHuyenXaPhuong(false)
+				setDisableXaPhuong(false)
+			}
+
+
+
+
+
+		}
+
+
+
+	}
+
+	const formValidation = () => {
+		// debugger
+		const denghiNHError = {}
+		const trichTkSoError = {}
+
+		let isValid = true;
+
+		// if (denghiNH === '' || denghiNH === null) {
+		// 	denghiNHError.required = MESSAGE_REQUIRE;
+		// 	isValid = false;
+		// }
+
+		if (trichTKso === '' || trichTKso === null) {
+			trichTkSoError.required = MESSAGE_REQUIRE;
+			isValid = false;
+		}
+		//=====================
+
+		setTrichTKSoErro(trichTkSoError);
+		// setMotaErrors(motaErrors);
+
+		return isValid;
+	}
+
+	const handleOnChange = (e) =>{
+
+		console.log(`e`, e)
+		const {name, value}=e.value;
+		 console.log('name', name)	
+		 console.log('value', value)
+
+	}
+
+
 
 
 	return (
@@ -285,11 +465,11 @@ const LapGiayNopTien = () => {
 
 					<div className="card-body">
 						<fieldset>
-							<legend>Thông tin người nộp thuế </legend>
-							<div>Ngày</div>
-							<div>Mã số thuế</div>
-							<div>Tên người nộp thuế</div>
-							<div>Địa chỉ</div>
+							<legend>Thông tin người nộp thuế: </legend>
+							<div>Ngày: </div>
+							<div>Mã số thuế: </div>
+							<div>Tên người nộp thuế: </div>
+							<div>Địa chỉ: </div>
 						</fieldset>
 
 
@@ -299,7 +479,7 @@ const LapGiayNopTien = () => {
 								<div className="p-col-12 p-md-6 p-lg-6" >
 									<div className="p-grid">
 										<label htmlFor="firstname4" className="p-col-fixed" style={{ width: '200px' }}>
-											Đề nghị NH <span>*</span>
+											Đề nghị NH <span className="item-required">*</span>
 										</label>
 										<div className="p-col">
 											<Dropdown
@@ -316,18 +496,24 @@ const LapGiayNopTien = () => {
 								<div className="p-col-12 p-md-6 p-lg-6">
 									<div className="p-grid">
 										<label htmlFor="firstname4" className="p-col-fixed" style={{ width: '200px' }} >
-											Trích TK số <span>*</span>
+											Trích TK số <span className="item-required">*</span>
 										</label>
 										<div className="p-col">
 											<Dropdown
-												value={selectedBank}
-												options={banks}
-												onChange={onChangeBank}
+												className={Object.keys(trichTKSoErro).length > 0 ? "error" : null}
+												value={trichTKso}
+												options={trichTKsos}
+												// onChange={(e) => setTrichTKso(e.value)}
+												onChange={handleOnChange}
 												optionLabel="name"
 												editable
+												placeholder="====== Chọn ======"
 											/>
 										</div>
 									</div>
+									{Object.keys(trichTKSoErro).map((keyIndex, key) => {
+										return <span className="errorMessage" key={key} >{trichTKSoErro[keyIndex]}</span>
+									})}
 								</div>
 							</div>
 						</fieldset>
@@ -340,15 +526,16 @@ const LapGiayNopTien = () => {
 								<div className="p-col-12 p-md-6 p-lg-6" >
 									<div className="p-grid">
 										<label htmlFor="firstname4" className="p-col-fixed" style={{ width: '200px' }}>
-											Tỉnh/TP <span>*</span>
+											Tỉnh/TP <span className="item-required">*</span>
 										</label>
 										<div className="p-col">
 											<Dropdown
-												value={selectedBank}
-												options={banks}
-												onChange={onChangeBank}
+												value={tinhTp}
+												options={tinhTPs}
+												onChange={(e) => setTinhTp(e.value)}
 												optionLabel="name"
 												editable
+												placeholder="====== Chọn ======"
 											/>
 										</div>
 									</div>
@@ -356,15 +543,16 @@ const LapGiayNopTien = () => {
 								<div className="p-col-12 p-md-6 p-lg-6">
 									<div className="p-grid">
 										<label htmlFor="firstname4" className="p-col-fixed" style={{ width: '200px' }} >
-											Cơ quan quản lý thu <span>*</span>
+											Cơ quan quản lý thu <span className="item-required">*</span>
 										</label>
 										<div className="p-col">
 											<Dropdown
-												value={selectedBank}
-												options={banks}
-												onChange={onChangeBank}
+												value={coquanQLthu}
+												options={coQuanQuanLyThus}
+												onChange={(e) => setCoquanQLthu(e.value)}
 												optionLabel="name"
 												editable
+												placeholder="====== Chọn ======"
 											/>
 										</div>
 									</div>
@@ -379,62 +567,78 @@ const LapGiayNopTien = () => {
 							<div className="p-grid">
 								<div className="p-col-3 ">
 									<div className="p-field-radiobutton">
-										<RadioButton inputId="tinhtp" name="ttnpst" value="tinhtp" onChange={(e) => setTtnpst(e.target.value)} checked={ttnpst === 'tinhtp'} />
+										<RadioButton inputId="tinhtp" name="ttnpst" value="tinhtp"
+											// onChange={(e) => setTtnpst(e.target.value)} 
+											onChange={handleOnChangeRadioButton}
+
+											checked={ttnpst === 'tinhtp'} />
 										<label htmlFor="tinhtp">Tỉnh/TP</label>
 									</div>
 								</div>
 
 								<div className="p-col-3">
 									<div className="p-field-radiobutton">
-										<RadioButton inputId="quanhuyen" name="ttnpst" value="quanhuyen" onChange={(e) => setTtnpst(e.target.value)} checked={ttnpst === 'quanhuyen'} />
+										<RadioButton inputId="quanhuyen" name="ttnpst" value="quanhuyen"
+											// onChange={(e) => setTtnpst(e.target.value)} 
+											onChange={handleOnChangeRadioButton}
+											checked={ttnpst === 'quanhuyen'} />
 										<label htmlFor="quanhuyen">Quận/Huyện</label>
 									</div>
 								</div>
 
 								<div className="p-col-3">
 									<div className="p-field-radiobutton">
-										<RadioButton inputId="xaphuong" name="ttnpst" value="xaphuong" onChange={(e) => setTtnpst(e.target.value)} checked={ttnpst === 'xaphuong'} />
+										<RadioButton inputId="xaphuong" name="ttnpst" value="xaphuong"
+											// onChange={(e) => setTtnpst(e.target.value)} 
+											onChange={handleOnChangeRadioButton}
+											checked={ttnpst === 'xaphuong'} />
 										<label htmlFor="xaphuong">Xã/Phường</label>
 									</div>
 
 								</div>
 
-								<div className="p-col-12 p-md-12 p-lg-12">Tỉnh/TP: </div>
+								<div className="p-col-12 p-md-12 p-lg-12">Tỉnh/TP: {tinhTp === null ? '' : tinhTp.name} </div>
 
 
-								<div className="p-col-12 p-md-6">
-									<div className="p-grid">
-										<label htmlFor="firstname4" className="p-col-fixed" style={{ width: '200px' }} >
-											Quận/Huyện
-										</label>
-										<div className="p-col-8 p-md-9">
-											<Dropdown
-												value={selectedBank}
-												options={banks}
-												onChange={onChangeBank}
-												optionLabel="name"
-												editable
-											/>
+								{disableQuanHuyenXaPhuong === false &&
+									<div className="p-col-12 p-md-6">
+										<div className="p-grid">
+											<label htmlFor="firstname4" className="p-col-fixed" style={{ width: '200px' }} >
+												Quận/Huyện <span className="item-required">*</span>
+											</label>
+											<div className="p-col-8 p-md-9">
+												<Dropdown
+													value={quanHuyen}
+													options={quanHuyens}
+													onChange={(e) => setQuanHuyen(e.value)}
+													optionLabel="name"
+													editable
+													placeholder="====== Chọn ======"
+												/>
+											</div>
 										</div>
 									</div>
-								</div>
-
-								<div className="p-col-12 p-md-6">
-									<div className="p-grid">
-										<label htmlFor="firstname4" className="p-col-fixed" style={{ width: '200px' }} >
-											Xã/Phường
-										</label>
-										<div className="p-col">
-											<Dropdown
-												value={selectedBank}
-												options={banks}
-												onChange={onChangeBank}
-												optionLabel="name"
-												editable
-											/>
+								}
+								{(disableXaPhuong === false) &&
+									<div className="p-col-12 p-md-6">
+										<div className="p-grid">
+											<label htmlFor="firstname4" className="p-col-fixed" style={{ width: '200px' }} >
+												Xã/Phường <span className="item-required">*</span>
+											</label>
+											<div className="p-col">
+												<Dropdown
+													value={xaPhuong}
+													options={xaPhuongs}
+													onChange={(e) => setXaPhuong(e.value)}
+													optionLabel="name"
+													editable
+													placeholder="====== Chọn ======"
+												/>
+											</div>
 										</div>
 									</div>
-								</div>
+								}
+
 							</div>
 						</fieldset>
 
@@ -447,15 +651,16 @@ const LapGiayNopTien = () => {
 								<div className="p-col-4" >
 									<div className="p-grid">
 										<label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>
-											Chuyển cho KBNN <span>*</span>
+											Chuyển cho KBNN <span className="item-required">*</span>
 										</label>
 										<div className="p-col">
 											<Dropdown
-												value={selectedBank}
-												options={banks}
-												onChange={onChangeBank}
+												value={chuyenChoKBNN}
+												options={khoBacNNs}
+												onChange={(e) => setChuyenChoKBNN(e.value)}
 												optionLabel="name"
 												editable
+												placeholder="====== Chọn ======"
 											/>
 										</div>
 									</div>
@@ -484,14 +689,15 @@ const LapGiayNopTien = () => {
 								<div className="p-col-4">
 
 									<div className="p-field p-grid">
-										<label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Ngân hàng ủy nhiệm thu<span>*</span></label>
+										<label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Ngân hàng ủy nhiệm thu</label>
 										<div className="p-col">
 											<Dropdown
-												value={selectedBank}
-												options={banks}
-												onChange={onChangeBank}
+												value={nganHangUNT}
+												options={nganHangUNTs}
+												onChange={(e) => setNganHangUNT(e.value)}
 												optionLabel="name"
 												editable
+												placeholder="====== Chọn ======"
 											/>
 										</div>
 									</div>
@@ -509,15 +715,16 @@ const LapGiayNopTien = () => {
 								<div className="p-col-6" >
 									<div className="p-grid">
 										<label htmlFor="firstname4" className="p-col-4 p-md-3">
-											Loại thuế <span>*</span>
+											Loại thuế <span className="item-required">*</span>
 										</label>
 										<div className="p-col-8 p-md-9">
 											<Dropdown
-												value={selectedBank}
-												options={banks}
-												onChange={onChangeBank}
+												value={loaiThue}
+												options={loaiThues}
+												onChange={(e) => setLoaiThue(e.value)}
 												optionLabel="name"
 												editable
+												placeholder="====== Chọn ======"
 											/>
 										</div>
 									</div>
@@ -529,7 +736,7 @@ const LapGiayNopTien = () => {
 
 										<div className="p-col-2">
 											<label htmlFor="firstname4" className="p-col-4 p-md-3" >
-												Loại tiền<span>*</span>
+												Loại tiền<span className="item-required">*</span>
 											</label>
 										</div>
 
@@ -537,14 +744,14 @@ const LapGiayNopTien = () => {
 											<div className="p-grid">
 												<div className="p-col-12">
 													<div className="p-field-radiobutton ">
-														<RadioButton inputId="tk7111" name="radioTTKB" value="tk7111" onChange={(e) => setRadioTTKB(e.target.value)} checked={radioTTKB === 'tk7111'} />
-														<label htmlFor="city1">Nộp vào NSNN(TK 7111)</label>
+														<RadioButton inputId="VND" name="radioLoaiTien" value="VND" onChange={(e) => setRadioLoaiTien(e.target.value)} checked={radioLoaiTien === 'VND'} />
+														<label htmlFor="city1">VND</label>
 													</div>
 												</div>
 												<div className="p-col-12">
 													<div className="p-field-radiobutton ">
-														<RadioButton inputId="tk7111" name="radioTTKB" value="tk7111" onChange={(e) => setRadioTTKB(e.target.value)} checked={radioTTKB === 'tk7111'} />
-														<label htmlFor="city1">Nộp vào NSNN(TK 7111)</label>
+														<RadioButton inputId="USD" name="radioLoaiTien" value="USD" onChange={(e) => setRadioLoaiTien(e.target.value)} checked={radioLoaiTien === 'USD'} />
+														<label htmlFor="city1">USD</label>
 													</div>
 												</div>
 											</div>
@@ -584,82 +791,16 @@ const LapGiayNopTien = () => {
 						</fieldset>
 
 
-
-						{/* <fieldset>
-							<legend>Thông tin loại thuế</legend>
-							<div className="p-grid nested-grid">
-								<div className="p-col-6" >
-									<div className="p-grid">
-										<label htmlFor="firstname4" className="p-col-4 p-md-3">
-											Loại thuế <span>*</span>
-										</label>
-										<div className="p-col-8 p-md-9">
-											<Dropdown
-												value={selectedBank}
-												options={banks}
-												onChange={onChangeBank}
-												optionLabel="name"
-												editable
-											/>
-										</div>
-									</div>
-								</div>
-
-
-								<div className="p-col-6">
-									<div className="p-grid nested-grid">
-
-										<div className="p-col-4">
-											<label htmlFor="firstname4" className="p-col-4 p-md-3" >
-												Loại tiền<span>*</span>
-											</label>
-										</div>
-
-										<div className="p-col-8">
-											<div className="p-grid">
-												<div className="p-col-12">
-													<div className="p-field-radiobutton ">
-														<RadioButton inputId="tk7111" name="radioTTKB" value="tk7111" onChange={(e) => setRadioTTKB(e.target.value)} checked={radioTTKB === 'tk7111'} />
-														<label htmlFor="city1">Nộp vào NSNN(TK 7111)</label>
-													</div>
-												</div>
-												<div className="p-col-12">
-													<div className="p-field-radiobutton ">
-														<RadioButton inputId="tk7111" name="radioTTKB" value="tk7111" onChange={(e) => setRadioTTKB(e.target.value)} checked={radioTTKB === 'tk7111'} />
-														<label htmlFor="city1">Nộp vào NSNN(TK 7111)</label>
-													</div>
-												</div>
-											</div>
-										</div>
-
-									</div>
-								</div>
-							</div>
-
-							<div className="p-col-12 p-md-6 p-lg-6">
-								<div>Nộp theo văn bản cơ quan có thẩm quyền</div>
-								<div className="p-field-radiobutton">
-									<RadioButton inputId="city1" name="radioNTVBCQCTQ" value="ktnn" onChange={(e) => setRadioNTVBCQCTQ(e.target.value)} checked={radioNTVBCQCTQ === 'ktnn'} />
-									<label htmlFor="city1">Kiểm toán nhà nước</label>
-								</div>
-								<div className="p-field-radiobutton">
-									<RadioButton inputId="city2" name="radioNTVBCQCTQ" value="tttc" onChange={(e) => setRadioNTVBCQCTQ(e.target.value)} checked={radioNTVBCQCTQ === 'tttc'} />
-									<label htmlFor="city2">Thanh tra tài chính</label>
-								</div>
-								<div className="p-field-radiobutton">
-									<RadioButton inputId="city1" name="radioNTVBCQCTQ" value="tccp" onChange={(e) => setRadioNTVBCQCTQ(e.target.value)} checked={radioNTVBCQCTQ === 'tccp'} />
-									<label htmlFor="city1">Thanh tra chính phủ</label>
-								</div>
-								<div className="p-field-radiobutton">
-									<RadioButton inputId="city2" name="radioNTVBCQCTQ" value="cqctq" onChange={(e) => setRadioNTVBCQCTQ(e.target.value)} checked={radioNTVBCQCTQ === 'cqctq'} />
-									<label htmlFor="city2">Cơ quan có thẩm quyền khác</label>
-								</div>
-							</div>
-						</fieldset> */}
-
 						<fieldset>
-							<Button label="Truy vấn số thuế PN" className="p-button-warning" className="item-title" />
-							<Button label="Thêm dòng" className="p-button-success" onClick={addRow} />
+							<div className="p-grid">
+								<div className="p-col-6">
+									<Button label="Truy vấn số thuế PN" className="p-button-primary" />
+								</div>
+								<div className="p-col-6">
+									<Button label="Thêm dòng" className="p-button-success" onClick={addRow} style={{ float: "right" }} />
+								</div>
+							</div>
+
 
 							<DataTable value={listData} headerColumnGroup={headerGroup} >
 								<Column field="stt" body={renderRowIndex} />
@@ -681,9 +822,13 @@ const LapGiayNopTien = () => {
 								<div>Tổng số ký hiện tại: </div>
 							</div>
 
-							<div className="item-button">
-								<Button label="Lập mới" className="p-button-danger" onClick={() => console.log('listData', listData)} />
-								<Button label="Hoàn thành" className="p-button-warning" />
+							<div className="p-grid">
+								<div className="p-col-6">
+									<Button label="Lập mới" className="p-button-danger" style={{ float: "right" }} />
+								</div>
+								<div className="p-col-6">
+									<Button label="Hoàn thành" className="p-button-warning" onClick={processHoanThanh} />
+								</div>
 							</div>
 						</fieldset>
 
