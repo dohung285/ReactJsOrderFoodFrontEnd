@@ -45,6 +45,17 @@ const LapGiayNopTien = () => {
 
 
 	const [trichTKSoErro, setTrichTKSoErro] = useState({});
+	const [tinhTpCQQLTError, setTinhTpCQQLTError] = useState({});
+	const [coquanQLTError, setCoquanQLTError] = useState({});
+
+	const [quanHuyenTTNPSKTError, setQuanHuyenTTNPSKTError] = useState({})
+	const [xaPhuongTTNPSKTError, setXaPhuongTTNPSKTError] = useState({})
+
+	const [chuyenChoKBNNError, setChuyenChoKBNNError] = useState({})
+	const [loaiThueError, setLoaiThueError] = useState({})
+	const [loaiTienError, setLoaiTienError] = useState({})
+
+
 
 
 
@@ -342,8 +353,6 @@ const LapGiayNopTien = () => {
 
 	const handleOnChangeRadioButton = (e) => {
 		const { name, value } = e.target
-		// console.log('name', name);
-		// console.log('value', value);
 		if (name === 'ttnpst') {
 			if (value === 'tinhtp') {
 				setTtnpst(value)
@@ -360,47 +369,207 @@ const LapGiayNopTien = () => {
 				setDisableQuanHuyenXaPhuong(false)
 				setDisableXaPhuong(false)
 			}
-
-
-
-
-
 		}
-
-
-
 	}
 
 	const formValidation = () => {
 		// debugger
-		const denghiNHError = {}
+
 		const trichTkSoError = {}
+		const tinhTPCQQLTObjectError = {}
+		const coquanQLTError = {}
+		const quanHuyenObjectError = {}
+		const xaPhuongObjectError = {}
+
+		const chuyenchoKBNNObjectError = {}
+		const loaiThueObjectError = {}
+		const loaiTienObjectError = {}
+
 
 		let isValid = true;
 
-		// if (denghiNH === '' || denghiNH === null) {
-		// 	denghiNHError.required = MESSAGE_REQUIRE;
-		// 	isValid = false;
-		// }
+		if (tinhTp === '' || tinhTp === null) {
+			tinhTPCQQLTObjectError.required = MESSAGE_REQUIRE;
+			isValid = false;
+		}
 
 		if (trichTKso === '' || trichTKso === null) {
 			trichTkSoError.required = MESSAGE_REQUIRE;
 			isValid = false;
 		}
-		//=====================
+
+		if (coquanQLthu === '' || coquanQLthu === null) {
+			coquanQLTError.required = MESSAGE_REQUIRE
+			isValid = false;
+		}
+
+		if (quanHuyen === '' || quanHuyen === null) {
+			quanHuyenObjectError.required = MESSAGE_REQUIRE
+			isValid = false;
+		}
+
+		if (xaPhuong === '' || xaPhuong === null) {
+			xaPhuongObjectError.required = MESSAGE_REQUIRE
+			isValid = false;
+		}
+
+		if (chuyenChoKBNN === '' || chuyenChoKBNN === null) {
+			chuyenchoKBNNObjectError.required = MESSAGE_REQUIRE
+			isValid = false;
+		}
+
+		if (loaiThue === '' || loaiThue === null) {
+			loaiThueObjectError.required = MESSAGE_REQUIRE
+			isValid = false;
+		}
+
+		if (radioLoaiTien === '' || radioLoaiTien === null) {
+			loaiTienObjectError.required = MESSAGE_REQUIRE
+			isValid = false;
+		}
 
 		setTrichTKSoErro(trichTkSoError);
-		// setMotaErrors(motaErrors);
+		setTinhTpCQQLTError(tinhTPCQQLTObjectError);
+		setCoquanQLTError(coquanQLTError);
+		setQuanHuyenTTNPSKTError(quanHuyenObjectError)
+		setXaPhuongTTNPSKTError(xaPhuongObjectError)
+
+		setChuyenChoKBNNError(chuyenchoKBNNObjectError)
+		setLoaiThueError(loaiThueObjectError)
+		setLoaiTienError(loaiTienObjectError)
+
 
 		return isValid;
 	}
 
-	const handleOnChange = (e) =>{
+	const handleOnChange = (e) => {
 
-		console.log(`e`, e)
-		const {name, value}=e.value;
-		 console.log('name', name)	
-		 console.log('value', value)
+		// console.log(`e`, e)
+		const { name, value } = e.target;
+
+		// console.log('name', name)
+		// console.log('value', value)
+		const valueName = value.name;
+
+		switch (name) {
+			case "trichTKso":
+				setTrichTKso(valueName)
+				if (valueName.length > 0) {
+					setTrichTKSoErro("")
+				} else {
+					setTrichTKSoErro(MESSAGE_REQUIRE)
+				}
+				break;
+			case "tinhTp":
+				setTinhTp(valueName)
+				if (valueName.length > 0) {
+					setTinhTpCQQLTError("")
+				} else {
+					setTinhTpCQQLTError(MESSAGE_REQUIRE)
+				}
+				break;
+			case "coquanQLthu":
+				setCoquanQLthu(valueName);
+				if (valueName.length > 0) {
+					setCoquanQLTError("")
+				} else {
+					setCoquanQLTError(MESSAGE_REQUIRE)
+				}
+				break;
+			case "quanHuyen":
+				setQuanHuyen(valueName);
+				if (valueName.length > 0) {
+					setQuanHuyenTTNPSKTError("")
+				} else {
+					setQuanHuyenTTNPSKTError(MESSAGE_REQUIRE)
+				}
+				break;
+			case "xaPhuong":
+				setXaPhuong(valueName);
+				if (valueName.length > 0) {
+					setXaPhuongTTNPSKTError("")
+				} else {
+					setXaPhuongTTNPSKTError(MESSAGE_REQUIRE)
+				}
+				break;
+			case "chuyenChoKBNN":
+				setChuyenChoKBNN(valueName);
+				if (valueName.length > 0) {
+					setChuyenChoKBNNError("")
+				} else {
+					setChuyenChoKBNNError(MESSAGE_REQUIRE)
+				}
+				break;
+			case "loaiThue":
+				setLoaiThue(valueName);
+				if (valueName.length > 0) {
+					setLoaiThueError("")
+				} else {
+					setLoaiThueError(MESSAGE_REQUIRE)
+				}
+				break;
+			case "radioLoaiTien":
+				setRadioLoaiTien(value);
+				if (value.length > 0) {
+					setLoaiTienError("")
+				} else {
+					setLoaiTienError(MESSAGE_REQUIRE)
+				}
+				break;
+			case "ttnpst":
+				if (value === 'tinhtp') {
+					setTtnpst(value)
+
+					setDisableQuanHuyenXaPhuong(true)
+					setDisableXaPhuong(true)
+				} else if (value === 'quanhuyen') {
+					setTtnpst(value)
+
+					setDisableQuanHuyenXaPhuong(false)
+					setDisableXaPhuong(true)
+				} else {
+					setTtnpst(value)
+					setDisableQuanHuyenXaPhuong(false)
+					setDisableXaPhuong(false)
+				}
+			default:
+				break;
+
+		}
+
+
+
+
+	}
+
+	const processLapMoi = () => {
+		// alert('0k')
+		setTrichTKso(null)
+		setTinhTp(null)
+		setCoquanQLthu(null)
+		setQuanHuyen(null)
+		setXaPhuong(null)
+		setChuyenChoKBNN(null)
+		setLoaiThue(null)
+		setRadioLoaiTien(null)
+
+
+		setTtnpst(null)
+		setNganHangUNT(null)
+		setRadioNTVBCQCTQ(null)
+		setRadioTTKB(null)
+
+
+		setTrichTKSoErro("")
+		setTinhTpCQQLTError("")
+		setCoquanQLTError("")
+		setQuanHuyenTTNPSKTError("")
+		setXaPhuongTTNPSKTError("")
+		setChuyenChoKBNNError("")
+		setLoaiThueError("")
+		setLoaiTienError("")
+
+
 
 	}
 
@@ -503,6 +672,7 @@ const LapGiayNopTien = () => {
 												className={Object.keys(trichTKSoErro).length > 0 ? "error" : null}
 												value={trichTKso}
 												options={trichTKsos}
+												name="trichTKso"
 												// onChange={(e) => setTrichTKso(e.value)}
 												onChange={handleOnChange}
 												optionLabel="name"
@@ -530,15 +700,21 @@ const LapGiayNopTien = () => {
 										</label>
 										<div className="p-col">
 											<Dropdown
+												className={Object.keys(tinhTpCQQLTError).length > 0 ? "error" : null}
 												value={tinhTp}
+												name="tinhTp"
 												options={tinhTPs}
-												onChange={(e) => setTinhTp(e.value)}
+												// onChange={(e) => setTinhTp(e.value)}
+												onChange={handleOnChange}
 												optionLabel="name"
 												editable
 												placeholder="====== Chọn ======"
 											/>
 										</div>
 									</div>
+									{Object.keys(tinhTpCQQLTError).map((keyIndex, key) => {
+										return <span className="errorMessage" key={key} >{tinhTpCQQLTError[keyIndex]}</span>
+									})}
 								</div>
 								<div className="p-col-12 p-md-6 p-lg-6">
 									<div className="p-grid">
@@ -547,15 +723,21 @@ const LapGiayNopTien = () => {
 										</label>
 										<div className="p-col">
 											<Dropdown
+												className={Object.keys(coquanQLTError).length > 0 ? "error" : null}
 												value={coquanQLthu}
+												name="coquanQLthu"
 												options={coQuanQuanLyThus}
-												onChange={(e) => setCoquanQLthu(e.value)}
+												// onChange={(e) => setCoquanQLthu(e.value)}
+												onChange={handleOnChange}
 												optionLabel="name"
 												editable
 												placeholder="====== Chọn ======"
 											/>
 										</div>
 									</div>
+									{Object.keys(coquanQLTError).map((keyIndex, key) => {
+										return <span className="errorMessage" key={key} >{coquanQLTError[keyIndex]}</span>
+									})}
 								</div>
 							</div>
 						</fieldset>
@@ -569,7 +751,8 @@ const LapGiayNopTien = () => {
 									<div className="p-field-radiobutton">
 										<RadioButton inputId="tinhtp" name="ttnpst" value="tinhtp"
 											// onChange={(e) => setTtnpst(e.target.value)} 
-											onChange={handleOnChangeRadioButton}
+											// onChange={handleOnChangeRadioButton}
+											onChange={handleOnChange}
 
 											checked={ttnpst === 'tinhtp'} />
 										<label htmlFor="tinhtp">Tỉnh/TP</label>
@@ -580,7 +763,8 @@ const LapGiayNopTien = () => {
 									<div className="p-field-radiobutton">
 										<RadioButton inputId="quanhuyen" name="ttnpst" value="quanhuyen"
 											// onChange={(e) => setTtnpst(e.target.value)} 
-											onChange={handleOnChangeRadioButton}
+											// onChange={handleOnChangeRadioButton}
+											onChange={handleOnChange}
 											checked={ttnpst === 'quanhuyen'} />
 										<label htmlFor="quanhuyen">Quận/Huyện</label>
 									</div>
@@ -590,7 +774,8 @@ const LapGiayNopTien = () => {
 									<div className="p-field-radiobutton">
 										<RadioButton inputId="xaphuong" name="ttnpst" value="xaphuong"
 											// onChange={(e) => setTtnpst(e.target.value)} 
-											onChange={handleOnChangeRadioButton}
+											// onChange={handleOnChangeRadioButton}
+											onChange={handleOnChange}
 											checked={ttnpst === 'xaphuong'} />
 										<label htmlFor="xaphuong">Xã/Phường</label>
 									</div>
@@ -608,15 +793,21 @@ const LapGiayNopTien = () => {
 											</label>
 											<div className="p-col-8 p-md-9">
 												<Dropdown
+													className={Object.keys(quanHuyenTTNPSKTError).length > 0 ? "error" : null}
 													value={quanHuyen}
+													name="quanHuyen"
 													options={quanHuyens}
-													onChange={(e) => setQuanHuyen(e.value)}
+													// onChange={(e) => setQuanHuyen(e.value)}
+													onChange={handleOnChange}
 													optionLabel="name"
 													editable
 													placeholder="====== Chọn ======"
 												/>
 											</div>
 										</div>
+										{Object.keys(quanHuyenTTNPSKTError).map((keyIndex, key) => {
+											return <span className="errorMessage" key={key} >{quanHuyenTTNPSKTError[keyIndex]}</span>
+										})}
 									</div>
 								}
 								{(disableXaPhuong === false) &&
@@ -627,15 +818,21 @@ const LapGiayNopTien = () => {
 											</label>
 											<div className="p-col">
 												<Dropdown
+													className={Object.keys(xaPhuongTTNPSKTError).length > 0 ? "error" : null}
 													value={xaPhuong}
+													name="xaPhuong"
 													options={xaPhuongs}
-													onChange={(e) => setXaPhuong(e.value)}
+													// onChange={(e) => setXaPhuong(e.value)}
+													onChange={handleOnChange}
 													optionLabel="name"
 													editable
 													placeholder="====== Chọn ======"
 												/>
 											</div>
 										</div>
+										{Object.keys(xaPhuongTTNPSKTError).map((keyIndex, key) => {
+											return <span className="errorMessage" key={key} >{xaPhuongTTNPSKTError[keyIndex]}</span>
+										})}
 									</div>
 								}
 
@@ -655,15 +852,21 @@ const LapGiayNopTien = () => {
 										</label>
 										<div className="p-col">
 											<Dropdown
+												className={Object.keys(chuyenChoKBNNError).length > 0 ? "error" : null}
 												value={chuyenChoKBNN}
+												name="chuyenChoKBNN"
 												options={khoBacNNs}
-												onChange={(e) => setChuyenChoKBNN(e.value)}
+												// onChange={(e) => setChuyenChoKBNN(e.value)}
+												onChange={handleOnChange}
 												optionLabel="name"
 												editable
 												placeholder="====== Chọn ======"
 											/>
 										</div>
 									</div>
+									{Object.keys(chuyenChoKBNNError).map((keyIndex, key) => {
+										return <span className="errorMessage" key={key} >{chuyenChoKBNNError[keyIndex]}</span>
+									})}
 								</div>
 
 								<div className="p-col-4">
@@ -719,15 +922,21 @@ const LapGiayNopTien = () => {
 										</label>
 										<div className="p-col-8 p-md-9">
 											<Dropdown
+												className={Object.keys(loaiThueError).length > 0 ? "error" : null}
 												value={loaiThue}
 												options={loaiThues}
-												onChange={(e) => setLoaiThue(e.value)}
+												name="loaiThue"
+												// onChange={(e) => setLoaiThue(e.value)}
+												onChange={handleOnChange}
 												optionLabel="name"
 												editable
 												placeholder="====== Chọn ======"
 											/>
 										</div>
 									</div>
+									{Object.keys(loaiThueError).map((keyIndex, key) => {
+										return <span className="errorMessage" key={key} >{loaiThueError[keyIndex]}</span>
+									})}
 								</div>
 
 
@@ -744,13 +953,27 @@ const LapGiayNopTien = () => {
 											<div className="p-grid">
 												<div className="p-col-12">
 													<div className="p-field-radiobutton ">
-														<RadioButton inputId="VND" name="radioLoaiTien" value="VND" onChange={(e) => setRadioLoaiTien(e.target.value)} checked={radioLoaiTien === 'VND'} />
+														<RadioButton
+															// className={Object.keys(loaiTienError).length > 0 ? "error" : null}
+															inputId="VND"
+															name="radioLoaiTien"
+															value="VND"
+															// onChange={(e) => setRadioLoaiTien(e.target.value)}
+															onChange={handleOnChange}
+															checked={radioLoaiTien === 'VND'} />
 														<label htmlFor="city1">VND</label>
 													</div>
 												</div>
 												<div className="p-col-12">
 													<div className="p-field-radiobutton ">
-														<RadioButton inputId="USD" name="radioLoaiTien" value="USD" onChange={(e) => setRadioLoaiTien(e.target.value)} checked={radioLoaiTien === 'USD'} />
+														<RadioButton
+															// className={Object.keys(loaiTienError).length > 0 ? "error" : null}
+															inputId="USD"
+															name="radioLoaiTien"
+															value="USD"
+															// onChange={(e) => setRadioLoaiTien(e.target.value)}
+															onChange={handleOnChange}
+															checked={radioLoaiTien === 'USD'} />
 														<label htmlFor="city1">USD</label>
 													</div>
 												</div>
@@ -758,6 +981,10 @@ const LapGiayNopTien = () => {
 										</div>
 
 									</div>
+									{Object.keys(loaiTienError).map((keyIndex, key) => {
+										return <span className="errorMessage" key={key} >{loaiTienError[keyIndex]}</span>
+									})}
+
 								</div>
 							</div>
 
@@ -824,8 +1051,9 @@ const LapGiayNopTien = () => {
 
 							<div className="p-grid">
 								<div className="p-col-6">
-									<Button label="Lập mới" className="p-button-danger" style={{ float: "right" }} />
+									<Button label="Lập mới" className="p-button-danger" style={{ float: "right" }} onClick={processLapMoi} />
 								</div>
+
 								<div className="p-col-6">
 									<Button label="Hoàn thành" className="p-button-warning" onClick={processHoanThanh} />
 								</div>
