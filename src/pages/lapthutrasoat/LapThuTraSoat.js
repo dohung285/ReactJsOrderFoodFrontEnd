@@ -212,9 +212,10 @@ const LapThuTraSoat = () => {
                 break;
 
             case "ngayNopThue":
+
                 // debugger
                 setDateNNT(value)
-                if (value.length > 0) {
+                if (value.toString().length > 0) {
                     setNgayNopThueError("")
                 } else {
                     setNgayNopThueError(MESSAGE_REQUIRE)

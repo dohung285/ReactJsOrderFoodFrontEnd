@@ -8,9 +8,10 @@ import { InputText } from 'primereact/inputtext';
 import { RadioButton } from 'primereact/radiobutton';
 import { Row } from 'primereact/row';
 import { Toast } from 'primereact/toast';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { v4 } from 'uuid';
 import { MESSAGE_REQUIRE } from '../../constants/ConstantString';
+import LapGiayNopTienService from '../../service/LapGiayNopTienService';
 import './lapgiaynoptien.css';
 import './lapgiaynoptien.scss';
 
@@ -57,6 +58,13 @@ const LapGiayNopTien = () => {
 
 
 
+	const [tinhTPs, setTinhTPs] = useState([]);
+	const [quanHuyens, setQuanHuyens] = useState([])
+	const [xaPhuongs, setXaPhuongs] = useState([])
+
+
+
+
 
 
 
@@ -100,11 +108,11 @@ const LapGiayNopTien = () => {
 		{ name: 'Trích số tK C', code: 'C' },
 	];
 
-	const tinhTPs = [
-		{ name: 'Thành phố A', code: 'A' },
-		{ name: 'Thành phố B', code: 'B' },
-		{ name: 'Thành phố C', code: 'C' },
-	];
+	// let tinhTPs = [
+	// 	{ name: 'Thành phố A', code: 'A' },
+	// 	{ name: 'Thành phố B', code: 'B' },
+	// 	{ name: 'Thành phố C', code: 'C' },
+	// ];
 
 	const coQuanQuanLyThus = [
 		{ name: 'Cơ quan quản lý thu A', code: 'A' },
@@ -112,17 +120,17 @@ const LapGiayNopTien = () => {
 		{ name: 'Cơ quan quản lý thu C', code: 'C' },
 	];
 
-	const quanHuyens = [
-		{ name: 'Quận huyện A', code: 'A' },
-		{ name: 'Quận huyện B', code: 'B' },
-		{ name: 'Quận huyện C', code: 'C' },
-	];
+	// const quanHuyens = [
+	// 	{ name: 'Quận huyện A', code: 'A' },
+	// 	{ name: 'Quận huyện B', code: 'B' },
+	// 	{ name: 'Quận huyện C', code: 'C' },
+	// ];
 
-	const xaPhuongs = [
-		{ name: 'Xã phường A', code: 'A' },
-		{ name: 'Xã phường B', code: 'B' },
-		{ name: 'Xã phường C', code: 'C' },
-	];
+	// const xaPhuongs = [
+	// 	{ name: 'Xã phường A', code: 'A' },
+	// 	{ name: 'Xã phường B', code: 'B' },
+	// 	{ name: 'Xã phường C', code: 'C' },
+	// ];
 
 	const khoBacNNs = [
 		{ name: 'Kho bạc nhà nước A', code: 'A' },
@@ -461,11 +469,34 @@ const LapGiayNopTien = () => {
 				}
 				break;
 			case "tinhTp":
+				// console.log('value', value)
+				// setIdTinhThanh(value.code)
 				setTinhTp(valueName)
+				getQuanHuyenById(value.code);
+
+
 				if (valueName.length > 0) {
 					setTinhTpCQQLTError("")
 				} else {
 					setTinhTpCQQLTError(MESSAGE_REQUIRE)
+				}
+				break;
+			case "quanHuyen":
+				setQuanHuyen(valueName);
+				getXaPhuongById(value.code)
+				if (valueName.length > 0) {
+					setQuanHuyenTTNPSKTError("")
+				} else {
+					setQuanHuyenTTNPSKTError(MESSAGE_REQUIRE)
+				}
+				break;
+			case "xaPhuong":
+				setXaPhuong(valueName);
+
+				if (valueName.length > 0) {
+					setXaPhuongTTNPSKTError("")
+				} else {
+					setXaPhuongTTNPSKTError(MESSAGE_REQUIRE)
 				}
 				break;
 			case "coquanQLthu":
@@ -476,22 +507,7 @@ const LapGiayNopTien = () => {
 					setCoquanQLTError(MESSAGE_REQUIRE)
 				}
 				break;
-			case "quanHuyen":
-				setQuanHuyen(valueName);
-				if (valueName.length > 0) {
-					setQuanHuyenTTNPSKTError("")
-				} else {
-					setQuanHuyenTTNPSKTError(MESSAGE_REQUIRE)
-				}
-				break;
-			case "xaPhuong":
-				setXaPhuong(valueName);
-				if (valueName.length > 0) {
-					setXaPhuongTTNPSKTError("")
-				} else {
-					setXaPhuongTTNPSKTError(MESSAGE_REQUIRE)
-				}
-				break;
+
 			case "chuyenChoKBNN":
 				setChuyenChoKBNN(valueName);
 				if (valueName.length > 0) {
@@ -572,6 +588,82 @@ const LapGiayNopTien = () => {
 
 
 	}
+
+	const lapGiayNopTienService = new LapGiayNopTienService();
+
+	const getAllTinhThanh = async () => {
+		// console.log('before tinhTPs', tinhTPs)
+		let arrayTmp = [];
+		const result = await lapGiayNopTienService.getAllTinhThanh();
+		// console.log('result', result);
+		if (result.status === 1000) {
+			let arrayResult = result.list;
+			arrayResult.forEach(element => {
+				let obj = {
+					name: `${element.tenTinh}`,
+					code: `${element.maTinh}`
+				}
+				// console.log('element', element)
+				arrayTmp.push(obj)
+			});
+			setTinhTPs(arrayTmp)
+			// console.log('tinhTPs', tinhTPs)
+		}
+	}
+
+
+	const getQuanHuyenById = async (id) => {
+
+		let arrayTmp = [];
+		const result = await lapGiayNopTienService.getAllQuanHuyenById(id);
+		console.log('result', result);
+		if (result.status === 1000) {
+			let arrayResult = result.list;
+			arrayResult.forEach(element => {
+
+				console.log('element', element)
+
+				let obj = {
+					name: `${element.tenHuyen}`,
+					code: `${element.maHuyen}`
+				}
+				arrayTmp.push(obj)
+			});
+			// setTinhTPs(arrayTmp)
+			setQuanHuyens(arrayTmp)
+			// console.log('tinhTPs', tinhTPs)
+		}
+	}
+
+
+	const getXaPhuongById = async (id) => {
+
+		let arrayTmp = [];
+		const result = await lapGiayNopTienService.getAllXaPhuongById(id);
+		console.log('result', result);
+		if (result.status === 1000) {
+			let arrayResult = result.list;
+			arrayResult.forEach(element => {
+
+				console.log('element', element)
+
+				let obj = {
+					name: `${element.tenXa}`,
+					code: `${element.maXa}`
+				}
+				arrayTmp.push(obj)
+			});
+			setXaPhuongs(arrayTmp)
+		}
+	}
+
+
+
+
+	useEffect(() => {
+		getAllTinhThanh();
+
+	}, [])
 
 
 
@@ -755,7 +847,7 @@ const LapGiayNopTien = () => {
 											onChange={handleOnChange}
 
 											checked={ttnpst === 'tinhtp'} />
-										<label htmlFor="tinhtp">Tỉnh/TP</label>
+										<label htmlFor="tinhtp">Tỉnh/TP: </label>
 									</div>
 								</div>
 
@@ -782,7 +874,7 @@ const LapGiayNopTien = () => {
 
 								</div>
 
-								<div className="p-col-12 p-md-12 p-lg-12">Tỉnh/TP: {tinhTp === null ? '' : tinhTp.name} </div>
+								<div className="p-col-12 p-md-12 p-lg-12">Tỉnh/TP: {tinhTp === null ? '' : tinhTp} </div>
 
 
 								{disableQuanHuyenXaPhuong === false &&

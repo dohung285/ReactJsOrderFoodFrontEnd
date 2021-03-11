@@ -7,6 +7,9 @@ import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext'
 import { Row } from 'primereact/row';
 import React, { useState } from 'react'
+import * as moment from "moment";
+
+// moment(rowData.thoiGian).format("DD/MM/yy HH:mm:ss")
 
 const TraCuuGiayNopTien = () => {
 
@@ -20,15 +23,100 @@ const TraCuuGiayNopTien = () => {
         { stt: 3, sct: '', stc: '', sgnt: '', nlgnt: '', nggnt: '', nnt: '', nh: '', tknh: '', st: '', lt: '', tt: '', tv: '' },
     ]
 
-    const cities = [
-        { name: 'New York', code: 'NY' },
-        { name: 'Rome', code: 'RM' },
-        { name: 'London', code: 'LDN' },
-        { name: 'Istanbul', code: 'IST' },
-        { name: 'Paris', code: 'PRS' }
+    const nganHangs = [
+        { name: 'Ngân hàng New York', code: 'NY' },
+        { name: 'Ngân hàng Rome', code: 'RM' },
+        { name: 'Ngân hàng London', code: 'LDN' },
+        { name: 'Ngân hàng Istanbul', code: 'IST' },
+        { name: 'Ngân hàng Paris', code: 'PRS' }
     ];
 
+
+    const loaiTiens = [
+        { name: 'VND', code: 'NY' },
+        { name: 'USA', code: 'RM' },
+        { name: 'Tất cả', code: 'LDN' },
+
+    ];
+
+    const trangThais = [
+        { name: 'Lấy từ danh mục trạng thái New York', code: 'NY' },
+        { name: 'Lấy từ danh mục trạng thái Rome', code: 'RM' },
+        { name: 'Lấy từ danh mục trạng thái London', code: 'LDN' },
+        { name: 'Lấy từ danh mục trạng thái Istanbul', code: 'IST' },
+        { name: 'Lấy từ danh mục trạng thái Paris', code: 'PRS' }
+    ];
+
+
+
+
+
+
+
     const [date, setDate] = useState(null);
+    const [ngayNopGNTTuNgay, setNgayNopGNTTuNgay] = useState(null)
+    const [ngayNopGNTDenNgay, setNgayNopGNTDenNgay] = useState(null)
+    const [ngayGuiGNTTuNgay, setNgayGuiGNTTuNgay] = useState(null)
+    const [ngayGuiGNTDenNgay, setNgayGuiGNTDenNgay] = useState(null)
+    const [ngayNopThueTuNgay, setNgayNopThueTuNgay] = useState(null)
+    const [ngayNopThueDenNgay, setNgayNopThueDenNgay] = useState(null)
+
+    const [nganHang, setNganHang] = useState(null)
+    const [loaiTien, setLoaiTien] = useState(null)
+    const [trangThai, setTrangThai] = useState(null)
+
+
+
+    const handleOnChange = (e) => {
+        // console.log('e', e);
+        const { name, value } = e.target;
+        // console.log('name', name)
+        // console.log('value', value)
+
+
+        let valueName = value.name;
+
+        switch (name) {
+            case 'ngayNopGNTTuNgay':
+                setNgayNopGNTTuNgay(moment(value).format("DD/MM/yy HH:mm:ss"))
+                break;
+            case 'ngayNopGNTDenNgay':
+                setNgayNopGNTDenNgay(moment(value).format("DD/MM/yy HH:mm:ss"))
+                break;
+            case 'ngayGuiGNTTuNgay':
+                setNgayGuiGNTTuNgay(moment(value).format("DD/MM/yy HH:mm:ss"))
+                break;
+            case 'ngayGuiGNTDenNgay':
+                setNgayGuiGNTDenNgay(moment(value).format("DD/MM/yy HH:mm:ss"))
+                break;
+            case 'ngayNopThueTuNgay':
+                // console.log('moment(value).format("DD/MM/yy HH:mm:ss")', moment(value).format("DD/MM/yy HH:mm:ss"))
+                setNgayNopThueTuNgay(moment(value).format("DD/MM/yy HH:mm:ss"))
+                break;
+            case 'ngayNopThueDenNgay':
+                setNgayNopThueDenNgay(moment(value).format("DD/MM/yy HH:mm:ss"))
+                break;
+
+            case 'nganHang':
+                setNganHang(value)
+                break;
+            case 'loaiTien':
+                setLoaiTien(value)
+                break;
+            case 'trangThai':
+                setTrangThai(value)
+                break;
+        }
+
+
+
+
+
+    }
+
+
+
+
 
     let headerGroup = <ColumnGroup>
 
@@ -97,7 +185,13 @@ const TraCuuGiayNopTien = () => {
                                 <div className="p-field p-grid">
                                     <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Ngân hàng</label>
                                     <div className="p-col">
-                                        <Dropdown value={selectedCity1} options={cities} onChange={e => setSelectedCity1(e.value)} optionLabel="name" placeholder="Select a City" style={{ width: '219px' }} />
+                                        <Dropdown
+                                            value={nganHang}
+                                            name="nganHang"
+                                            options={nganHangs}
+                                            onChange={handleOnChange}
+                                            // onChange={e => setSelectedCity1(e.value)}
+                                            optionLabel="name" placeholder="==== Chọn ====" style={{ width: '219px' }} />
                                     </div>
                                 </div>
                             </div>
@@ -124,7 +218,13 @@ const TraCuuGiayNopTien = () => {
                                 <div className="p-field p-grid">
                                     <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Loại tiền</label>
                                     <div className="p-col">
-                                        <Dropdown value={selectedCity1} options={cities} onChange={e => setSelectedCity1(e.value)} optionLabel="name" placeholder="Select a City" style={{ width: '219px' }} />
+                                        <Dropdown
+                                            value={loaiTien}
+                                            name="loaiTien"
+                                            options={loaiTiens}
+                                            // onChange={e => setSelectedCity1(e.value)}
+                                            onChange={handleOnChange}
+                                            optionLabel="name" placeholder="==== Chọn ====" style={{ width: '219px' }} />
                                     </div>
                                 </div>
                             </div>
@@ -151,8 +251,16 @@ const TraCuuGiayNopTien = () => {
                                         <div className="p-field p-grid">
                                             <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Ngày nộp GNT từ ngày</label>
                                             <div className="p-col">
-                                                {/* <InputText id="firstname3" type="text" /> */}
-                                                <Calendar id="time" value={date} onChange={(e) => setDate(e.value)} showTime showSeconds showIcon />
+                                                <Calendar
+                                                    id="ngayNopGNTTuNgay"
+                                                    value={ngayNopGNTTuNgay}
+                                                    name="ngayNopGNTTuNgay"
+                                                    // onChange={(e) => setDate(e.value)}
+                                                    onChange={handleOnChange}
+                                                    showTime showSeconds showIcon
+                                                    dateFormat="dd/mm/yy"
+
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -163,7 +271,15 @@ const TraCuuGiayNopTien = () => {
                                         <div className="p-field p-grid">
                                             <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Đến ngày</label>
                                             <div className="p-col">
-                                                <Calendar id="time" value={date} onChange={(e) => setDate(e.value)} showTime showSeconds showIcon />
+                                                <Calendar
+                                                    id="ngayNopGNTDenNgay"
+                                                    value={ngayNopGNTDenNgay}
+                                                    name="ngayNopGNTDenNgay"
+                                                    // onChange={(e) => setDate(e.value)}
+                                                    onChange={handleOnChange}
+                                                    showTime showSeconds showIcon
+                                                    dateFormat="dd/mm/yy"
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -174,9 +290,16 @@ const TraCuuGiayNopTien = () => {
                                 <div className="p-col-6">
                                     <div className="p-col-12">
                                         <div className="p-field p-grid">
-                                            <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Ngày nộp GNT từ ngày</label>
+                                            <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Ngày gửi GNT từ ngày</label>
                                             <div className="p-col">
-                                                <Calendar id="time" value={date} onChange={(e) => setDate(e.value)} showTime showSeconds showIcon />
+                                                <Calendar
+                                                    id="ngayGuiGNTTuNgay"
+                                                    value={ngayGuiGNTTuNgay}
+                                                    name="ngayGuiGNTTuNgay"
+                                                    onChange={handleOnChange}
+                                                    showTime showSeconds showIcon
+                                                    dateFormat="dd/mm/yy"
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -187,7 +310,15 @@ const TraCuuGiayNopTien = () => {
                                         <div className="p-field p-grid">
                                             <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Đến ngày</label>
                                             <div className="p-col">
-                                                <Calendar id="time" value={date} onChange={(e) => setDate(e.value)} showTime showSeconds showIcon />
+                                                <Calendar
+                                                    id="ngayGuiGNTDenNgay"
+                                                    value={ngayGuiGNTDenNgay}
+                                                    name="ngayGuiGNTDenNgay"
+                                                    // onChange={(e) => setDate(e.value)}
+                                                    onChange={handleOnChange}
+                                                    showTime showSeconds showIcon
+                                                    dateFormat="dd/mm/yy"
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -200,7 +331,15 @@ const TraCuuGiayNopTien = () => {
                                         <div className="p-field p-grid">
                                             <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Ngày nộp thuế từ ngày</label>
                                             <div className="p-col">
-                                                <Calendar id="time" value={date} onChange={(e) => setDate(e.value)} showTime showSeconds showIcon />
+                                                <Calendar
+                                                    id="ngayNopThueTuNgay"
+                                                    value={ngayNopThueTuNgay}
+                                                    name="ngayNopThueTuNgay"
+                                                    // onChange={(e) => setDate(e.value)}
+                                                    onChange={handleOnChange}
+                                                    showTime showSeconds showIcon
+                                                    dateFormat="dd/mm/yy"
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -211,7 +350,15 @@ const TraCuuGiayNopTien = () => {
                                         <div className="p-field p-grid">
                                             <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Đến ngày</label>
                                             <div className="p-col">
-                                                <Calendar id="time" value={date} onChange={(e) => setDate(e.value)} showTime showSeconds showIcon />
+                                                <Calendar
+                                                    id="ngayNopThueDenNgay"
+                                                    value={ngayNopThueDenNgay}
+                                                    name="ngayNopThueDenNgay"
+                                                    // onChange={(e) => setDate(e.value)}
+                                                    onChange={handleOnChange}
+                                                    showTime showSeconds showIcon
+                                                    dateFormat="dd/mm/yy"
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -226,7 +373,13 @@ const TraCuuGiayNopTien = () => {
                                         <div className="p-field p-grid">
                                             <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Trạng thái</label>
                                             <div className="p-col">
-                                                <Dropdown value={selectedCity1} options={cities} onChange={e => setSelectedCity1(e.value)} optionLabel="name" placeholder="Select a City" style={{ width: '219px' }} />
+                                                <Dropdown
+                                                    value={trangThai}
+                                                    name="trangThai"
+                                                    options={trangThais}
+                                                    // onChange={e => setSelectedCity1(e.value)}
+                                                    onChange={handleOnChange}
+                                                    optionLabel="name" placeholder="==== Chọn ====" style={{ width: '219px' }} />
                                             </div>
                                         </div>
                                     </div>
@@ -295,7 +448,7 @@ const TraCuuGiayNopTien = () => {
                         <Column field="tv" body={renderTacVu} />
                     </DataTable>
 
-                    <div style={{float:"right"}}>Tổng tiền:...... VND,...... USD</div>
+                    <div style={{ float: "right" }}>Tổng tiền:...... VND,...... USD</div>
                 </fieldset>
 
                 <fieldset>
