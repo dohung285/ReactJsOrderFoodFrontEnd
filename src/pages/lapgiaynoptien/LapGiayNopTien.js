@@ -14,10 +14,16 @@ import { MESSAGE_REQUIRE } from '../../constants/ConstantString';
 import LapGiayNopTienService from '../../service/LapGiayNopTienService';
 import './lapgiaynoptien.css';
 import './lapgiaynoptien.scss';
+import useFullPageLoader from "../../hooks/useFullPageLoader";
 
 const LapGiayNopTien = () => {
-	const [activeIndex, setActiveIndex] = useState(0);
+
 	const toast = useRef(null);
+
+	const [loader, showLoader, hideLoader] = useFullPageLoader();
+
+
+	const [activeIndex, setActiveIndex] = useState(0);
 	const [selectedStep, setSelectedStep] = useState(null);
 	const [selectedBank, setSelectedBank] = useState(null);
 
@@ -61,12 +67,7 @@ const LapGiayNopTien = () => {
 	const [tinhTPs, setTinhTPs] = useState([]);
 	const [quanHuyens, setQuanHuyens] = useState([])
 	const [xaPhuongs, setXaPhuongs] = useState([])
-
-
-
-
-
-
+	const [nganHangs, setNganHangs] = useState([])
 
 
 
@@ -93,13 +94,13 @@ const LapGiayNopTien = () => {
 		},
 	];
 
-	const banks = [
-		{ name: 'BIDV', code: 'BIDV' },
-		{ name: 'Agribank', code: 'BIDV' },
-		{ name: 'TP', code: 'LDN' },
-		{ name: 'MB', code: 'IST' },
-		{ name: 'TechCombank', code: 'PRS' },
-	];
+	// const banks = [
+	// 	{ name: 'BIDV', code: 'BIDV' },
+	// 	{ name: 'Agribank', code: 'BIDV' },
+	// 	{ name: 'TP', code: 'LDN' },
+	// 	{ name: 'MB', code: 'IST' },
+	// 	{ name: 'TechCombank', code: 'PRS' },
+	// ];
 
 
 	const trichTKsos = [
@@ -146,26 +147,19 @@ const LapGiayNopTien = () => {
 	];
 
 	const loaiThues = [
-		{ name: 'Loại thuế A', code: 'A' },
-		{ name: 'Loại thuế B', code: 'B' },
-		{ name: 'Loại thuế C', code: 'C' },
+		{ name: 'Thuế nội địa', code: 'A' },
+		{ name: 'Thuế trước bạ', code: 'B' },
 	];
 
 
 
 
 
+	// const onChangeBank = (e) => {
+	// 	// console.log(e.target.value.name)
+	// 	setSelectedBank(e.value);
 
-
-
-
-
-
-	const onChangeBank = (e) => {
-		// console.log(e.target.value.name)
-		setSelectedBank(e.value);
-
-	};
+	// };
 	const processSelectedBank = () => {
 		// alert('ok');
 		if (selectedBank === null) {
@@ -460,6 +454,9 @@ const LapGiayNopTien = () => {
 		const valueName = value.name;
 
 		switch (name) {
+			case "selectedBank":   //	
+				setSelectedBank(value);
+				break;
 			case "trichTKso":
 				setTrichTKso(valueName)
 				if (valueName.length > 0) {
@@ -469,11 +466,8 @@ const LapGiayNopTien = () => {
 				}
 				break;
 			case "tinhTp":
-				// console.log('value', value)
-				// setIdTinhThanh(value.code)
 				setTinhTp(valueName)
 				getQuanHuyenById(value.code);
-
 
 				if (valueName.length > 0) {
 					setTinhTpCQQLTError("")
@@ -482,8 +476,10 @@ const LapGiayNopTien = () => {
 				}
 				break;
 			case "quanHuyen":
+
 				setQuanHuyen(valueName);
 				getXaPhuongById(value.code)
+
 				if (valueName.length > 0) {
 					setQuanHuyenTTNPSKTError("")
 				} else {
@@ -501,6 +497,7 @@ const LapGiayNopTien = () => {
 				break;
 			case "coquanQLthu":
 				setCoquanQLthu(valueName);
+
 				if (valueName.length > 0) {
 					setCoquanQLTError("")
 				} else {
@@ -518,6 +515,7 @@ const LapGiayNopTien = () => {
 				break;
 			case "loaiThue":
 				setLoaiThue(valueName);
+
 				if (valueName.length > 0) {
 					setLoaiThueError("")
 				} else {
@@ -526,6 +524,7 @@ const LapGiayNopTien = () => {
 				break;
 			case "radioLoaiTien":
 				setRadioLoaiTien(value);
+
 				if (value.length > 0) {
 					setLoaiTienError("")
 				} else {
@@ -535,7 +534,6 @@ const LapGiayNopTien = () => {
 			case "ttnpst":
 				if (value === 'tinhtp') {
 					setTtnpst(value)
-
 					setDisableQuanHuyenXaPhuong(true)
 					setDisableXaPhuong(true)
 				} else if (value === 'quanhuyen') {
@@ -552,11 +550,29 @@ const LapGiayNopTien = () => {
 				break;
 
 		}
-
-
-
-
 	}
+
+	const handleOnMouseDownQuanHuyen = (e) => {
+		// console.log('handleOnClick',e)
+		// console.log('quanHuyens', quanHuyens)
+		// debugger
+		if (quanHuyens.length === 0) {
+			showWarn('Bạn chưa chọn Tỉnh/TP')
+		}
+	}
+
+	const handleOnMouseDownXaPhuong = (e) => {  
+		// console.log('handleOnClick',e)
+		// console.log('quanHuyens', quanHuyens)
+		// debugger
+		if (xaPhuongs.length === 0) {
+			showWarn('Bạn chưa chọn Quận/Huyện')
+		}
+	}
+
+
+
+
 
 	const processLapMoi = () => {
 		// alert('0k')
@@ -594,8 +610,9 @@ const LapGiayNopTien = () => {
 	const getAllTinhThanh = async () => {
 		// console.log('before tinhTPs', tinhTPs)
 		let arrayTmp = [];
+		showLoader()
 		const result = await lapGiayNopTienService.getAllTinhThanh();
-		// console.log('result', result);
+		hideLoader()
 		if (result.status === 1000) {
 			let arrayResult = result.list;
 			arrayResult.forEach(element => {
@@ -615,13 +632,15 @@ const LapGiayNopTien = () => {
 	const getQuanHuyenById = async (id) => {
 
 		let arrayTmp = [];
+		showLoader()
 		const result = await lapGiayNopTienService.getAllQuanHuyenById(id);
-		console.log('result', result);
+		hideLoader()
+		// console.log('result', result);
 		if (result.status === 1000) {
 			let arrayResult = result.list;
 			arrayResult.forEach(element => {
 
-				console.log('element', element)
+				// console.log('element', element)
 
 				let obj = {
 					name: `${element.tenHuyen}`,
@@ -639,13 +658,15 @@ const LapGiayNopTien = () => {
 	const getXaPhuongById = async (id) => {
 
 		let arrayTmp = [];
+		showLoader()
 		const result = await lapGiayNopTienService.getAllXaPhuongById(id);
-		console.log('result', result);
+		hideLoader()
+		// console.log('result', result);
 		if (result.status === 1000) {
 			let arrayResult = result.list;
 			arrayResult.forEach(element => {
 
-				console.log('element', element)
+				// console.log('element', element)
 
 				let obj = {
 					name: `${element.tenXa}`,
@@ -654,6 +675,33 @@ const LapGiayNopTien = () => {
 				arrayTmp.push(obj)
 			});
 			setXaPhuongs(arrayTmp)
+		} else {
+			// console.log('result', result.message)
+			showError(result.message + ' để hiển thị danh sách xã phường')
+		}
+	}
+
+
+	const getAllDsNganHang = async (id) => {
+
+		let arrayTmp = [];
+		showLoader()
+		const result = await lapGiayNopTienService.getAllDanhSachNganHang();
+		hideLoader()
+		// console.log('result', result);
+		if (result.status === 1000) {
+			let arrayResult = result.list;
+			// console.log('arrayResult', arrayResult)
+			arrayResult.forEach(element => {
+				// console.log('element', element)
+				let obj = {
+					name: `${element.bankNo}`,
+					code: `${element.idBank}`
+				}
+				arrayTmp.push(obj)
+			});
+			setNganHangs(arrayTmp)
+			// setXaPhuongs(arrayTmp)
 		}
 	}
 
@@ -662,10 +710,23 @@ const LapGiayNopTien = () => {
 
 	useEffect(() => {
 		getAllTinhThanh();
+		getAllDsNganHang();
 
 	}, [])
 
 
+
+	const showError = (message) => {
+		toast.current.show({ severity: 'error', summary: 'Error Message', detail: message, life: 3000 });
+	}
+
+	const showSuccess = (message) => {
+		toast.current.show({ severity: 'success', summary: 'Success Message', detail: message, life: 3000 });
+	}
+
+	const showWarn = (message) => {
+		toast.current.show({ severity: 'warn', summary: 'Warn Message', detail: message, life: 3000 });
+	}
 
 
 	return (
@@ -705,10 +766,13 @@ const LapGiayNopTien = () => {
 								<div className="p-col-12 p-md-9">
 									<Dropdown
 										value={selectedBank}
-										options={banks}
-										onChange={onChangeBank}
+										name="selectedBank"
+										options={nganHangs}
+										// onChange={onChangeBank}
+										onChange={handleOnChange}
 										optionLabel="name"
 										editable
+										placeholder="====== Chọn ======"
 									/>
 								</div>
 							</div>
@@ -722,8 +786,6 @@ const LapGiayNopTien = () => {
 
 				{disableSelectBank === true && <div className="card">
 
-
-
 					<div className="card-body">
 						<fieldset>
 							<legend>Thông tin người nộp thuế: </legend>
@@ -732,7 +794,6 @@ const LapGiayNopTien = () => {
 							<div>Tên người nộp thuế: </div>
 							<div>Địa chỉ: </div>
 						</fieldset>
-
 
 						<fieldset>
 							<legend>Thông tin ngân hàng</legend>
@@ -745,8 +806,10 @@ const LapGiayNopTien = () => {
 										<div className="p-col">
 											<Dropdown
 												value={selectedBank}
-												options={banks}
-												onChange={onChangeBank}
+												options={nganHangs}
+												name="selectedBank"
+												// onChange={onChangeBank}
+												onChange={handleOnChange}
 												optionLabel="name"
 												editable
 											/>
@@ -891,6 +954,8 @@ const LapGiayNopTien = () => {
 													options={quanHuyens}
 													// onChange={(e) => setQuanHuyen(e.value)}
 													onChange={handleOnChange}
+													// onClick = {handleOnClick}
+													onMouseDown={handleOnMouseDownQuanHuyen}
 													optionLabel="name"
 													editable
 													placeholder="====== Chọn ======"
@@ -916,6 +981,7 @@ const LapGiayNopTien = () => {
 													options={xaPhuongs}
 													// onChange={(e) => setXaPhuong(e.value)}
 													onChange={handleOnChange}
+													onMouseDown={handleOnMouseDownXaPhuong}
 													optionLabel="name"
 													editable
 													placeholder="====== Chọn ======"
@@ -930,7 +996,6 @@ const LapGiayNopTien = () => {
 
 							</div>
 						</fieldset>
-
 
 
 						<fieldset>
@@ -1157,6 +1222,7 @@ const LapGiayNopTien = () => {
 				}
 
 			</div>
+			{loader}
 		</div>
 
 	);

@@ -26,6 +26,13 @@ class LapGiayNopTienService extends FetchAPI {
         return await this.request(url, null, TypeMethodConstantEnum.GET);
     }
 
+    //lấy ra toàn bộ danh sách ngân hàng
+
+    async getAllDanhSachNganHang() {
+        let url = `/dm/danhmuc/cybertaxv2/api/getallnganhang`;
+        return await this.request(url, null, TypeMethodConstantEnum.GET);
+    }
+
 
 
 

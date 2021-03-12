@@ -143,7 +143,7 @@ const TraCuuThuTraSoat = () => {
                             <div className="p-field p-grid">
                                 <label htmlFor="firstname3" className="p-col-fixed" style={{ width: '200px' }}>Đến ngày</label>
                                 <div className="p-col">
-                                    <Calendar id="time24" value={dateNLDN} onChange={(e) => setDateNLDN(e.value)} showTime showSeconds showIcon />
+                                    <Calendar id="time24" value={dateNLDN} onChange={(e) => {setDateNLDN(e.value)}} showTime showSeconds showIcon />
                                 </div>
                             </div>
                         </div>
