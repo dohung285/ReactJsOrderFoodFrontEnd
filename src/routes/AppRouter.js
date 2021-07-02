@@ -37,6 +37,7 @@ const AppRouter = ({ keycloak, keycloakInitialized }) => {
           className="p-button-rounded p-button-success"
           onClick={() => keycloak.login()}
         />
+        // <Main />
       )}
       {keycloak && keycloak.authenticated && <Main />}
     </div>

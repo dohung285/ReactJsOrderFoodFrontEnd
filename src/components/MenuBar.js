@@ -5,7 +5,12 @@ import { Link, useHistory } from "react-router-dom";
 import logo from "../asset/images/cybertax_logo2.png";
 import { PERMISSION_CTS, PERMISSION_ND, PERMISSION_NTK_DKHS, PERMISSION_NTK_DKNHS, PERMISSION_NTK_TCHS, PERMISSION_NTK_TKHS, PERMISSION_NT_LGNT, PERMISSION_NT_LGNTT, PERMISSION_NT_LTTS, PERMISSION_NT_TCGNT, PERMISSION_NT_TCTB, PERMISSION_NT_TCTTS, PERMISSION_QLDK, PERMISSION_TTDN, PERMISSION_VT } from "../constants/PermissionString";
 import { useRole } from "../hooks/useRole";
+import { Badge } from 'primereact/badge';
+import MenuService from "../service/MenuService";
+
+
 export const MenuBar = () => {
+
   let history = useHistory();
   function handleLogout() {
     history.push("/");
@@ -14,9 +19,11 @@ export const MenuBar = () => {
 
   const [active, setActive] = useState(false);
 
+  const [items, setItems] = useState([])
+
   // const roleOfUser = ["a", "c", "d", "e", "f", "g", "h", "i"]; // fake "f", "g", "h", "i"
 
-  const items = [
+  const itemsx = [
     {
       label: "Hệ thống",
       icon: "pi pi-fw pi-desktop",
@@ -135,65 +142,91 @@ export const MenuBar = () => {
 
 
 
- 
 
 
-  // const roleOfUser = fetPermission();
+  const [keycloak] = useKeycloak();
 
-  // const roleOfUser = ["a", "c", "d", "e", "f", "h", "i"];
+  const service = new MenuService();
 
+  // console.log(`keycloak`, keycloak?.realmAccess?.roles.toString());
 
+  const fetchMenuBar = async () => {
 
-  
-
-
-  //hardcode
-//   const roleOfUser = [
-//   'a5d1645c-773b-11eb-9439-0242ac130002', //Chứng thư số
-//  'd3c64a62-773b-11eb-9439-0242ac130002', // Quản lý đăng kí
-//  '3fa54130-5871-4536-b699-f4ddbff4566a', //vai trò
-//  '4bd89a24-773b-11eb-9439-0242ac130002', // người dùng
-//  ]
-  // const [permission, setPermission] = useState([]);
-  let roleOfUser = useRole();
-
-  function removeRoleDontHas(items,roleOfUser) {
-    // console.log('roleOfUser', roleOfUser)
-    // console.log('Before', items)
-    if(roleOfUser){
-      items.forEach(element => {
-        for (let index = 0; index < element.items.length; index++) {
-          // debugger
-          if (!roleOfUser.includes(element.items[index].permission)) {
-            // console.log('co vao day', index, element.items[index].permission)
-            element.items.splice(index, 1)
-          }
+    const result = await service.getAllMenuByRoleName(keycloak?.realmAccess?.roles.toString());
+    // console.log(`result Before`, result)
+    if (result) {
+      const resultWithLink = result.map(element => {
+        const { items, label } = element;
+        // console.log(`element`, element)
+        if (items.length === 0 && label === 'Trang chủ') {
+          history.push('/home')
         }
-      });
+        const itemsWithLink = items.map(item => {
+
+          const { command: url } = item;
+          return { ...item, command: () => history.push(`${url}`) }
+        })
+        return { ...element, items: itemsWithLink }
+      })
+
+      setItems(resultWithLink);
+      // console.log(`result After`, resultWithLink)
+
+      // result.forEach(element => {
+      //   // console.log(`element`, element?.items)
+      //   let arrayItems = element?.items;
+      //   arrayItems.forEach(e => {
+      //     // console.log(`e.command`, e.command)
+      //    let link = e.command;
+      //     let strFn = ()=>history.push(`${link}`)
+      //     // console.log(`strFn`, strFn)
+      //     // console.log(`e => updateObject`, { ...e, command: strFn})
+      //     // e = { ...e, command: strFn }
+      //     e.command = strFn
+      //   });
+
+
+
+
     }
-    
-    // console.log('After', items)
-  }
+
+
+
+  };
+
+
 
 
   useEffect(() => {
-    removeRoleDontHas(items, roleOfUser);
-    // fetPermission();
-  }, [roleOfUser]);
+    fetchMenuBar()
+  }, []);
 
   // const {keycloak} = useKeycloak();
-  const [keycloak] = useKeycloak();
+
   const onMouseOver = () => {
     setActive(true);
   };
-  const start = <img alt="logo" src={logo} height="40" className="p-mr-2" />;
+
+  const onClickLogo = () =>{
+   history.push('/')
+  }
+  const start =<img alt="logo" src={logo} height="40" className="p-mr-2" onClick={onClickLogo}/>;
   const end = (
+
+
+
     <ul
       className={"p-menubar-root-list menubar-right"}
       role="menubar"
       onMouseOver={onMouseOver}
       onMouseOut={() => setActive(false)}
     >
+
+      <li>
+        <Badge value="6" size="xlarge" severity="success"></Badge>
+      </li>
+
+
       <li
         role="none"
         className={active ? "p-menuitem p-menuitem-active" : "p-menuitem"}
@@ -247,7 +280,10 @@ export const MenuBar = () => {
           )}
         </ul>
       </li>
+
     </ul>
+
+
   );
   return (
     <div>

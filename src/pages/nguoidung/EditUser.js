@@ -102,10 +102,10 @@ const EditUser = (props) => {
     setSelectedGroupRole(e.value)
   }
 
-  useEffect(() => {
-    getAllGroupRole();
-    // getAllPermissionSelected();
-  }, [])
+  // useEffect(() => {
+  //   getAllGroupRole();
+  //   // getAllPermissionSelected();
+  // }, [])
 
 
 

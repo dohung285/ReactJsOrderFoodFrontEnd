@@ -35,7 +35,7 @@ const User = (props) => {
   const [visibleAddUser, setVisibleAddUser] = useState(false);
   const [visibleEditUser, setVisibleEditUser] = useState(false);
 
-  const roleOfUser = useRole();
+  // const roleOfUser = useRole();
 
   const [userObj, setUserObj] = useState({
     hoten: "",
@@ -109,8 +109,8 @@ const User = (props) => {
 
 
   // const fetAllRoles = async () => {
-  
- 
+
+
   //   const result = await service.getAllRoleWithPaging();
   //   console.log('result', result)
   //   if (result && result.status === 1000) {
@@ -120,7 +120,7 @@ const User = (props) => {
 
   const [arrayPermissionSelected, setArrayPermissionSelected] = useState([])
   const getAllPermissionSelected = async (id) => {
-    console.log('co chay',id)
+    console.log('co chay', id)
     let arrayPermissionSelectedsssssss = [];
     // console.log('co chay vao day')
     const result = await service.getAllPermissionSelected(id)
@@ -137,7 +137,7 @@ const User = (props) => {
         arrayPermissionSelectedsssssss.push(objPer)
       });
     }
-    console.log('arrayPermissionSelectedsssssss',arrayPermissionSelectedsssssss )
+    console.log('arrayPermissionSelectedsssssss', arrayPermissionSelectedsssssss)
     setArrayPermissionSelected(arrayPermissionSelectedsssssss)
   }
 
@@ -156,19 +156,19 @@ const User = (props) => {
     hideLoader();
   };
 
-  const getAllGroupRole = async ()=>{
+  const getAllGroupRole = async () => {
     const result = await service.getAllGroupRole();
     // console.log('result', result.list)
     setListGroupRole(result.list);
   }
 
-  useEffect(() => {
-    fetDataUser();
-    getAllGroupRole();
-    // eslint-disable-next-line
-    // getAllPermissionSelected();
-  }, [props.location.search]);
-  
+  // useEffect(() => {
+  //   fetDataUser();
+  //   getAllGroupRole();
+  //   // eslint-disable-next-line
+  //   // getAllPermissionSelected();
+  // }, [props.location.search]);
+
   const onHandleChangeSearch = (e) => {
     let valueSearch = e.target.value;
     // console.log("{...search, [e.target.name]:e.target.value}", {
@@ -352,7 +352,7 @@ const User = (props) => {
     // console.log('rowData', rowData)
     return (
       <React.Fragment>
-        {roleOfUser.includes(PERMISSION_ND_EDIT) && (
+        {/* {roleOfUser.includes(PERMISSION_ND_EDIT) && (
           <i
             className="pi pi-pencil p-mr-2 icon-medium"
             title={"Sửa"}
@@ -367,7 +367,24 @@ const User = (props) => {
             title={"Xóa"}
             onClick={() => onHandleDelete(rowData)}
           />
-        )}
+        )} */}
+
+
+        <i
+          className="pi pi-pencil p-mr-2 icon-medium"
+          title={"Sửa"}
+          style={{ color: "blue", cursor: "pointer" }}
+          onClick={() => onHandleEdit(rowData)}
+        />
+
+        <i
+          className="pi pi-trash icon-medium"
+          style={{ color: "red", cursor: "pointer" }}
+          title={"Xóa"}
+          onClick={() => onHandleDelete(rowData)}
+        />
+
+
       </React.Fragment>
     );
   };

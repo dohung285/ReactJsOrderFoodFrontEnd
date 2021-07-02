@@ -1,6 +1,14 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import router from "../router";
+import { Bread } from "../pages/banhmi/Bread";
+import Catalog from "../pages/danhmuc/Catalog";
+
+
+import Home from "../pages/Home";
+import User from "../pages/nguoidung/User";
+import NotFound from "../pages/NotFound";
+import Role from "../pages/vaitro/Role";
+import { PrivateRoute } from "../utils/PrivateRoute";
 
 const Content = () => {
   function showContent(routes) {
@@ -23,7 +31,28 @@ const Content = () => {
   return (
     <div>
       <section>
-        <Switch>{showContent(router)}</Switch>
+        <Switch>
+          {/* {showContent(router)} */}
+          <PrivateRoute roles={['RealmAdmin']} path="/user" component={User} />
+          <PrivateRoute roles={['RealmAdmin']} component={Role} path="/role" exact />
+
+          <Route component={Home} path="/" exact />
+          <Route component={Home} path="/home" exact />
+
+
+          <Route component={Bread} path="/bread" exact />
+          <Route component={Catalog} path="/catalog/:id"  />
+          {/* <Route component={User} path="/nguoi-dung" exact />
+          <Route component={User} path="/nguoi-dung" exact />
+          <Route component={User} path="/nguoi-dung" exact /> */}
+
+
+
+
+
+          <Route component={NotFound} />
+
+        </Switch>
       </section>
     </div>
   );

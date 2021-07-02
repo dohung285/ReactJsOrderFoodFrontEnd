@@ -25,7 +25,7 @@ import { ViewRole } from "./ViewRole";
 
 const Role = (props) => {
 
-  const roleOfUser = useRole();
+  // const roleOfUser = useRole();
   //==================================================================================
   const [loader, showLoader, hideLoader] = useFullPageLoader();
 
@@ -103,10 +103,10 @@ const Role = (props) => {
   };
  
 
-  useEffect(() => {
-    fetDataUser();
-    // eslint-disable-next-line
-  }, [props.location.search]); //props.location.search
+  // useEffect(() => {
+  //   fetDataUser();
+  //   // eslint-disable-next-line
+  // }, [props.location.search]); //props.location.search
 
   const onHandleChangeSearch = (e) => {
    
@@ -284,7 +284,22 @@ const Role = (props) => {
   const actionBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
-        {roleOfUser.includes(PERMISSION_VT_EDIT) && (
+
+ <i
+          className="pi pi-pencil p-mr-2 icon-medium"
+          title={"Sửa"}
+          style={{ color: "blue", cursor: "pointer" }}
+          onClick={() => handleEditNhomQuyen(rowData)}
+        />
+
+          <i
+                  className="pi pi-trash icon-medium"
+                  style={{ color: "red", cursor: "pointer" }}
+                  title={"Xóa"}
+                  onClick={() => handleDeleteNhomQuyen(rowData.id)}
+                />
+
+        {/* {roleOfUser.includes(PERMISSION_VT_EDIT) && (
         <i
           className="pi pi-pencil p-mr-2 icon-medium"
           title={"Sửa"}
@@ -300,7 +315,7 @@ const Role = (props) => {
                   title={"Xóa"}
                   onClick={() => handleDeleteNhomQuyen(rowData.id)}
                 />
-        )}
+        )} */}
       </React.Fragment>
     );
   };

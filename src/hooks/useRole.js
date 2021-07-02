@@ -34,9 +34,9 @@ export const useRole =  () => {
 
     // await fetPermission();
 
-    useEffect(() => {
-        fetPermission();
-    }, [])
+    // useEffect(() => {
+    //     fetPermission();
+    // }, [])
 
     // return ["a", "b", "c", "d", "e", "f", "g", "h", "i", PERMISSION_EDIT]; // fake "f", "g", "h", "i"
     return arrayRoles;
