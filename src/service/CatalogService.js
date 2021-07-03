@@ -1,7 +1,7 @@
 
 
 
-import { PREFIX_URL_NHOMQUYEN_PAGING, PREFIX_URL_ORDERFOOD } from "../constants/ConstantUrlAPI";
+import {  PREFIX_URL_ORDERFOOD } from "../constants/ConstantUrlAPI";
 import { TypeMethodConstantEnum } from "../helper/MethodAPIConstant";
 import FetchAPI from "./FetchAPI";
 

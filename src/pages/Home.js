@@ -97,7 +97,7 @@ export const Home = () => {
         return (
             <div className="product-item">
                 <div className="product-item-content">
-                    <div className="p-mb-3" >
+                    <div className="p-mb-3" style={{height:'60%'}}>
                         <div>
                             <img src={`./img/${product.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={product.name} className="product-image" />
                         </div>
@@ -157,7 +157,7 @@ export const Home = () => {
         return (
             <div className="p-col-12">
                 <div className="product-list-item">
-                    <img src={`../../img/banh-mi-kep-thit-nuong-thom-phuc.jpg`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
+                    <img src={`../../img/banh-mi-nuong-muoi-ot.jpg`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
                     <div className="product-list-detail">
                         <div className="product-name">{data.name}</div>
                         <div className="product-description">{data.description}</div>
@@ -188,7 +188,7 @@ export const Home = () => {
                     <div className="product-grid-item-content">
                         {/* <img src={`showcase/demo/images/product/${data.image}`} onError={(e) => e.target.src='https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} /> */}
                         {/* <img src={`https://drive.google.com/file/d/1jpRV0o25hW_5JGq7cIwiirOgQneCp-fe/view`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} /> */}
-                        <img src={`./img/banh-mi-kep-thit-nuong-thom-phuc.jpg`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
+                        <img src={`../../img/banh-mi-nuong-muoi-ot.jpg`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
 
                         {/* <img src={`D:/DuLieuTmp/SourceCode/Cyber/CyberTaxV2/FE/public/img/banh-mi-kep-thit-nuong-thom-phuc.jpg`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} /> */}
 
@@ -242,7 +242,7 @@ export const Home = () => {
             <div className="carousel-demo">
                 <div className="card">
                     <Carousel value={carousel} numVisible={3} numScroll={1} responsiveOptions={responsiveOptions} className="custom-carousel" circular
-                        autoplayInterval={3000} itemTemplate={productTemplate} />
+                        autoplayInterval={155000} itemTemplate={productTemplate} />
                 </div>
             </div>
 

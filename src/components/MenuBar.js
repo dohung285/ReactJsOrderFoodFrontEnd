@@ -207,10 +207,10 @@ export const MenuBar = () => {
     setActive(true);
   };
 
-  const onClickLogo = () =>{
-   history.push('/')
+  const onClickLogo = () => {
+    history.push('/')
   }
-  const start =<img alt="logo" src={logo} height="40" className="p-mr-2" onClick={onClickLogo}/>;
+  const start = <img alt="logo" src={logo} height="40" className="p-mr-2" onClick={onClickLogo} />;
   const end = (
 
 
@@ -218,8 +218,6 @@ export const MenuBar = () => {
     <ul
       className={"p-menubar-root-list menubar-right"}
       role="menubar"
-      onMouseOver={onMouseOver}
-      onMouseOut={() => setActive(false)}
     >
 
       <li>
@@ -230,6 +228,8 @@ export const MenuBar = () => {
       <li
         role="none"
         className={active ? "p-menuitem p-menuitem-active" : "p-menuitem"}
+        onMouseOver={onMouseOver}
+        onMouseOut={() => setActive(false)}
       >
         <span role="menuitem" className="p-menuitem-link" aria-haspopup="true">
           <span className="p-menuitem-text">

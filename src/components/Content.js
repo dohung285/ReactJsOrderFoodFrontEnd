@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 import { Bread } from "../pages/banhmi/Bread";
+import FoodDetail from "../pages/chitietmonan/FoodDetail";
 import Catalog from "../pages/danhmuc/Catalog";
 
 
@@ -42,6 +43,8 @@ const Content = () => {
 
           <Route component={Bread} path="/bread" exact />
           <Route component={Catalog} path="/catalog/:id"  />
+
+          <Route component={FoodDetail} path="/food/:id"  />
           {/* <Route component={User} path="/nguoi-dung" exact />
           <Route component={User} path="/nguoi-dung" exact />
           <Route component={User} path="/nguoi-dung" exact /> */}

@@ -7,7 +7,8 @@ import { Button } from 'primereact/button';
 import { Rating } from 'primereact/rating';
 import { Dropdown } from 'primereact/dropdown';
 // import '../danhmuc/Catalog.css'
-// import './Catalog.css'
+import './Catalog.css'
+import { Link } from 'react-router-dom';
 
 
 export const Catalog = ({ match }) => {
@@ -30,7 +31,7 @@ export const Catalog = ({ match }) => {
     const fetchFoodByFoodGroup = async () => {
 
         const result = await catalogService.getAllFoodByFoodGroup(1, 5, idCatalog);
-        console.log(`result`, result)
+        // console.log(`result`, result)
         if (result?.status == 1000) {
             console.log(`có vao day`, result?.response?.listReturn)
             setData(result?.response?.listReturn)
@@ -73,16 +74,19 @@ export const Catalog = ({ match }) => {
         return (
             <div className="p-col-12">
                 <div className="product-list-item">
-                    <img src={`../../img/${data.path}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
-                    <div className="product-list-detail">
-                        <div className="product-name">{data.name}</div>
-                        <Rating value={data.rating} readOnly cancel={false}></Rating>
-                    </div>
-                    <div className="product-list-action">
-                        <span className="product-price">${data.price} VND</span>
-                        <Button icon="pi pi-shopping-cart" label="Add to Cart" ></Button>
-                    </div>
+                    <Link to={`/food/${data.id}`} className="linkFoodDetail">
+                        <img src={`../../img/${data.path}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
+                        <div className="product-list-detail">
+                            <div className="product-name">{data.name}</div>
+                            <Rating value={data.rating} readOnly cancel={false}></Rating>
+                        </div>
+                        <div className="product-list-action">
+                            <span className="product-price">{data.price} VND</span>
+                            <Button icon="pi pi-shopping-cart" label="Add to Cart" ></Button>
+                        </div>
+                    </Link>
                 </div>
+
             </div>
         );
     }
@@ -91,20 +95,22 @@ export const Catalog = ({ match }) => {
         return (
             <div className="p-col-12 p-md-3">
                 <div className="product-grid-item card">
+                    <Link to={`/food/${data.id}`} className="linkFoodDetail">
+                        <div className="product-grid-item-content">
+                            <img src={`../../img/${data.path}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
+                            <div className="product-name">{data.name}</div>
+                            <Rating value={data.rating} readOnly cancel={false}></Rating>
+                        </div>
+                        <div className="product-grid-item-bottom">
+                            <span className="product-price">{data.price} VND</span>
+                            <Button
+                                icon="pi pi-shopping-cart"
+                                label="Add to Cart"
+                                onClick={() => alert("0k")}
+                            ></Button>
+                        </div>
+                    </Link>
 
-                    <div className="product-grid-item-content">
-                        <img src={`../../img/${data.path}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
-                        <div className="product-name">{data.name}</div>
-                        <Rating value={data.rating} readOnly cancel={false}></Rating>
-                    </div>
-                    <div className="product-grid-item-bottom">
-                        <span className="product-price">{data.price} VND</span>
-                        <Button
-                            icon="pi pi-shopping-cart"
-                            label="Add to Cart"
-                            onClick={() => alert("0k")}
-                        ></Button>
-                    </div>
                 </div>
             </div>
         );
@@ -124,7 +130,7 @@ export const Catalog = ({ match }) => {
 
     const header = renderHeader();
 
-    console.log(`data.path`, data)
+    // console.log(`data.path`, data)
 
 
 
