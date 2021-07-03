@@ -27,7 +27,7 @@ export const FoodDetail = ({ match }) => {
         }
     };
 
-  
+
 
     // console.log(`check`, Array.isArray(products))
 
@@ -59,10 +59,15 @@ export const FoodDetail = ({ match }) => {
 
     const handleTab = index => {
         setCurrentImage(products.listImage[index]);
+        const images = myRef.current.children;
+        for(let i=0; i<images.length; i++){
+          images[i].className = images[i].className.replace("active", "");
+        }
+        images[index].className = "active";
     };
 
     useEffect(() => {
-        if(products?.listImage){
+        if (products?.listImage) {
             setCurrentImage(products.listImage[0]);
         }
     }, [products])
@@ -76,19 +81,19 @@ export const FoodDetail = ({ match }) => {
     return (
         <div className="app card">
 
-            <div className="details" >   
+            <div className="details" >
                 <div className="big-img">
-                <img src={'/img/'+currentImage} alt="" key={index}/>
+                    <img src={'/img/' + currentImage} alt="" key={index} />
                 </div>
 
                 <div className="box">
                     <div className="row">
-                        <h2 style={{ fontWeight: '700', fontSize: '2rem' }}>{products.title}</h2>
+                        <h2 style={{ fontWeight: '600', fontSize: '1rem' }}>{products.name}</h2>
                         <span style={{ fontSize: '1.5rem', fontWeight: '600' }}>{products.price} VNĐ</span>
                     </div>
-           
 
-                    <p style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '1rem' }}>{products.content}</p>
+
+                    <p style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '1rem' }}>{products.description}</p>
 
                     <DetailsThumb images={products?.listImage} tab={handleTab} myRef={myRef} />
                     <Button icon="pi pi-shopping-cart" label="Giỏ hàng" style={{ marginRight: '30px' }}></Button>

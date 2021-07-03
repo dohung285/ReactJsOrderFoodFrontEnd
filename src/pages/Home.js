@@ -186,12 +186,8 @@ export const Home = () => {
                         <span className={`product-badge status-${data.inventoryStatus.toLowerCase()}`}>{data.inventoryStatus}</span>
                     </div>
                     <div className="product-grid-item-content">
-                        {/* <img src={`showcase/demo/images/product/${data.image}`} onError={(e) => e.target.src='https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} /> */}
-                        {/* <img src={`https://drive.google.com/file/d/1jpRV0o25hW_5JGq7cIwiirOgQneCp-fe/view`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} /> */}
+                       
                         <img src={`../../img/banh-mi-nuong-muoi-ot.jpg`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
-
-                        {/* <img src={`D:/DuLieuTmp/SourceCode/Cyber/CyberTaxV2/FE/public/img/banh-mi-kep-thit-nuong-thom-phuc.jpg`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} /> */}
-
                         <div className="product-name">{data.name}</div>
                         <div className="product-description">{data.description}</div>
                         <Rating value={data.rating} readOnly cancel={false}></Rating>
@@ -242,7 +238,7 @@ export const Home = () => {
             <div className="carousel-demo">
                 <div className="card">
                     <Carousel value={carousel} numVisible={3} numScroll={1} responsiveOptions={responsiveOptions} className="custom-carousel" circular
-                        autoplayInterval={155000} itemTemplate={productTemplate} />
+                        autoplayInterval={3000} itemTemplate={productTemplate} />
                 </div>
             </div>
 
