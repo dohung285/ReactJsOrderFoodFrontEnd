@@ -10,6 +10,12 @@ class MenuService extends FetchAPI {
         return await this.request(url, null, TypeMethodConstantEnum.GET);
     }
 
+    async getAllMenuNotRoleName() {
+     
+        let url = `${PREFIX_URL_ORDERFOOD}/menu/byNotRole`;
+        return await this.request(url, null, TypeMethodConstantEnum.GET);
+    }
+
 
 
     // async saveRole(dataBody) {

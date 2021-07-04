@@ -36,10 +36,13 @@ const AppRouter = ({ keycloak, keycloakInitialized }) => {
           label="Đăng nhập"
           className="p-button-rounded p-button-success"
           onClick={() => keycloak.login()}
+          // onClick={()=>keycloak.register()}
         />
         // <Main />
       )}
       {keycloak && keycloak.authenticated && <Main />}
+      {/* <Main /> */}
+     
     </div>
   );
 };

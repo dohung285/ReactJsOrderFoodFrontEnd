@@ -7,6 +7,7 @@ import { PERMISSION_CTS, PERMISSION_ND, PERMISSION_NTK_DKHS, PERMISSION_NTK_DKNH
 import { useRole } from "../hooks/useRole";
 import { Badge } from 'primereact/badge';
 import MenuService from "../service/MenuService";
+import CardService from "../service/CardService";
 
 
 export const MenuBar = () => {
@@ -146,13 +147,25 @@ export const MenuBar = () => {
 
   const [keycloak] = useKeycloak();
 
+  const [cardNumber, setCardNumber] = useState(0)
+
   const service = new MenuService();
+  const cardService = new CardService();
 
   // console.log(`keycloak`, keycloak?.realmAccess?.roles.toString());
 
   const fetchMenuBar = async () => {
 
-    const result = await service.getAllMenuByRoleName(keycloak?.realmAccess?.roles.toString());
+    // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
+
+    let result = await service.getAllMenuNotRoleName();
+    // if (keycloak && keycloak.authenticated) {
+    //   result = await service.getAllMenuByRoleName(keycloak?.realmAccess?.roles.toString());
+    // } else {
+    //   result = await service.getAllMenuNotRoleName();
+    // }
+
+
     // console.log(`result Before`, result)
     if (result) {
       const resultWithLink = result.map(element => {
@@ -170,38 +183,30 @@ export const MenuBar = () => {
       })
 
       setItems(resultWithLink);
-      // console.log(`result After`, resultWithLink)
+    }
+  };
 
-      // result.forEach(element => {
-      //   // console.log(`element`, element?.items)
-      //   let arrayItems = element?.items;
-      //   arrayItems.forEach(e => {
-      //     // console.log(`e.command`, e.command)
-      //    let link = e.command;
-      //     let strFn = ()=>history.push(`${link}`)
-      //     // console.log(`strFn`, strFn)
-      //     // console.log(`e => updateObject`, { ...e, command: strFn})
-      //     // e = { ...e, command: strFn }
-      //     e.command = strFn
-      //   });
-
-
-
-
+  const fetchNumberCard = async () => {
+    console.log(`username`, keycloak?.idTokenParsed?.preferred_username)
+    let result = await cardService.countNumber(keycloak?.idTokenParsed?.preferred_username);
+    if (result?.status === 1000) {
+      console.log(`cardNumber`, result?.response?.totalItems)
+      setCardNumber(result?.response?.totalItems)
     }
 
-
-
-  };
+  }
 
 
 
 
   useEffect(() => {
     fetchMenuBar()
+    fetchNumberCard()
   }, []);
 
   // const {keycloak} = useKeycloak();
+
+
 
   const onMouseOver = () => {
     setActive(true);
@@ -220,8 +225,10 @@ export const MenuBar = () => {
       role="menubar"
     >
 
-      <li>
-        <Badge value="6" size="xlarge" severity="success"></Badge>
+      <li >
+        <Link to={`/card/${keycloak?.idTokenParsed?.preferred_username}`}>
+          <Badge value={cardNumber} severity="danger" className="p-mr-2" />
+        </Link>
       </li>
 
 

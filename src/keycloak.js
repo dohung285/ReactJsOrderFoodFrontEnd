@@ -21,6 +21,7 @@ const keycloakConfig = {
   realm: 'orderfood',
   clientId: 'orderfoodfrontend',
   // clientSecret: 'c4327533-29c5-4faf-a596-36584cc3691b'
+  onLoad: 'login-required',
 
 }
 

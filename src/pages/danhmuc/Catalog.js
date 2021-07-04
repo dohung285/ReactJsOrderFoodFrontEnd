@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 
 
 export const Catalog = ({ match }) => {
-    console.log(`match`, match.params.id)
+    // console.log(`match`, match.params.id)
     let idCatalog = match.params.id;
 
     const catalogService = new CatalogService();
@@ -33,7 +33,7 @@ export const Catalog = ({ match }) => {
         const result = await catalogService.getAllFoodByFoodGroup(1, 5, idCatalog);
         // console.log(`result`, result)
         if (result?.status == 1000) {
-            console.log(`có vao day`, result?.response?.listReturn)
+            // console.log(`có vao day`, result?.response?.listReturn)
             setData(result?.response?.listReturn)
         }
     };
@@ -82,7 +82,9 @@ export const Catalog = ({ match }) => {
                         </div>
                         <div className="product-list-action">
                             <span className="product-price">{data.price} VND</span>
-                            <Button icon="pi pi-shopping-cart" label="Add to Cart" ></Button>
+                            <Button
+                                icon="pi pi-shopping-cart"
+                                label="Giỏ hàng" ></Button>
                         </div>
                     </Link>
                 </div>
@@ -101,13 +103,14 @@ export const Catalog = ({ match }) => {
                             <div className="product-name">{data.name}</div>
                             <Rating value={data.rating} readOnly cancel={false}></Rating>
                         </div>
+
                         <div className="product-grid-item-bottom">
                             <span className="product-price">{data.price} VND</span>
-                            <Button
-                                icon="pi pi-shopping-cart"
-                                label="Add to Cart"
-                                onClick={() => alert("0k")}
-                            ></Button>
+                            {/* <Button
+                            icon="pi pi-shopping-cart"
+                            label="Giỏ hàng"
+                            onClick={() => console.log(`idCard: =`, data.id)}
+                        ></Button> */}
                         </div>
                     </Link>
 
@@ -136,7 +139,7 @@ export const Catalog = ({ match }) => {
 
     return (
         <div>
-            Catalog {idCatalog}
+            {/* Catalog {idCatalog} */}
 
             <div className="dataview-demo">
                 <div className="card">

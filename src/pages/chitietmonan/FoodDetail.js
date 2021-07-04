@@ -1,31 +1,88 @@
 
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Galleria } from 'primereact/galleria';
 import DetailsThumb from './DetailsThumb';
 import { Button } from 'primereact/button';
 import './FoodDetail.css'
 import FoodService from '../../service/FoodService';
+import { InputNumber } from 'primereact/inputnumber';
+import CardService from '../../service/CardService';
+import { useKeycloak } from '@react-keycloak/web';
+import { Toast } from 'primereact/toast';
 
 export const FoodDetail = ({ match }) => {
     // console.log(`match`, match.params.id)
     let foodId = match.params.id;
-    const foodService = new FoodService();
 
-    const [data, setData] = useState({})
+    const foodService = new FoodService();
+    const cardService = new CardService();
+
     const [currentImage, setCurrentImage] = useState('')
+
+    const [valueAmount, setValueAmount] = useState(1)
+
+    const [keycloak] = useKeycloak();
+    const toast = useRef(null);
+
+
+
+    const showSuccess = (message) => {
+        toast.current.show({ severity: 'Thành công', summary: 'Success Message', detail: message, life: 3000 });
+    }
+
+    const showInfo = (message) => {
+        toast.current.show({ severity: 'Thông tin', summary: 'Info Message', detail: message, life: 3000 });
+    }
+
+    const showWarn = (message) => {
+        toast.current.show({ severity: 'Cảnh báo', summary: 'Warn Message', detail: message, life: 3000 });
+    }
+
+    const showError = (message) => {
+        toast.current.show({ severity: 'Lỗi', summary: 'Lỗi', detail: message, life: 3000 });
+    }
+
+
+
 
     const [products, setProducts] = useState({})
 
     const fetchFoodDetailByFoodId = async () => {
 
+        console.log(`keycloak`, keycloak?.idTokenParsed?.preferred_username)
+
         const result = await foodService.getFoodDetailByFoodId(foodId);
-        console.log(`result`, result)
+        // console.log(`result`, result)
         if (result?.status == 1000) {
-            console.log(`có vao day`, result)
+            // console.log(`có vao day`, result)
             setProducts(result?.object);
         }
     };
+
+    const onChangeAmount = (e)=> {
+        console.log(`e`, e);
+        setValueAmount(e.value)
+    }
+
+
+    const saveCard = async () => {
+
+        const cardBody = {
+            foodId: foodId,
+            amount: valueAmount,
+            username: keycloak?.idTokenParsed?.preferred_username,
+        }
+
+        console.log(`cardBody`, cardBody)
+
+        const result = await cardService.saveCard(cardBody);
+        // console.log(`result`, result)
+        if (result?.status == 1000) {
+            showSuccess("Thêm vào giỏ hàng thành công!")
+        }
+    };
+
 
 
 
@@ -60,8 +117,8 @@ export const FoodDetail = ({ match }) => {
     const handleTab = index => {
         setCurrentImage(products.listImage[index]);
         const images = myRef.current.children;
-        for(let i=0; i<images.length; i++){
-          images[i].className = images[i].className.replace("active", "");
+        for (let i = 0; i < images.length; i++) {
+            images[i].className = images[i].className.replace("active", "");
         }
         images[index].className = "active";
     };
@@ -77,34 +134,45 @@ export const FoodDetail = ({ match }) => {
 
     }, [])
 
+   
+
 
     return (
-        <div className="app card">
+        <div>
+            <Toast ref={toast} position="top-right" />
+            <div className="app card">
 
-            <div className="details" >
-                <div className="big-img">
-                    <img src={'/img/' + currentImage} alt="" key={index} />
-                </div>
-
-                <div className="box">
-                    <div className="row">
-                        <h2 style={{ fontWeight: '600', fontSize: '1rem' }}>{products.name}</h2>
-                        <span style={{ fontSize: '1.5rem', fontWeight: '600' }}>{products.price} VNĐ</span>
+                <div className="details" >
+                    <div className="big-img">
+                        <img src={'/img/' + currentImage} alt="" key={index} />
                     </div>
 
+                    <div className="box">
+                        <div className="row">
+                            <h2 style={{ fontWeight: '600', fontSize: '1rem' }}>{products.name}</h2>
+                            <span style={{ fontSize: '1.5rem', fontWeight: '600' }}>{products.price} VNĐ</span>
+                        </div>
 
-                    <p style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '1rem' }}>{products.description}</p>
 
-                    <DetailsThumb images={products?.listImage} tab={handleTab} myRef={myRef} />
-                    <Button icon="pi pi-shopping-cart" label="Giỏ hàng" style={{ marginRight: '30px' }}></Button>
-                    <Button icon="pi pi-shopping-cart" label="Mua ngay" ></Button>
+                        <p style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '1rem' }}>{products.description}</p>
 
+                        <DetailsThumb images={products?.listImage} tab={handleTab} myRef={myRef} />
+
+                        <div className="p-field p-col-12 p-md-3">
+                            <InputNumber inputId="minmax-buttons" value={valueAmount} onValueChange={e => onChangeAmount(e)} mode="decimal" showButtons min={0} max={20} />
+                        </div>
+
+                        <Button icon="pi pi-shopping-cart" label="Giỏ hàng" style={{ marginRight: '30px' }} onClick={() => saveCard()}></Button>
+                        <Button icon="pi pi-shopping-cart" label="Mua ngay" ></Button>
+
+
+                    </div>
                 </div>
-            </div>
 
 
 
-            <div className="card">
+                <div className="card">
+                </div>
             </div>
         </div>
     );
