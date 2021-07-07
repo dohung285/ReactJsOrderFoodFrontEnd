@@ -13,6 +13,8 @@ class CatalogService extends FetchAPI {
         return await this.request(url, null, TypeMethodConstantEnum.GET);
     }
 
+  
+
 
 
     // async saveRole(dataBody) {

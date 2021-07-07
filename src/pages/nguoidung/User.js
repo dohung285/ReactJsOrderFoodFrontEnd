@@ -539,6 +539,7 @@ const User = (props) => {
 
         <AddUser
           visible={visibleAddUser}
+          // visible={false}
           onHide={handleHideAddUser}
           fetDataUser={fetDataUser}
           listGroupRole={listGroupRole}

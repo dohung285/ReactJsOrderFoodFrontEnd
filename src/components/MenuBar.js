@@ -187,10 +187,10 @@ export const MenuBar = () => {
   };
 
   const fetchNumberCard = async () => {
-    console.log(`username`, keycloak?.idTokenParsed?.preferred_username)
+    // console.log(`username`, keycloak?.idTokenParsed?.preferred_username)
     let result = await cardService.countNumber(keycloak?.idTokenParsed?.preferred_username);
     if (result?.status === 1000) {
-      console.log(`cardNumber`, result?.response?.totalItems)
+      // console.log(`cardNumber`, result?.response?.totalItems)
       setCardNumber(result?.response?.totalItems)
     }
 

@@ -3,6 +3,7 @@ import { Route, Switch } from "react-router-dom";
 import { Bread } from "../pages/banhmi/Bread";
 import FoodDetail from "../pages/chitietmonan/FoodDetail";
 import Catalog from "../pages/danhmuc/Catalog";
+import OrderCard from "../pages/dathang/OrderCard";
 import Card from "../pages/giohang/Card";
 
 
@@ -47,6 +48,8 @@ const Content = () => {
 
           <Route component={FoodDetail} path="/food/:id"  />
            <Route component={Card} path="/card/:username" exact />
+
+           {/* <Route component={OrderCard} path="/ordercard" exact /> */}
 
 
 

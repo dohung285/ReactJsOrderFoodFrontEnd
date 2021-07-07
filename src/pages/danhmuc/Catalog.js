@@ -80,13 +80,14 @@ export const Catalog = ({ match }) => {
                             <div className="product-name">{data.name}</div>
                             <Rating value={data.rating} readOnly cancel={false}></Rating>
                         </div>
-                        <div className="product-list-action">
-                            <span className="product-price">{data.price} VND</span>
-                            <Button
-                                icon="pi pi-shopping-cart"
-                                label="Giỏ hàng" ></Button>
-                        </div>
                     </Link>
+                    <div className="product-list-action">
+                        <span className="product-price">{data.price} VND</span>
+                        <Button
+                            icon="pi pi-shopping-cart"
+                            label="Giỏ hàng" ></Button>
+                    </div>
+
                 </div>
 
             </div>
@@ -103,16 +104,16 @@ export const Catalog = ({ match }) => {
                             <div className="product-name">{data.name}</div>
                             <Rating value={data.rating} readOnly cancel={false}></Rating>
                         </div>
-
-                        <div className="product-grid-item-bottom">
-                            <span className="product-price">{data.price} VND</span>
-                            {/* <Button
+                    </Link>
+                    <div className="product-grid-item-bottom">
+                        <span className="product-price">{data.price} VND</span>
+                        <Button
                             icon="pi pi-shopping-cart"
                             label="Giỏ hàng"
                             onClick={() => console.log(`idCard: =`, data.id)}
-                        ></Button> */}
-                        </div>
-                    </Link>
+                        ></Button>
+                    </div>
+
 
                 </div>
             </div>
