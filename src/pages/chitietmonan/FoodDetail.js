@@ -12,7 +12,7 @@ import { useKeycloak } from '@react-keycloak/web';
 import { Toast } from 'primereact/toast';
 
 export const FoodDetail = ({ match }) => {
-    // console.log(`match`, match.params.id)
+    console.log(`match`, match.params.id)
     let foodId = match.params.id;
 
     const foodService = new FoodService();
@@ -47,22 +47,64 @@ export const FoodDetail = ({ match }) => {
 
 
     const [products, setProducts] = useState({})
+    const [orderObj, setOrderObj] = useState(
+        {
+            address: '',
+            phone: '',
+            username: '',
+            dateOrder: '',
+            note: '',
+        }
+    )
+
+    const [orderDetailObj, setOrderDetailObj] = useState({
+        foodId: foodId,
+        amount: null,
+        money: null
+    })
 
     const fetchFoodDetailByFoodId = async () => {
 
         console.log(`keycloak`, keycloak?.idTokenParsed?.preferred_username)
 
         const result = await foodService.getFoodDetailByFoodId(foodId);
-        // console.log(`result`, result)
+        console.log(`result`, result)
         if (result?.status == 1000) {
             // console.log(`có vao day`, result)
             setProducts(result?.object);
+
+            // tạo sẵn dữ liệu
+            const { price, percent } = result?.object;
+            let money = null;
+            if (percent === null) {
+                //th giảm giá bằng 0
+                money = valueAmount * price
+            } else {
+                // có giảm giá
+                money = (valueAmount * price) - (valueAmount * price * percent) / 100
+            }
+
+            //update orderDetailObj
+            setOrderDetailObj(
+                {
+                    ...orderDetailObj,
+                    money: money
+                }
+            )
+
+
+
+
+
+
+
         }
     };
 
-    const onChangeAmount = (e)=> {
+    const onChangeAmount = (e) => {
         console.log(`e`, e);
         setValueAmount(e.value)
+       
     }
 
 
@@ -82,6 +124,10 @@ export const FoodDetail = ({ match }) => {
             showSuccess("Thêm vào giỏ hàng thành công!")
         }
     };
+
+    const onByProduct = () => {
+        console.log(`products`, products)
+    }
 
 
 
@@ -134,7 +180,7 @@ export const FoodDetail = ({ match }) => {
 
     }, [])
 
-   
+
 
 
     return (
@@ -163,7 +209,7 @@ export const FoodDetail = ({ match }) => {
                         </div>
 
                         <Button icon="pi pi-shopping-cart" label="Giỏ hàng" style={{ marginRight: '30px' }} onClick={() => saveCard()}></Button>
-                        <Button icon="pi pi-shopping-cart" label="Mua ngay" ></Button>
+                        <Button icon="pi pi-shopping-cart" label="Mua ngay" onClick={() => onByProduct()} ></Button>
 
 
                     </div>

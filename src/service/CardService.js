@@ -39,6 +39,10 @@ class CardService extends FetchAPI {
         return await this.request(url, null, TypeMethodConstantEnum.DELETE);
     }
 
+    async deleteFoodIntoCardSelected(cardIds) {
+        let url = `${PREFIX_URL_ORDERFOOD}/card/all/?cardIds=${cardIds}`;
+        return await this.request(url, null, TypeMethodConstantEnum.DELETE);
+    }
 
 
 

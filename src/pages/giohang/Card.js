@@ -1,29 +1,24 @@
 
 import { useKeycloak } from '@react-keycloak/web';
 import { Button } from 'primereact/button';
-import { DataView } from 'primereact/dataview';
-import { Dropdown } from 'primereact/dropdown';
-import { InputNumber } from 'primereact/inputnumber';
-import React, { useEffect, useState, useRef, cloneElement } from 'react';
-import CardService from '../../service/CardService';
-import './Card.css';
-import OrderCard from "../dathang/OrderCard";
-
-
-// import { classNames } from 'primereact/utils';
-import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-
-import { Toast } from 'primereact/toast';
-import { FileUpload } from 'primereact/fileupload';
-import { Rating } from 'primereact/rating';
-import { Toolbar } from 'primereact/toolbar';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { RadioButton } from 'primereact/radiobutton';
-
+import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
+import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
-import { Link } from '@material-ui/core';
+import { InputTextarea } from 'primereact/inputtextarea';
+import { Toast } from 'primereact/toast';
+import { Toolbar } from 'primereact/toolbar';
+import React, { useEffect, useRef, useState } from 'react';
+import CardService from '../../service/CardService';
+import OrderService from '../../service/OrderService';
+import './Card.css';
+import * as moment from "moment";
+import { MESSAGE_PHONE_FORMAT_ERROR, MESSAGE_REQUIRE, NOT_NUMBER } from '../../constants/ConstantString';
+import { isNumber } from '../../constants/FunctionConstant';
+
+
+
 
 
 export const Card = ({ match }) => {
@@ -60,6 +55,7 @@ export const Card = ({ match }) => {
 
 
     const cardService = new CardService();
+    const orderService = new OrderService();
 
     const fetchFoodIntoCard = async () => {
 
@@ -121,6 +117,23 @@ export const Card = ({ match }) => {
         }
 
     }
+
+
+    const saveOrderFood = async (objParam) => {
+
+        // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
+        // console.log(`product.cardId`, product.cardId)
+
+        let result = await orderService.saveOrder(objParam);
+        console.log(`result`, result)
+        if (result?.status === 1000) {
+
+            // fetchFoodIntoCard();
+            toast.current.show({ severity: 'success', summary: 'Thành công', detail: 'Thành công', life: 3000 });
+        }
+
+    }
+
 
 
 
@@ -329,7 +342,7 @@ export const Card = ({ match }) => {
 
 
     const onClickHandleOrderButton = () => {
-        console.log(`selectedProducts`, selectedProducts)
+        // console.log(`selectedProducts`, selectedProducts)
         onClick('displayBasic')
     }
 
@@ -484,13 +497,62 @@ export const Card = ({ match }) => {
         dialogFuncMap[`${name}`](false);
     }
 
+    const onResetInput = () => {
+
+    }
+
+    const handleOnYesDialog = (name) => {
+
+        // console.log(`objOrder`, objOrder)
+        // console.log(`dataOder`, dataOrder)
+
+        if (formValidation()) {
+
+            let newData = dataOrder.map(obj => {
+                // console.log(`obj`, obj.foodId)
+                return {
+                    foodId: obj.foodId,
+                    amount: obj.amount,
+                    money: obj.money
+                }
+            })
+
+            // console.log(`newData`, newData)
+            const objParam = {
+                ...objOrder,
+                orderDetails: newData
+            }
+            console.log(`objParam`, objParam)
+
+            saveOrderFood(objParam)
+            setSelectedProducts(null);
+
+
+            setObjOrder(
+                {
+                    username: keycloak?.idTokenParsed?.name,
+                    address: '',
+                    phone: '',
+                    note: '',
+                    dateOrder: moment().format("DD/MM/yy HH:mm:ss"),
+
+                }
+            )
+            // xong thì tắt dialog
+            onHide(name)
+
+
+        }
+
+    }
+
     const renderFooter = (name) => {
         return (
             <div>
                 <Button
                     label="Hủy"
                     icon="pi pi-times"
-                    // onClick={onHide}
+                    onClick={() => onHide('displayBasic')}
                     // onClick={handleOnCloseDialog}
                     className="p-button-text"
                 />
@@ -498,7 +560,7 @@ export const Card = ({ match }) => {
                     label="Đồng ý"
                     icon="pi pi-check"
                     // onClick={() => onHide(name)}
-                    // onClick={() => handleOnYesDialog(name)}
+                    onClick={() => handleOnYesDialog('displayBasic')}
                     autoFocus
                 />
             </div>
@@ -523,42 +585,96 @@ export const Card = ({ match }) => {
     // console.log(`keycloak`, keycloak?.idTokenParsed)
 
     const [objOrder, setObjOrder] = useState({
-        tenKhachHang: keycloak?.idTokenParsed?.name,
-        diaChi: 'Lào Cai',
-        soDienThoai: '0981746490',
-        ghiChu: 'Giao hàng đúng giờ'
+        username: keycloak?.idTokenParsed?.name,
+        address: '',
+        phone: '',
+        note: '',
+        dateOrder: moment().format("DD/MM/yy HH:mm:ss"),
+
     })
 
     const handleOnChange = (e) => {
+        // debugger
         // console.log(`e`, e)
         const eTN = e.target.name;
-        if (eTN === 'diachi') {
+        const value = e.target.value
+        // console.log(`eTN`, eTN)
+        if (eTN === 'address') {
+            // console.log(`e.target.value`, e.target.value)
+            if (value.length > 0) {
+                setAddressErrors("")
+            } else {
+                setAddressErrors(MESSAGE_REQUIRE)
+            }
+
+            // console.log(`e.value`, e.target.value)
             setObjOrder(
                 {
-                    ...dataOrder,
-                    diaChi: e.value
+                    ...objOrder,
+                    address: e.target.value
                 }
             )
         }
-        if (eTN === 'sodienthoai') {
+        if (eTN === 'phone') {
             setObjOrder(
                 {
-                    ...dataOrder,
-                    soDienThoai: e.value
+                    ...objOrder,
+                    phone: e.target.value
                 }
             )
         }
-        if (eTN === 'ghichu') {
+        if (eTN === 'note') {
             setObjOrder(
                 {
-                    ...dataOrder,
-                    ghiChu: e.value
+                    ...objOrder,
+                    note: e.target.value
                 }
             )
         }
 
 
     }
+
+    const [addressErrors, setAddressErrors] = useState({});
+    const [phoneErrors, setPhoneErrors] = useState({});
+
+    const formValidation = () => {
+        console.log(`formValidation`)
+        // debugger
+        const addressErrors = {}
+        const phoneErrors = {}
+
+        console.log(`String(objOrder.phone).length`, String(objOrder.phone).length)
+
+        let isValid = true;
+
+        if (objOrder.address === '') {
+            addressErrors.addressRequired = MESSAGE_REQUIRE;
+            isValid = false;
+        }
+
+        if (objOrder.phone === '') {
+            phoneErrors.phoneErrorRequired = MESSAGE_REQUIRE;
+            isValid = false;
+        }
+        if (!isNumber(objOrder.phone)) {
+            console.log(`cisNumber`)
+            phoneErrors.phoneErrorNotNumber = NOT_NUMBER;
+            isValid = false;
+        }
+        if ((String(objOrder.phone).length < 0 && String(objOrder.phone).length > 10) || String(objOrder.phone).length != 10) {
+            // console.log(`co vao `)
+            phoneErrors.phoneErrorNotFormat = MESSAGE_PHONE_FORMAT_ERROR;
+            isValid = false;
+        }
+        //=====================
+
+        setAddressErrors(addressErrors);
+        setPhoneErrors(phoneErrors);
+
+        return isValid;
+    }
+
 
 
     return (
@@ -619,9 +735,9 @@ export const Card = ({ match }) => {
             <Dialog header="Đặt hàng" visible={displayBasic} style={{ width: '50vw' }} footer={renderFooter('displayBasic')} onHide={() => onHide('displayBasic')}>
                 <div className="p-fluid">
                     <div className="p-field p-grid">
-                        <label htmlFor="tenkhachhang" className="p-col-12 p-md-3">Tên khách hàng</label>
+                        <label htmlFor="tenkhachhang" className="p-col-12 p-md-3">Tên khách hàng <span className="item-required"> *</span></label>
                         <div className="p-col-12 p-md-9">
-                            <InputText id="tenkhachhang" type="text" value={objOrder.tenKhachHang} onChange={handleOnChange} />
+                            <InputText id="tenkhachhang" type="text" value={objOrder.username} onChange={handleOnChange} readOnly={true} />
                         </div>
                     </div>
 
@@ -641,25 +757,55 @@ export const Card = ({ match }) => {
 
 
                     <div className="p-field p-grid">
-                        <label htmlFor="diachi" className="p-col-12 p-md-3">Địa chỉ</label>
+                        <label htmlFor="address" className="p-col-12 p-md-3">Địa chỉ  <span className="item-required"> *</span></label>
                         <div className="p-col-12 p-md-9">
-                            <InputTextarea name="diachi" rows={2} cols={30} autoResize value={objOrder.diaChi} onChange={handleOnChange} />
+                            <InputTextarea
+                                className={Object.keys(addressErrors).length > 0 ? "error" : null}
+                                name="address"
+                                rows={2}
+                                cols={30}
+                                autoResize
+                                value={objOrder.address}
+                                onChange={handleOnChange} />
+                            {Object.keys(addressErrors).map((keyIndex, key) => {
+                                return <span className="errorMessage" key={key} >{addressErrors[keyIndex]} <br></br></span>
+                            })}
                         </div>
                     </div>
                 </div>
                 <div className="p-fluid">
                     <div className="p-field p-grid">
-                        <label htmlFor="sodienthoai" className="p-col-12 p-md-3">Số điện thoại</label>
+                        <label htmlFor="phone" className="p-col-12 p-md-3">Số điện thoại <span className="item-required">*</span></label>
                         <div className="p-col-12 p-md-9">
-                            <InputText id="sodienthoai" name="sodienthoai" type="text" value={objOrder.soDienThoai} onChange={handleOnChange} />
+                            <InputText
+                                className={Object.keys(phoneErrors).length > 0 ? "error" : null}
+                                id="phone"
+                                name="phone"
+                                type="text"
+                                value={objOrder.phone}
+                                onChange={handleOnChange} />
+                            {Object.keys(phoneErrors).map((keyIndex, key) => {
+                                return <span
+                                    className="errorMessage"
+                                    key={key}
+                                >{phoneErrors[keyIndex]}
+                                    <br></br>
+                                </span>
+                            })}
                         </div>
                     </div>
                 </div>
                 <div className="p-fluid">
                     <div className="p-field p-grid">
-                        <label htmlFor="ghichu" className="p-col-12 p-md-3">Ghi chú</label>
+                        <label htmlFor="note" className="p-col-12 p-md-3">Ghi chú</label>
                         <div className="p-col-12 p-md-9">
-                            <InputTextarea name="ghichu" rows={4} cols={30} autoResize value={objOrder.ghiChu} onChange={handleOnChange} />
+                            <InputTextarea
+                                name="note"
+                                rows={4}
+                                cols={30}
+                                autoResize
+                                value={objOrder.note}
+                                onChange={handleOnChange} />
                         </div>
                     </div>
 

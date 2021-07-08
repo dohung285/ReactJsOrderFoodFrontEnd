@@ -10,6 +10,8 @@ export const EMAIL_REGEX = RegExp(
 
 
 export const MESSAGE_REQUIRE = "Không được bỏ trống";
+export const NOT_NUMBER = "Không phải số";
+
 export const MESSAGE_EMAIL_FORMAT_ERROR = "Không đúng định dạng email";
 export const MESSAGE_PHONE_FORMAT_ERROR = "Số điện thoại phải gồm có 10 số";
 

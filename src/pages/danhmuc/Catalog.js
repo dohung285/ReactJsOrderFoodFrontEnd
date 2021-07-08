@@ -107,11 +107,11 @@ export const Catalog = ({ match }) => {
                     </Link>
                     <div className="product-grid-item-bottom">
                         <span className="product-price">{data.price} VND</span>
-                        <Button
+                        {/* <Button
                             icon="pi pi-shopping-cart"
-                            label="Giỏ hàng"
-                            onClick={() => console.log(`idCard: =`, data.id)}
-                        ></Button>
+                            label="Mua"
+                            onClick={() => onBuyProduct(data.id)}
+                        ></Button> */}
                     </div>
 
 
@@ -135,6 +135,11 @@ export const Catalog = ({ match }) => {
     const header = renderHeader();
 
     // console.log(`data.path`, data)
+
+    // const onBuyProduct= (id)=>{
+    //     console.log(`data`, data)
+    //     console.log(`idCard: =`, id)
+    // }
 
 
 

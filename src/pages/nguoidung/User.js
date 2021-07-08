@@ -7,7 +7,7 @@ import { InputText } from "primereact/inputtext";
 import { Paginator } from "primereact/paginator";
 import { Tag } from "primereact/tag";
 import { Toolbar } from "primereact/toolbar";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 import Moment from "react-moment";
 import { withRouter } from "react-router-dom";
@@ -15,18 +15,10 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { EXPRITIME_HIDER_LOADER } from "../../constants/ConstantString";
 import {
-  PERMISSION_ADD,
-  PERMISSION_DELETE,
-  PERMISSION_EDIT,
-  PERMISSION_ND_DELETE,
-  PERMISSION_ND_EDIT,
-} from "../../constants/PermissionString";
-import {
   convertJsonToQueryString,
-  queryStringToJSON,
+  queryStringToJSON
 } from "../../helper/CyberTaxHelper";
 import useFullPageLoader from "../../hooks/useFullPageLoader";
-import { useRole } from "../../hooks/useRole";
 import UserServices from "../../service/UserService";
 import AddUser from "./AddUser";
 import EditUser from "./EditUser";
