@@ -69,6 +69,7 @@ export const Card = ({ match }) => {
         // console.log(`result`, result)
         if (result?.status === 1000) {
             // setData(result?.response.listReturn)
+            // console.log(`result?.response.listReturn`, result?.response.listReturn)
             setProducts1(result?.response.listReturn)
         }
 
@@ -304,32 +305,38 @@ export const Card = ({ match }) => {
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Xóa các sản phẩm thành công', life: 3000 });
     }
 
-    const onCategoryChange = (e) => {
-        let _product = { ...product };
-        _product['category'] = e.value;
-        setProduct(_product);
-    }
+    //  const onCategoryChange = (e) => {
+    //     let _product = { ...product };
+    //     _product['category'] = e.value;
+    //     setProduct(_product);
+    // }
 
-    const onInputChange = (e, name) => {
-        const val = (e.target && e.target.value) || '';
-        let _product = { ...product };
-        _product[`${name}`] = val;
+    // const onInputChange = (e, name) => {
+    //     const val = (e.target && e.target.value) || '';
+    //     let _product = { ...product };
+    //     _product[`${name}`] = val;
 
-        setProduct(_product);
-    }
+    //     setProduct(_product);
+    // }
 
-    const onInputNumberChange = (e, name) => {
-        const val = e.value || 0;
-        let _product = { ...product };
-        _product[`${name}`] = val;
+    // const onInputNumberChange = (e, name) => {
+    //     const val = e.value || 0;
+    //     let _product = { ...product };
+    //     _product[`${name}`] = val;
 
-        setProduct(_product);
+    //     setProduct(_product);
+    // }
+
+
+    const onClickHandleOrderButton = () => {
+        console.log(`selectedProducts`, selectedProducts)
+        onClick('displayBasic')
     }
 
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <Button label="Đặt hàng" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={() => onClick('displayBasic')} disabled={!selectedProducts || !selectedProducts.length} />
+                <Button label="Đặt hàng" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={onClickHandleOrderButton} disabled={!selectedProducts || !selectedProducts.length} />
 
                 <Button label="Xóa" icon="pi pi-trash" className="p-button-danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
             </React.Fragment>
@@ -375,6 +382,14 @@ export const Card = ({ match }) => {
             <React.Fragment>
                 {/* <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2" onClick={() => editProduct(rowData)} /> */}
                 <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => confirmDeleteProduct(rowData)} />
+            </React.Fragment>
+        );
+    }
+
+    const actionThanhTien = (rowData) => {
+        return (
+            <React.Fragment>
+                <span>{(rowData.amount * rowData.price) - (rowData.amount * rowData.price * rowData.percent) / 100}</span>
             </React.Fragment>
         );
     }
@@ -490,8 +505,61 @@ export const Card = ({ match }) => {
         );
     };
 
-    const [cities2, setCities2] = useState([]);
-    const [city2, setCity2] = useState(null);
+    // const [cities2, setCities2] = useState([]);
+    // const [city2, setCity2] = useState(null);
+    const [dataOrder, setDataOrder] = useState([]);
+    // const [chooseAddress, setChooseAddress] = useState(null);
+
+    const handleOnSelectedChange = (e) => {
+        let array = [];
+        setSelectedProducts(e.value)
+        e.value.forEach(element => {
+            element.money = (element.amount * element.price) - (element.amount * element.price * element.percent) / 100
+            array.push(element);
+        });
+        setDataOrder(array)
+    }
+
+    // console.log(`keycloak`, keycloak?.idTokenParsed)
+
+    const [objOrder, setObjOrder] = useState({
+        tenKhachHang: keycloak?.idTokenParsed?.name,
+        diaChi: 'Lào Cai',
+        soDienThoai: '0981746490',
+        ghiChu: 'Giao hàng đúng giờ'
+    })
+
+    const handleOnChange = (e) => {
+        // console.log(`e`, e)
+        const eTN = e.target.name;
+        if (eTN === 'diachi') {
+            setObjOrder(
+                {
+                    ...dataOrder,
+                    diaChi: e.value
+                }
+            )
+        }
+        if (eTN === 'sodienthoai') {
+            setObjOrder(
+                {
+                    ...dataOrder,
+                    soDienThoai: e.value
+                }
+            )
+        }
+        if (eTN === 'ghichu') {
+            setObjOrder(
+                {
+                    ...dataOrder,
+                    ghiChu: e.value
+                }
+            )
+        }
+
+
+    }
+
 
     return (
 
@@ -503,10 +571,14 @@ export const Card = ({ match }) => {
 
                     <Toolbar className="p-mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
-                    <DataTable ref={dt} value={products1} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}
-                        dataKey="id" paginator rows={5} rowsPerPageOptions={[5, 10, 25]}
+                    <DataTable ref={dt} value={products1}
+                        selection={selectedProducts}
+                        onSelectionChange={(e) => handleOnSelectedChange(e)}
+                        dataKey="cardId"
+                        paginator rows={5}
+                        rowsPerPageOptions={[5, 10, 25]}
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        // currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
                         currentPageReportTemplate="Tổng {totalRecords} món"
                         globalFilter={globalFilter}
                     // header={header}
@@ -526,7 +598,7 @@ export const Card = ({ match }) => {
                     </DataTable>
                 </div>
 
-              
+
 
                 <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
                     <div className="confirmation-content">
@@ -549,29 +621,29 @@ export const Card = ({ match }) => {
                     <div className="p-field p-grid">
                         <label htmlFor="tenkhachhang" className="p-col-12 p-md-3">Tên khách hàng</label>
                         <div className="p-col-12 p-md-9">
-                            <InputText id="tenkhachhang" type="text" />
+                            <InputText id="tenkhachhang" type="text" value={objOrder.tenKhachHang} onChange={handleOnChange} />
                         </div>
                     </div>
 
-                    <div className="p-field p-grid">
+                    {/* <div className="p-field p-grid">
                         <label htmlFor="chondiachi" className="p-col-12 p-md-3">Chọn địa chỉ</label>
                         <div className="p-col-12 p-md-9 p-formgroup-inline">
                             <div className="p-field-checkbox">
-                                <RadioButton inputId="city5" name="city2" value="Chicago" onChange={e => setCity2(e.value)} checked={city2 === 'Chicago'} />
-                                <label htmlFor="city7">Mặc định</label>
+                                <RadioButton inputId="chooseAddress1" name="chooseAddress" value="default" onChange={handleOnChange} checked={chooseAddress === 'default'} />
+                                <label htmlFor="chooseAddress1">Mặc định</label>
                             </div>
                             <div className="p-field-checkbox">
-                                <RadioButton inputId="city8" name="city2" value="Los Angeles" onChange={e => setCity2(e.value)} checked={city2 === 'Los Angeles'} />
-                                <label htmlFor="city8">Khác</label>
+                                <RadioButton inputId="chooseAddress2" name="chooseAddress" value="other" onChange={handleOnChange} checked={chooseAddress === 'other'} />
+                                <label htmlFor="chooseAddress2">Khác</label>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
 
                     <div className="p-field p-grid">
-                        <label htmlFor="diachi" className="p-col-12 p-md-3"></label>
+                        <label htmlFor="diachi" className="p-col-12 p-md-3">Địa chỉ</label>
                         <div className="p-col-12 p-md-9">
-                            <InputTextarea rows={2} cols={30} autoResize />
+                            <InputTextarea name="diachi" rows={2} cols={30} autoResize value={objOrder.diaChi} onChange={handleOnChange} />
                         </div>
                     </div>
                 </div>
@@ -579,13 +651,7 @@ export const Card = ({ match }) => {
                     <div className="p-field p-grid">
                         <label htmlFor="sodienthoai" className="p-col-12 p-md-3">Số điện thoại</label>
                         <div className="p-col-12 p-md-9">
-                            <InputText id="sodienthoai" type="text" />
-                        </div>
-                    </div>
-                    <div className="p-field p-grid">
-                        <label htmlFor="ngaydat" className="p-col-12 p-md-3">Ngày đặt</label>
-                        <div className="p-col-12 p-md-9">
-                            <InputText id="ngaydat" type="text" />
+                            <InputText id="sodienthoai" name="sodienthoai" type="text" value={objOrder.soDienThoai} onChange={handleOnChange} />
                         </div>
                     </div>
                 </div>
@@ -593,7 +659,7 @@ export const Card = ({ match }) => {
                     <div className="p-field p-grid">
                         <label htmlFor="ghichu" className="p-col-12 p-md-3">Ghi chú</label>
                         <div className="p-col-12 p-md-9">
-                            <InputTextarea rows={4} cols={30} autoResize />
+                            <InputTextarea name="ghichu" rows={4} cols={30} autoResize value={objOrder.ghiChu} onChange={handleOnChange} />
                         </div>
                     </div>
 
@@ -601,21 +667,20 @@ export const Card = ({ match }) => {
 
                 <div className="datatable-crud-demo ">
 
-                   
 
-                    <DataTable ref={dt} value={products1} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}
+
+                    <DataTable ref={dt}
+                        value={dataOrder}
                         dataKey="id"
                     >
 
-                        <Column headerStyle={{ width: '3rem' }}></Column>
+                        {/* <Column headerStyle={{ width: '3rem' }}></Column> */}
                         <Column field="cardId" header="Id" ></Column>
                         <Column field="name" header="Tên" ></Column>
                         <Column field="price" header="Giá" body={priceBodyTemplate} ></Column>
                         <Column field="amount" header="Số lượng"  ></Column>
-
-
                         <Column header="Giảm giá" body={discountBodyTemplate} ></Column>
-                        
+                        <Column field="money" header="Thành tiền" />
                     </DataTable>
                 </div>
 
