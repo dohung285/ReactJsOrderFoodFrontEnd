@@ -33,6 +33,48 @@ const routes=[
         main: () => <Role />
 
     },
+
+    // {
+    //     path: '/food',
+    //     exact: true,
+    //     main: () => <Food />
+
+    // },
+
+    // {
+    //     path: '/role',
+    //     exact: true,
+    //     main: () => <Role />
+
+    // },
+
+    // {
+    //     path: '/role',
+    //     exact: true,
+    //     main: () => <Role />
+
+    // },
+
+    // {
+    //     path: '/role',
+    //     exact: true,
+    //     main: () => <Role />
+
+    // },
+
+    // {
+    //     path: '/role',
+    //     exact: true,
+    //     main: () => <Role />
+
+    // },
+
+
+
+
+
+
+
  
     {
         path: '',

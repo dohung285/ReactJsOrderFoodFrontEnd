@@ -2,7 +2,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import { Menubar } from "primereact/menubar";
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import logo from "../asset/images/cybertax_logo2.png";
+import logo from "../asset/images/lg-order-food.png";
 import { PERMISSION_CTS, PERMISSION_ND, PERMISSION_NTK_DKHS, PERMISSION_NTK_DKNHS, PERMISSION_NTK_TCHS, PERMISSION_NTK_TKHS, PERMISSION_NT_LGNT, PERMISSION_NT_LGNTT, PERMISSION_NT_LTTS, PERMISSION_NT_TCGNT, PERMISSION_NT_TCTB, PERMISSION_NT_TCTTS, PERMISSION_QLDK, PERMISSION_TTDN, PERMISSION_VT } from "../constants/PermissionString";
 import { useRole } from "../hooks/useRole";
 import { Badge } from 'primereact/badge';
@@ -253,7 +253,7 @@ export const MenuBar = () => {
               aria-haspopup="false"
             >
               <span className="pi pi-user" style={{ marginRight: "0.5rem" }} />
-              <span className="p-menuitem-text">Quản lý tài khoản</span>
+              <span className="p-menuitem-text">Danh sách đơn hàng</span>
             </Link>
           </li>
           <li role="none">

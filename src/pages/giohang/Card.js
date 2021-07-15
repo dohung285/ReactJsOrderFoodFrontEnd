@@ -680,68 +680,69 @@ export const Card = ({ match }) => {
     return (
 
         <div className={"card"}>
-            <div className="datatable-crud-demo ">
-                <Toast ref={toast} />
+            <div className="card-body">
+                <div className="datatable-crud-demo ">
+                    <Toast ref={toast} />
 
-                <div className="card">
+                    <div className="card">
 
-                    <Toolbar className="p-mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+                        <Toolbar className="p-mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
-                    <DataTable ref={dt} value={products1}
-                        selection={selectedProducts}
-                        onSelectionChange={(e) => handleOnSelectedChange(e)}
-                        dataKey="cardId"
-                        paginator rows={5}
-                        rowsPerPageOptions={[5, 10, 25]}
-                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                        currentPageReportTemplate="Tổng {totalRecords} món"
-                        globalFilter={globalFilter}
-                    // header={header}
-                    >
+                        <DataTable ref={dt} value={products1}
+                            selection={selectedProducts}
+                            onSelectionChange={(e) => handleOnSelectedChange(e)}
+                            dataKey="cardId"
+                            paginator rows={5}
+                            rowsPerPageOptions={[5, 10, 25]}
+                            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+                            currentPageReportTemplate="Tổng {totalRecords} món"
+                            globalFilter={globalFilter}
+                        // header={header}
+                        >
 
-                        <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
-                        <Column field="cardId" header="Id" ></Column>
-                        <Column field="name" header="Tên" ></Column>
-                        <Column field="price" header="Giá" body={priceBodyTemplate} ></Column>
-                        <Column field="amount" header="Số lượng" editor={(props) => amountEditor('products1', props)} ></Column>
-                        <Column header="Ảnh" body={imageBodyTemplate}></Column>
+                            <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
+                            <Column field="cardId" header="Id" ></Column>
+                            <Column field="name" header="Tên" ></Column>
+                            <Column field="price" header="Giá" body={priceBodyTemplate} ></Column>
+                            <Column field="amount" header="Số lượng" editor={(props) => amountEditor('products1', props)} ></Column>
+                            <Column header="Ảnh" body={imageBodyTemplate}></Column>
 
-                        <Column header="Giảm giá" body={discountBodyTemplate} ></Column>
-                        {/* <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable></Column> */}
-                        {/* <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} sortable></Column> */}
-                        <Column body={actionBodyTemplate}></Column>
-                    </DataTable>
+                            <Column header="Giảm giá" body={discountBodyTemplate} ></Column>
+                            {/* <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable></Column> */}
+                            {/* <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} sortable></Column> */}
+                            <Column body={actionBodyTemplate}></Column>
+                        </DataTable>
+                    </div>
+
+
+
+                    <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
+                        <div className="confirmation-content">
+                            <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
+                            {product && <span>Bạn có chắc chắn muốn xóa <b>{product.name}</b>?</span>}
+                        </div>
+                    </Dialog>
+
+                    <Dialog visible={deleteProductsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
+                        <div className="confirmation-content">
+                            <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
+                            {product && <span>Bạn có chắc chắn xóa hết các sản phẩm đang chọn?</span>}
+                        </div>
+                    </Dialog>
                 </div>
 
 
-
-                <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
-                    <div className="confirmation-content">
-                        <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
-                        {product && <span>Bạn có chắc chắn muốn xóa <b>{product.name}</b>?</span>}
-                    </div>
-                </Dialog>
-
-                <Dialog visible={deleteProductsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
-                    <div className="confirmation-content">
-                        <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
-                        {product && <span>Bạn có chắc chắn xóa hết các sản phẩm đang chọn?</span>}
-                    </div>
-                </Dialog>
-            </div>
-
-
-            <Dialog header="Đặt hàng" visible={displayBasic} style={{ width: '50vw' }} footer={renderFooter('displayBasic')} onHide={() => onHide('displayBasic')}>
-                <div className="p-fluid">
-                    <div className="p-field p-grid">
-                        <label htmlFor="tenkhachhang" className="p-col-12 p-md-3">Tên khách hàng <span className="item-required"> *</span></label>
-                        <div className="p-col-12 p-md-9">
-                            <InputText id="tenkhachhang" type="text" value={objOrder.username} onChange={handleOnChange} readOnly={true} />
+                <Dialog header="Đặt hàng" visible={displayBasic} style={{ width: '50vw' }} footer={renderFooter('displayBasic')} onHide={() => onHide('displayBasic')}>
+                    <div className="p-fluid">
+                        <div className="p-field p-grid">
+                            <label htmlFor="tenkhachhang" className="p-col-12 p-md-3">Tên khách hàng <span className="item-required"> *</span></label>
+                            <div className="p-col-12 p-md-9">
+                                <InputText id="tenkhachhang" type="text" value={objOrder.username} onChange={handleOnChange} readOnly={true} />
+                            </div>
                         </div>
-                    </div>
 
-                    {/* <div className="p-field p-grid">
+                        {/* <div className="p-field p-grid">
                         <label htmlFor="chondiachi" className="p-col-12 p-md-3">Chọn địa chỉ</label>
                         <div className="p-col-12 p-md-9 p-formgroup-inline">
                             <div className="p-field-checkbox">
@@ -756,84 +757,79 @@ export const Card = ({ match }) => {
                     </div> */}
 
 
-                    <div className="p-field p-grid">
-                        <label htmlFor="address" className="p-col-12 p-md-3">Địa chỉ  <span className="item-required"> *</span></label>
-                        <div className="p-col-12 p-md-9">
-                            <InputTextarea
-                                className={Object.keys(addressErrors).length > 0 ? "error" : null}
-                                name="address"
-                                rows={2}
-                                cols={30}
-                                autoResize
-                                value={objOrder.address}
-                                onChange={handleOnChange} />
-                            {Object.keys(addressErrors).map((keyIndex, key) => {
-                                return <span className="errorMessage" key={key} >{addressErrors[keyIndex]} <br></br></span>
-                            })}
+                        <div className="p-field p-grid">
+                            <label htmlFor="address" className="p-col-12 p-md-3">Địa chỉ  <span className="item-required"> *</span></label>
+                            <div className="p-col-12 p-md-9">
+                                <InputTextarea
+                                    className={Object.keys(addressErrors).length > 0 ? "error" : null}
+                                    name="address"
+                                    rows={2}
+                                    cols={30}
+                                    autoResize
+                                    value={objOrder.address}
+                                    onChange={handleOnChange} />
+                                {Object.keys(addressErrors).map((keyIndex, key) => {
+                                    return <span className="errorMessage" key={key} >{addressErrors[keyIndex]} <br></br></span>
+                                })}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="p-fluid">
-                    <div className="p-field p-grid">
-                        <label htmlFor="phone" className="p-col-12 p-md-3">Số điện thoại <span className="item-required">*</span></label>
-                        <div className="p-col-12 p-md-9">
-                            <InputText
-                                className={Object.keys(phoneErrors).length > 0 ? "error" : null}
-                                id="phone"
-                                name="phone"
-                                type="text"
-                                value={objOrder.phone}
-                                onChange={handleOnChange} />
-                            {Object.keys(phoneErrors).map((keyIndex, key) => {
-                                return <span
-                                    className="errorMessage"
-                                    key={key}
-                                >{phoneErrors[keyIndex]}
-                                    <br></br>
-                                </span>
-                            })}
+                    <div className="p-fluid">
+                        <div className="p-field p-grid">
+                            <label htmlFor="phone" className="p-col-12 p-md-3">Số điện thoại <span className="item-required">*</span></label>
+                            <div className="p-col-12 p-md-9">
+                                <InputText
+                                    className={Object.keys(phoneErrors).length > 0 ? "error" : null}
+                                    id="phone"
+                                    name="phone"
+                                    type="text"
+                                    value={objOrder.phone}
+                                    onChange={handleOnChange} />
+                                {Object.keys(phoneErrors).map((keyIndex, key) => {
+                                    return <span
+                                        className="errorMessage"
+                                        key={key}
+                                    >{phoneErrors[keyIndex]}
+                                        <br></br>
+                                    </span>
+                                })}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="p-fluid">
-                    <div className="p-field p-grid">
-                        <label htmlFor="note" className="p-col-12 p-md-3">Ghi chú</label>
-                        <div className="p-col-12 p-md-9">
-                            <InputTextarea
-                                name="note"
-                                rows={4}
-                                cols={30}
-                                autoResize
-                                value={objOrder.note}
-                                onChange={handleOnChange} />
+                    <div className="p-fluid">
+                        <div className="p-field p-grid">
+                            <label htmlFor="note" className="p-col-12 p-md-3">Ghi chú</label>
+                            <div className="p-col-12 p-md-9">
+                                <InputTextarea
+                                    name="note"
+                                    rows={4}
+                                    cols={30}
+                                    autoResize
+                                    value={objOrder.note}
+                                    onChange={handleOnChange} />
+                            </div>
                         </div>
+
                     </div>
 
-                </div>
+                    <div className="datatable-crud-demo ">
+                        <DataTable ref={dt}
+                            value={dataOrder}
+                            dataKey="id"
+                        >
 
-                <div className="datatable-crud-demo ">
+                            {/* <Column headerStyle={{ width: '3rem' }}></Column> */}
+                            <Column field="cardId" header="Id" ></Column>
+                            <Column field="name" header="Tên" ></Column>
+                            <Column field="price" header="Giá" body={priceBodyTemplate} ></Column>
+                            <Column field="amount" header="Số lượng"  ></Column>
+                            <Column header="Giảm giá" body={discountBodyTemplate} ></Column>
+                            <Column field="money" header="Thành tiền" />
+                        </DataTable>
+                    </div>
+                </Dialog>
 
-
-
-                    <DataTable ref={dt}
-                        value={dataOrder}
-                        dataKey="id"
-                    >
-
-                        {/* <Column headerStyle={{ width: '3rem' }}></Column> */}
-                        <Column field="cardId" header="Id" ></Column>
-                        <Column field="name" header="Tên" ></Column>
-                        <Column field="price" header="Giá" body={priceBodyTemplate} ></Column>
-                        <Column field="amount" header="Số lượng"  ></Column>
-                        <Column header="Giảm giá" body={discountBodyTemplate} ></Column>
-                        <Column field="money" header="Thành tiền" />
-                    </DataTable>
-                </div>
-
-
-
-
-            </Dialog>
+            </div>
 
         </div>
     );
