@@ -1,22 +1,29 @@
 
 
+
+
+import * as moment from "moment";
 import { Button } from 'primereact/button';
+import { Calendar } from 'primereact/calendar';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
-import { InputText } from 'primereact/inputtext';
-import { Toolbar } from 'primereact/toolbar';
-import React, { useEffect, useRef, useState } from 'react';
-import FoodGroupService from '../../service/FoodGroupService';
-import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import { InputNumber } from 'primereact/inputnumber';
-import DiscountService from '../../service/DiscountService';
-import * as moment from "moment";
-import Moment from "react-moment";
+import { InputText } from 'primereact/inputtext';
+import { Tag } from "primereact/tag";
 import { Toast } from 'primereact/toast';
+import React, { useEffect, useRef, useState } from 'react';
+import Moment from "react-moment";
+import { useHistory, useLocation } from "react-router-dom";
+import CommentService from "../../service/CommentService";
+import RoleService from "../../service/RoleService";
 
-const Discount = () => {
+const RoleNew = () => {
+
+    const location = useLocation()
+    const history = useHistory();
+
 
     const toast = useRef(null);
     const dt = useRef(null);
@@ -24,20 +31,20 @@ const Discount = () => {
     const [selectedProducts, setSelectedProducts] = useState(null);
     const [globalFilter, setGlobalFilter] = useState(null);
     const [deleteProductDialog, setDeleteProductDialog] = useState(false);
-
+    const [removeRole, setRemoveRole] = useState(false)
     const [productDeleteSelected, setProductDeleteSelected] = useState(null);
     const [position, setPosition] = useState('center');
     const [displayBasic, setDisplayBasic] = useState(false);
     const [submitted, setSubmitted] = useState(false);
 
     const [productDialog, setProductDialog] = useState(false);
-    const [txtName, setTxtName] = useState(null);
-    const [date16, setDate16] = useState(null);
-    const [value4, setValue4] = useState(50);
 
 
-    const foodGroupService = new FoodGroupService();
-    const discountService = new DiscountService();
+
+
+    const commentService = new CommentService();
+    const roleService = new RoleService();
+
 
     const [objDiscount, setObjDiscount] = useState(
         {
@@ -111,35 +118,39 @@ const Discount = () => {
     const actionBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
-                {/* <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2" onClick={() => editProduct(rowData)} /> */}
-                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => confirmDeleteProduct(rowData)} />
+                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2 " onClick={() => confirmDeleteProduct(rowData)} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={()=>confirmRemoveRole(rowData)} />
             </React.Fragment>
         );
     }
 
-    const bodyStartDate = (rowData) => {
-        return (
-            <React.Fragment>
-                <Moment format="DD/MM/YYYY">{rowData.startDate}</Moment>
-            </React.Fragment>
-        );
+    const renderRoleBodyTemplate = (rowData) => {
+        let status = null;
+        if (rowData.hasRoleAdmin === true) {
+            status = 'Admin'
+            return <Tag severity="success" value={status} />;
+        }
+        else {
+            status = 'Non-Admin'
+            return <Tag severity="warning" value={status} />;
+        }
     }
 
-    const bodyEndDate = (rowData) => {
-        return (
-            <React.Fragment>
-                <Moment format="DD/MM/YYYY">{rowData.endDate}</Moment>
-            </React.Fragment>
-        );
-    }
 
     const deleteProduct = () => {
-        // let _products = products.filter(val => val.id !== product.id);
-        // setProduct(_products);
-        // console.log(`productDelete`, product)
 
-        // deleteFoodIntoCard();
-        deleteDiscount(productDeleteSelected.id)
+        console.log(`history`, history.location.pathname)
+        console.log(`location`, location)
+        // console.log(`productDelete`, productDeleteSelected)
+        // const dataBody = [
+        //     {
+        //         id: "f68c6039-7394-4c64-a351-c87181658272",
+        //         name: "admin"
+        //     }
+        // ]
+
+        // // addRoleMapping;
+        // deleteDiscount(productDeleteSelected.id, dataBody)
 
         setDeleteProductDialog(false);
         setProductDeleteSelected(null)
@@ -147,24 +158,42 @@ const Discount = () => {
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Xóa  thành công', life: 3000 });
     }
 
-    const hideDeleteProductDialog = () => {
-        setDeleteProductDialog(false);
+    const removeRoleMapping = () => {
+
+        console.log(`productDelete`, productDeleteSelected)
+        const dataBody = [
+            {
+                id: "f68c6039-7394-4c64-a351-c87181658272",
+                name: "admin"
+            }
+        ]
+
+        // removeRoleMapping;
+        removeRoleMappingAPI(productDeleteSelected.id, dataBody)
+
+        setRemoveRole(false);
+        setProductDeleteSelected(null)
+        // setProduct(emptyProduct);
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Thành công', life: 3000 });
     }
+
+    // const hideDeleteProductDialog = () => {
+    //     setDeleteProductDialog(false);
+    // }
 
     const deleteProductDialogFooter = (
         <React.Fragment>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteProductDialog} />
-            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={deleteProduct} />
+            <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={()=>setDeleteProductDialog(false)} />
+            <Button label="Đồng ý" icon="pi pi-check" className="p-button-text" onClick={deleteProduct} />
         </React.Fragment>
     );
 
-    const leftToolbarTemplate = () => {
-        return (
-            <React.Fragment>
-                <Button label="Thêm" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={onClickHandleOrderButton} />
-            </React.Fragment>
-        )
-    }
+    const removeRoletDialogFooter = (
+        <React.Fragment>
+            <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={()=>setRemoveRole(false)} />
+            <Button label="Đồng ý" icon="pi pi-check" className="p-button-text" onClick={removeRoleMapping} />
+        </React.Fragment>
+    );
 
     const onClick = (name, position) => {
         dialogFuncMap[`${name}`](true);
@@ -179,11 +208,7 @@ const Discount = () => {
 
     }
 
-    const onClickHandleOrderButton = () => {
-        // console.log(`selectedProducts`, selectedProducts)
-        // onClick('displayBasic')
-        openNew();
-    }
+  
 
 
     const confirmDeleteProduct = (product) => {
@@ -192,9 +217,20 @@ const Discount = () => {
         setDeleteProductDialog(true);
     }
 
+
+    const confirmRemoveRole = (product) => {
+        // console.log(`product`, product)
+        setProductDeleteSelected(product);
+        setRemoveRole(true);
+    }
+
+
+
+
+
     const fetchDiscount = async () => {
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
-        let result = await discountService.getAll();
+        let result = await roleService.getAllUserAndRole();
         // console.log(`result`, result)
         if (result?.status === 1000) {
             setProducts(result?.list)
@@ -228,33 +264,42 @@ const Discount = () => {
     }
     const saveDiscount = async () => {
 
-        let result = await discountService.save(objDiscount);
+        // let result = await discountService.save(objDiscount);
+        // // console.log(`result`, result)
+        // if (result?.status === 1000) {
+        //     // setTxtName(null);
+        //     setObjDiscount(
+        //         {
+        //             name: '',
+        //             percent: 0,
+        //             startDate: moment().format("DD/MM/yy HH:mm:ss"),
+        //             endDate: moment().format("DD/MM/yy HH:mm:ss")
+        //         }
+        //     )
+        //     fetchDiscount();
+        // }
+        setProductDialog(false);
+    }
+
+    const deleteDiscount = async (id, dataBody) => {
+
+        let result = await roleService.addRoleMappingToUser(id, dataBody);
         // console.log(`result`, result)
         if (result?.status === 1000) {
-            // setTxtName(null);
-            setObjDiscount(
-                {
-                    name: '',
-                    percent: 0,
-                    startDate: moment().format("DD/MM/yy HH:mm:ss"),
-                    endDate: moment().format("DD/MM/yy HH:mm:ss")
-                }
-            )
             fetchDiscount();
         }
         setProductDialog(false);
     }
 
-    const deleteDiscount = async (id) => {
+    const removeRoleMappingAPI = async (id, dataBody) => {
 
-        let result = await discountService.delete(id);
+        let result = await roleService.removeRoleMappingToUser(id, dataBody);
         // console.log(`result`, result)
         if (result?.status === 1000) {
             fetchDiscount();
         }
         setProductDialog(false);
     }
-
 
 
     const productDialogFooter = (
@@ -273,7 +318,7 @@ const Discount = () => {
             <div className="card-body">
                 <Toast ref={toast} />
 
-                <Toolbar className="p-mb-4" left={leftToolbarTemplate} ></Toolbar>
+                {/* <Toolbar className="p-mb-4" left={leftToolbarTemplate} ></Toolbar> */}
 
                 <DataTable ref={dt} value={products}
                     selection={selectedProducts}
@@ -283,18 +328,17 @@ const Discount = () => {
                     rowsPerPageOptions={[5, 10, 25]}
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                    currentPageReportTemplate="Tổng {totalRecords} món"
+                    currentPageReportTemplate="Tổng {totalRecords} bản ghi"
                     globalFilter={globalFilter}
                 // header={header}
                 >
 
                     {/* <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column> */}
                     <Column field="id" header="Id" ></Column>
-                    <Column field="name" header="Tên" ></Column>
-                    <Column field="percent" header="%" ></Column>
-                    <Column field="startDate" body={bodyStartDate} header="Ngày bắt đầu" ></Column>
-                    <Column field="endDate" body={bodyEndDate} header="Ngày kết thúc" ></Column>
-                    <Column headerStyle={{ width: '4rem' }} body={actionBodyTemplate}></Column>
+                    <Column field="email" header="Email" ></Column>
+                    <Column field="username" header="Tài khoản" ></Column>
+                    <Column field="hasRoleAdmin" header="Vai trò" body={renderRoleBodyTemplate} ></Column>
+                    <Column headerStyle={{ width: '8rem' }} body={actionBodyTemplate}></Column>
                 </DataTable>
 
 
@@ -356,12 +400,18 @@ const Discount = () => {
                 </Dialog>
 
 
-                <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
+                <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={() => setDeleteProductDialog(false)}>
                     <div className="confirmation-content">
                         <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
-                        {/* {product && <span>Bạn có chắc chắn muốn xóa <b>{product.name}</b>?</span>} */}
-                        {/* <span>Bạn có chắc chắn muốn xóa <b>{productDeleteSelected.name }</b>?</span> */}
-                        {productDeleteSelected && <span>Bạn có chắc chắn muốn xóa <b>{productDeleteSelected.name}</b>?</span>}
+                        {productDeleteSelected && <span>Bạn có muốn thiết lập tài khoản <b>{productDeleteSelected.username}</b> thành admin ?</span>}
+                    </div>
+                </Dialog>
+
+
+                <Dialog visible={removeRole} style={{ width: '450px' }} header="Confirm" modal footer={removeRoletDialogFooter} onHide={()=>setRemoveRole(false)}>
+                    <div className="confirmation-content">
+                        <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
+                        {productDeleteSelected && <span>Bạn có muốn thiết lập tài khoản <b>{productDeleteSelected.username}</b> thành admin ?</span>}
                     </div>
                 </Dialog>
 
@@ -371,4 +421,4 @@ const Discount = () => {
     )
 }
 
-export default Discount
+export default RoleNew

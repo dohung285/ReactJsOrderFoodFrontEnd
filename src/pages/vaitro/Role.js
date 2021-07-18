@@ -92,7 +92,7 @@ const Role = (props) => {
     // console.log('dataBody', dataBody)
 
     // console.log("fetdata:", paginate);
-    const result = await service.getAllRoleWithPaging(dataBody);
+    const result = await service.getAllUserAndRole(dataBody);
     if (result && result.status === 1000) {
       //  console.log(result);
       // console.log('result - LOADING - totalItem: ', result.totalItem);
@@ -103,10 +103,10 @@ const Role = (props) => {
   };
  
 
-  // useEffect(() => {
-  //   fetDataUser();
-  //   // eslint-disable-next-line
-  // }, [props.location.search]); //props.location.search
+  useEffect(() => {
+    fetDataUser();
+    // eslint-disable-next-line
+  }, [props.location.search]); //props.location.search
 
   const onHandleChangeSearch = (e) => {
    
@@ -406,28 +406,28 @@ const Role = (props) => {
             />
 
             <Column
-              field="ten"
-              header="Tên"
+              field="id"
+              header="ID"
               className="p-text-center"
               sortable
               headerStyle={{ width: "20rem" }}
             />
             <Column
-              field="mota"
-              header="Mô tả"
+              field="email"
+              header="Email"
               className="p-text-center"
               headerStyle={{ width: "25rem" }}
               sortable
             />
             <Column
-              field="ngaytao"
-              header="Ngày tạo"
+              field="username"
+              header="Tên đăng nhập"
               body={renderRowCreatedAt}
               className="p-text-center"
               sortable
               headerStyle={{ width: "15rem" }}
             />
-            <Column
+            {/* <Column
               header="Chức năng"
               body={renderBodyChucNang}
               className="p-text-center"
@@ -438,9 +438,9 @@ const Role = (props) => {
               body={actionBodyTemplate}
               className="p-text-center"
               headerStyle={{ width: "6rem" }}
-            />
+            /> */}
           </DataTable>
-          <div className="p-d-flex p-mt-2">
+          {/* <div className="p-d-flex p-mt-2">
             <div className="p-mt-3">
               <span>
                 Tổng số <b>{totalRecord}</b> bản ghi
@@ -456,32 +456,12 @@ const Role = (props) => {
                 template=" RowsPerPageDropdown FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink "
               />
             </div>
-          </div>
-        </div>
-        {viewDialog ? (
-          <Add
-            visible={viewDialog}
-            onHide={hidenDialog}
-            datachucnangct={datachucnangct}
-            fetDataUser={fetDataUser}
-          />
-        ) : (
-          ""
-        )}
+          </div> */}
 
-        <ViewRole
-          visible={viewRole}
-          onHide={hidenViewRole}
-          listNhomQuyenView={listNhomQuyenView}
-        />
-        <Edit
-          visible={viewEditNhomQuyen}
-          onHide={hidenViewEditNhomQuyen}
-          listNhomQuyenView={listNhomQuyenView}
-          datachucnangct={datachucnangct}
-          objRoleTranfer={objRoleTranfer}
-          fetDataUser={fetDataUser}
-        />
+        </div>
+      
+
+    
       </div>
       {loader}
     </React.Fragment>

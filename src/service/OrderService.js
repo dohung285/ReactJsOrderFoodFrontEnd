@@ -16,6 +16,14 @@ class OrderService extends FetchAPI {
         return await this.request(url, orderBody, TypeMethodConstantEnum.POST);
     }
 
+    
+    async getAllOrderByUsername(username) {
+        let url = `${PREFIX_URL_ORDERFOOD}/order/${username}`;
+        return await this.request(url, null, TypeMethodConstantEnum.GET);
+    }
+
+
+
    
 }
 export default OrderService;

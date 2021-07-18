@@ -1,6 +1,7 @@
 import {
   PREFIX_URL_NHOMQUYEN,
   PREFIX_URL_NHOMQUYEN_PAGING,
+  PREFIX_URL_ORDERFOOD,
 } from "../constants/ConstantUrlAPI";
 import { TypeMethodConstantEnum } from "../helper/MethodAPIConstant";
 import FetchAPI from "./FetchAPI";
@@ -31,6 +32,22 @@ class RoleService extends FetchAPI {
     return await this.request(url, dataBody, TypeMethodConstantEnum.POST);
   }
 
+
+
+  async getAllUserAndRole() {
+    let url = `${PREFIX_URL_ORDERFOOD}/rolesAmin`;
+    return await this.request(url, null, TypeMethodConstantEnum.GET);
+  }
+
+  async addRoleMappingToUser(userId,dataBody) {
+    let url = `${PREFIX_URL_ORDERFOOD}/role-mappings?userId=${userId}`; 
+    return await this.request(url, dataBody, TypeMethodConstantEnum.POST);
+  }
+
+  async removeRoleMappingToUser(userId,dataBody) {
+    let url = `${PREFIX_URL_ORDERFOOD}/role-mappings?userId=${userId}`; 
+    return await this.request(url, dataBody, TypeMethodConstantEnum.DELETE);
+  }
   
 }
 export default RoleService;

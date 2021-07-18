@@ -57,7 +57,7 @@ export const FoodDetail = ({ match }) => {
         {
             address: '',
             phone: '',
-            username: keycloak?.idTokenParsed?.name,
+            username: keycloak?.idTokenParsed?.preferred_username,
             dateOrder: moment().format("DD/MM/yy HH:mm:ss"),
             note: '',
         }
@@ -76,7 +76,7 @@ export const FoodDetail = ({ match }) => {
         const result = await foodService.getFoodDetailByFoodId(foodId);
         // console.log(`result`, result)
         if (result?.status == 1000) {
-            console.log(`có vao day`, result?.object)
+            // console.log(`có vao day`, result?.object)
 
             setProducts(result?.object);
 

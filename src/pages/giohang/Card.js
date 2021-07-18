@@ -530,7 +530,7 @@ export const Card = ({ match }) => {
 
             setObjOrder(
                 {
-                    username: keycloak?.idTokenParsed?.name,
+                    username: keycloak?.idTokenParsed?.preferred_username,
                     address: '',
                     phone: '',
                     note: '',
@@ -585,7 +585,7 @@ export const Card = ({ match }) => {
     // console.log(`keycloak`, keycloak?.idTokenParsed)
 
     const [objOrder, setObjOrder] = useState({
-        username: keycloak?.idTokenParsed?.name,
+        username: keycloak?.idTokenParsed?.preferred_username,
         address: '',
         phone: '',
         note: '',

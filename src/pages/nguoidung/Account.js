@@ -1,21 +1,59 @@
 
+
+import { useKeycloak } from "@react-keycloak/web";
 import * as moment from "moment";
-import { Button } from 'primereact/button';
+import { Button } from "primereact/button";
 import { Calendar } from 'primereact/calendar';
-import { Column } from 'primereact/column';
-import { DataTable } from 'primereact/datatable';
+import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 import { InputNumber } from 'primereact/inputnumber';
-import { InputText } from 'primereact/inputtext';
-import { Tag } from "primereact/tag";
+import { InputText } from "primereact/inputtext";
 import { Toast } from 'primereact/toast';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
+import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 import Moment from "react-moment";
-import OrderStatusService from "../../service/OrderStatusService";
-import { RadioButton } from 'primereact/radiobutton';
+import "react-toastify/dist/ReactToastify.css";
+import AccountService from "../../service/AccountService";
 
-const Order = () => {
+
+
+
+
+
+
+
+
+const Account = () => {
+
+
+    const [keycloak] = useKeycloak();
+
+    const accountService = new AccountService();
+
+    const [data, setData] = useState([])
+
+    const fetchAllAccount = async () => {
+
+        // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
+
+        let result = await accountService.getAll();
+        console.log(`result`, result)
+        if (result) {
+            setData(result)
+            // setProducts(result?.list)
+        }
+    }
+
+
+    useEffect(() => {
+        fetchAllAccount();
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+
+
+
     const toast = useRef(null);
     const dt = useRef(null);
     const [products, setProducts] = useState(null);
@@ -24,22 +62,13 @@ const Order = () => {
     const [deleteProductDialog, setDeleteProductDialog] = useState(false);
 
     const [productDeleteSelected, setProductDeleteSelected] = useState(null);
-    const [position, setPosition] = useState('center');
-    const [displayBasic, setDisplayBasic] = useState(false);
-    const [submitted, setSubmitted] = useState(false);
 
     const [productDialog, setProductDialog] = useState(false);
-    const [orderObject, setOrderObject] = useState(null);
-    const [categoryStatus, setCategoryStatus] = useState(
-        null
-    )
 
 
 
 
-
-    const orderStatusService = new OrderStatusService();
-
+    // const commentService = new CommentService();
 
 
     const [objDiscount, setObjDiscount] = useState(
@@ -111,17 +140,19 @@ const Order = () => {
         // setDataOrder(array)
     }
 
-    const editProduct = (product) => {
-        console.log(`product`, product)
-        setOrderObject(product)
-        setProductDialog(true);
-    }
-
     const actionBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
-                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2" onClick={() => editProduct(rowData)} />
-                {/* <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => confirmDeleteProduct(rowData)} /> */}
+                {/* <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2" onClick={() => editProduct(rowData)} /> */}
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => confirmDeleteProduct(rowData)} />
+            </React.Fragment>
+        );
+    }
+
+    const renderFullName = (rowData) => {
+        return (
+            <React.Fragment>
+                <span>{rowData.firstName} {rowData.lastName} </span>
             </React.Fragment>
         );
     }
@@ -174,18 +205,18 @@ const Order = () => {
     //     )
     // }
 
-    const onClick = (name, position) => {
-        dialogFuncMap[`${name}`](true);
+    // const onClick = (name, position) => {
+    //     dialogFuncMap[`${name}`](true);
 
-        if (position) {
-            setPosition(position);
-        }
-    }
+    //     if (position) {
+    //         setPosition(position);
+    //     }
+    // }
 
-    const dialogFuncMap = {
-        'displayBasic': setDisplayBasic,
+    // const dialogFuncMap = {
+    //     'displayBasic': setDisplayBasic,
 
-    }
+    // }
 
     // const onClickHandleOrderButton = () => {
     //     // console.log(`selectedProducts`, selectedProducts)
@@ -200,14 +231,14 @@ const Order = () => {
         setDeleteProductDialog(true);
     }
 
-    const fetchDiscount = async () => {
-        // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
-        let result = await orderStatusService.getAll();
-        // console.log(`result`, result)
-        if (result?.status === 1000) {
-            setProducts(result?.list)
-        }
-    }
+    // const fetchDiscount = async () => {
+    //     // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
+    //     let result = await commentService.getAll();
+    //     // console.log(`result`, result)
+    //     if (result?.status === 1000) {
+    //         setProducts(result?.list)
+    //     }
+    // }
 
     const deleteFoodGroup = async () => {
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
@@ -226,41 +257,45 @@ const Order = () => {
         setProductDialog(true);
     }
 
-    useEffect(() => {
-        fetchDiscount();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    // useEffect(() => {
+    //     fetchDiscount();
+    // }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const hideDialog = () => {
-        setSubmitted(false);
+        // setSubmitted(false);
         setProductDialog(false);
     }
-    const updateSatus = async () => {
+    const saveDiscount = async () => {
 
-        const dataBody = {
-            orderId: orderObject.id,
-            status: orderObject.status
-
-        }
-        console.log(`orderObject?.id`, orderObject?.id)
-        console.log(`dataBody`, dataBody)
-
-        let result = await orderStatusService.update(orderObject?.id,dataBody);
-        console.log(`resultupdateSatus`, result)
-        if (result?.status === 1000) {
-         
-            setOrderObject(null)
-            fetchDiscount();
-        }
+        // let result = await discountService.save(objDiscount);
+        // // console.log(`result`, result)
+        // if (result?.status === 1000) {
+        //     // setTxtName(null);
+        //     setObjDiscount(
+        //         {
+        //             name: '',
+        //             percent: 0,
+        //             startDate: moment().format("DD/MM/yy HH:mm:ss"),
+        //             endDate: moment().format("DD/MM/yy HH:mm:ss")
+        //         }
+        //     )
+        //     fetchDiscount();
+        // }
         setProductDialog(false);
     }
 
-    const deleteDiscount = async (id) => {
+    const deleteDiscount = async () => {
 
-        let result = await orderStatusService.delete(id);
+        // console.log(`id`, productDeleteSelected.id)
+        let result = await accountService.deleteAccount(productDeleteSelected.id);
         // console.log(`result`, result)
         if (result?.status === 1000) {
-            fetchDiscount();
+            fetchAllAccount();
         }
+
+        // if (result?.status === 1000) {
+        //     fetchAllAccount();
+        // }
         setProductDialog(false);
     }
 
@@ -270,67 +305,10 @@ const Order = () => {
         <React.Fragment>
             <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
             <Button label="Đồng ý" icon="pi pi-check" className="p-button-text"
-                onClick={updateSatus}
+                onClick={saveDiscount}
             />
         </React.Fragment>
     );
-
-    const renderDateOrder = (rowData) => {
-        return (
-            <React.Fragment>
-                <Moment format="DD/MM/YYYY HH:mm:ss">{rowData.dateOrder}</Moment>
-            </React.Fragment>
-        );
-    };
-
-    const renderRowStatus = (rowData) => {
-        let status = null;
-        if (rowData.status === 0) {
-            status = 'Tiếp nhận đơn'
-            return <Tag severity="info" value={status} />;
-        }
-        if (rowData.status === 1) {
-            status = 'Đang giao hàng '
-            return <Tag severity="warning" value={status} />;
-        }
-        if (rowData.status === 2) {
-            status = 'Giao hàng thành công '
-            return <Tag severity="success" value={status} />;
-        }
-
-    };
-
-    const onCategoryChange = (e) => {
-        console.log(`e`, e)
-        setCategoryStatus(e.value)
-        if (e.value === 'tndh') {
-            setOrderObject(
-                {
-                    ...orderObject,
-                    status: 0
-                }
-            )
-        }
-
-        if (e.value === 'dgh') {
-            setOrderObject(
-                {
-                    ...orderObject,
-                    status: 1
-                }
-            )
-        }
-
-        if (e.value === 'gtc') {
-            setOrderObject(
-                {
-                    ...orderObject,
-                    status: 2
-                }
-            )
-        }
-
-    }
 
 
 
@@ -341,63 +319,85 @@ const Order = () => {
 
                 {/* <Toolbar className="p-mb-4" left={leftToolbarTemplate} ></Toolbar> */}
 
-                <DataTable ref={dt} value={products}
+                <DataTable ref={dt} value={data}
                     selection={selectedProducts}
                     onSelectionChange={(e) => handleOnSelectedChange(e)}
                     dataKey="id"
                     paginator rows={10}
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={[10, 25]}
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                    currentPageReportTemplate="Tổng {totalRecords} món"
+                    currentPageReportTemplate="Tổng {totalRecords}"
                     globalFilter={globalFilter}
                 // header={header}
                 >
 
                     {/* <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column> */}
                     <Column field="id" header="Id" ></Column>
-                    <Column field="address" header="Địa chỉ" ></Column>
-                    <Column field="phone" header="Số điện thoại" ></Column>
+                    <Column field="username" header="Tên đăng nhập" ></Column>
+                    <Column field="email" header="Email" ></Column>
                     <Column field="username" header="Khách hàng" ></Column>
-                    <Column field="dateOrder" body={renderDateOrder} header="Thời gian đặt" ></Column>
-                    <Column field="note" header="Ghi chú" ></Column>
-                    <Column field="status" body={renderRowStatus} header="Trạng thái" ></Column>
+                    <Column field="rating" header="Họ và Tên" body={renderFullName}></Column>
                     <Column headerStyle={{ width: '4rem' }} body={actionBodyTemplate}></Column>
                 </DataTable>
 
 
-
-
-
-                <Dialog visible={productDialog} style={{ width: '450px' }}
-                    header="Thay đổi trạng thái đơn hàng" modal className="p-fluid"
-                    footer={productDialogFooter} onHide={hideDialog}
-                >
-
-
-
+                <Dialog visible={productDialog} style={{ width: '550px' }}
+                    header="Thêm nhóm món ăn" modal className="p-fluid"
+                    footer={productDialogFooter} onHide={hideDialog}>
                     <div className="p-field">
-                        <label className="p-mb-3">Trạng thái</label>
-                        <div className="p-formgrid p-grid">
-                            <div className="p-field-radiobutton p-col-12">
-                                <RadioButton inputId="category1" name="category" value="tndh" onChange={onCategoryChange} checked={orderObject?.status === 0} />
-                                <label htmlFor="category1">Tiếp nhận đơn</label>
-                            </div>
-                            <div className="p-field-radiobutton p-col-12">
-                                <RadioButton inputId="category2" name="category" value="dgh" onChange={onCategoryChange} checked={orderObject?.status === 1} />
-                                <label htmlFor="category2">Đang giao hàng</label>
-                            </div>
-                            <div className="p-field-radiobutton p-col-12">
-                                <RadioButton inputId="category3" name="category" value="gtc" onChange={onCategoryChange} checked={orderObject?.status === 2} />
-                                <label htmlFor="category3">Giao hàng thành công</label>
-                            </div>
-                        </div>
+                        <label htmlFor="name">Tên</label>
+                        <InputText
+                            id="name"
+                            name="name"
+                            value={objDiscount.name}
+                            onChange={(e) => handleOnChange(e)}
+                        />
                     </div>
 
+                    <div className="p-field">
+                        <label htmlFor="percent">Phần trăm giảm</label>
+                        <InputNumber inputId="minmax"
+                            name="percent"
+                            value={objDiscount.percent}
+                            onValueChange={(e) => handleOnChange(e)}
+                            mode="decimal" min={0} max={100} showButtons
+                        />
+                    </div>
+
+                    <div className="p-field">
+                        <label htmlFor="startDate">Ngày bắt đầu</label>
+                        <Calendar
+                            id="startDate"
+                            name="startDate"
+                            value={objDiscount.startDate}
+                            onChange={(e) => handleOnChange(e)}
+                            monthNavigator
+                            yearNavigator
+                            yearRange="2000:2030"
+                            monthNavigatorTemplate={monthNavigatorTemplate}
+                            yearNavigatorTemplate={yearNavigatorTemplate}
+                            dateFormat="dd/mm/yy"
+                        />
+                    </div>
+
+                    <div className="p-field">
+                        <label htmlFor="endDate">Ngày kết thúc</label>
+                        <Calendar
+                            id="endDate"
+                            name="endDate"
+                            value={objDiscount.endDate}
+                            onChange={(e) => handleOnChange(e)}
+                            monthNavigator
+                            yearNavigator
+                            yearRange="2000:2030"
+                            monthNavigatorTemplate={monthNavigatorTemplate}
+                            yearNavigatorTemplate={yearNavigatorTemplate}
+                            dateFormat="dd/mm/yy"
+                        />
+                    </div>
 
                 </Dialog>
-
-
 
 
                 <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
@@ -415,4 +415,4 @@ const Order = () => {
     )
 }
 
-export default Order
+export default Account

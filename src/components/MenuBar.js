@@ -207,6 +207,9 @@ export const MenuBar = () => {
   // const {keycloak} = useKeycloak();
 
 
+  const changePassword = () => {
+
+  }
 
   const onMouseOver = () => {
     setActive(true);
@@ -248,23 +251,38 @@ export const MenuBar = () => {
           <li role="none">
             <Link
               role="menuitem"
-              to="/ho-so"
+              to="/list-order"
               className="p-menuitem-link"
               aria-haspopup="false"
             >
               <span className="pi pi-user" style={{ marginRight: "0.5rem" }} />
-              <span className="p-menuitem-text">Danh sách đơn hàng</span>
+              <span className="p-menuitem-text">Đơn hàng</span>
             </Link>
           </li>
+
           <li role="none">
             <Link
-              to="/doi-mat-khau"
+              role="menuitem"
+              to="/user-infor"
+              className="p-menuitem-link"
+              aria-haspopup="false"
+            >
+              <span className="pi pi-user" style={{ marginRight: "0.5rem" }} />
+              <span className="p-menuitem-text">Thông tin</span>
+            </Link>
+          </li>
+
+
+          <li role="none"
+          >
+            <Link
+              to="/change-password"
               role="menuitem"
               className="p-menuitem-link"
               aria-haspopup="false"
             >
               <span className="pi pi-key" style={{ marginRight: "0.5rem" }} />
-              <span className="p-menuitem-text">Thay đổi mật khẩu</span>
+              <span className="p-menuitem-text" >Đổi mật khẩu</span>
             </Link>
           </li>
           {!!keycloak?.authenticated && (
