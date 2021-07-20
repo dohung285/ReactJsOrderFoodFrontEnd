@@ -44,8 +44,8 @@ class RoleService extends FetchAPI {
     return await this.request(url, dataBody, TypeMethodConstantEnum.POST);
   }
 
-  async removeRoleMappingToUser(userId,dataBody) {
-    let url = `${PREFIX_URL_ORDERFOOD}/role-mappings?userId=${userId}`; 
+  async removeRoleMappingToUser(userId,dataBody,usernameDeleted) {
+    let url = `${PREFIX_URL_ORDERFOOD}/role-mappings?userId=${userId}&usernameDeleted=${usernameDeleted}`; 
     return await this.request(url, dataBody, TypeMethodConstantEnum.DELETE);
   }
   

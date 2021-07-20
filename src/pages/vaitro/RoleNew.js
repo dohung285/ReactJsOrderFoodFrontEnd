@@ -18,8 +18,36 @@ import Moment from "react-moment";
 import { useHistory, useLocation } from "react-router-dom";
 import CommentService from "../../service/CommentService";
 import RoleService from "../../service/RoleService";
-
+import { Tree } from 'primereact/tree';
+import PermissionService from "../../service/PermissionService";
+import { cloneDeep } from "lodash";
+import { useKeycloak } from "@react-keycloak/web";
 const RoleNew = () => {
+
+
+    let root = [
+        {
+            "key": "0",
+            "label": "Documents",
+            "children": [
+                { "key": "0-0", "label": "Work" },
+                { "key": "0-1", "label": "Home" }
+            ]
+        },
+        {
+            "key": "1",
+            "label": "Events",
+            "children": [
+                { "key": "a", "label": "Meeting", },
+                { "key": "b", "label": "Product Launch" },
+                { "key": "c", "label": "Report Review" }
+            ]
+        }
+    ]
+
+
+
+
 
     const location = useLocation()
     const history = useHistory();
@@ -37,13 +65,18 @@ const RoleNew = () => {
     const [displayBasic, setDisplayBasic] = useState(false);
     const [submitted, setSubmitted] = useState(false);
 
+    const [selectedKeys, setSelectedKeys] = useState(null);
+    const [nodes, setNodes] = useState(null);
+
     const [productDialog, setProductDialog] = useState(false);
 
+    const [keycloak] = useKeycloak();
 
 
 
-    const commentService = new CommentService();
+
     const roleService = new RoleService();
+    const permissionService = new PermissionService();
 
 
     const [objDiscount, setObjDiscount] = useState(
@@ -119,7 +152,7 @@ const RoleNew = () => {
         return (
             <React.Fragment>
                 <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2 " onClick={() => confirmDeleteProduct(rowData)} />
-                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={()=>confirmRemoveRole(rowData)} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => confirmRemoveRole(rowData)} />
             </React.Fragment>
         );
     }
@@ -139,19 +172,34 @@ const RoleNew = () => {
 
     const deleteProduct = () => {
 
-        console.log(`history`, history.location.pathname)
-        console.log(`location`, location)
-        // console.log(`productDelete`, productDeleteSelected)
-        // const dataBody = [
-        //     {
-        //         id: "f68c6039-7394-4c64-a351-c87181658272",
-        //         name: "admin"
-        //     }
-        // ]
+        console.log(`object`, selectedKeys)
+        console.log(`Object.keys(selectedKeys)`, Object.keys(selectedKeys))
 
-        // // addRoleMapping;
-        // deleteDiscount(productDeleteSelected.id, dataBody)
 
+        console.log(`productDelete`, productDeleteSelected)
+
+        const dataBody = {
+            username: productDeleteSelected.username,
+            actionIds: Object.keys(selectedKeys),
+            currentPermission: selectedKeys
+        }
+
+        saveAPI(dataBody);
+
+        // console.log(`history`, history.location.pathname)
+        // console.log(`location`, location)
+
+
+        const dataBodyAddRole = [
+            {
+                id: "f68c6039-7394-4c64-a351-c87181658272",
+                name: "admin"
+            }
+        ]
+
+        // addRoleMapping;
+        deleteDiscount(productDeleteSelected.id, dataBodyAddRole)
+        setSelectedKeys(null)
         setDeleteProductDialog(false);
         setProductDeleteSelected(null)
         // setProduct(emptyProduct);
@@ -159,8 +207,8 @@ const RoleNew = () => {
     }
 
     const removeRoleMapping = () => {
-
-        console.log(`productDelete`, productDeleteSelected)
+        // console.log(`chay vao day`)
+        // console.log(`productDeleteSelected`, productDeleteSelected)
         const dataBody = [
             {
                 id: "f68c6039-7394-4c64-a351-c87181658272",
@@ -169,7 +217,7 @@ const RoleNew = () => {
         ]
 
         // removeRoleMapping;
-        removeRoleMappingAPI(productDeleteSelected.id, dataBody)
+        removeRoleMappingAPI(productDeleteSelected.id, dataBody, productDeleteSelected.username)
 
         setRemoveRole(false);
         setProductDeleteSelected(null)
@@ -183,14 +231,14 @@ const RoleNew = () => {
 
     const deleteProductDialogFooter = (
         <React.Fragment>
-            <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={()=>setDeleteProductDialog(false)} />
+            <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={() => setDeleteProductDialog(false)} />
             <Button label="Đồng ý" icon="pi pi-check" className="p-button-text" onClick={deleteProduct} />
         </React.Fragment>
     );
 
     const removeRoletDialogFooter = (
         <React.Fragment>
-            <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={()=>setRemoveRole(false)} />
+            <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={() => setRemoveRole(false)} />
             <Button label="Đồng ý" icon="pi pi-check" className="p-button-text" onClick={removeRoleMapping} />
         </React.Fragment>
     );
@@ -208,7 +256,7 @@ const RoleNew = () => {
 
     }
 
-  
+
 
 
     const confirmDeleteProduct = (product) => {
@@ -236,6 +284,14 @@ const RoleNew = () => {
             setProducts(result?.list)
         }
     }
+    const fetchAllPermission = async () => {
+        // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
+        let result = await permissionService.getAllPermission();
+        // console.log(`result`, result)
+        if (result?.status === 1000) {
+            setNodes(result?.list)
+        }
+    }
 
     const deleteFoodGroup = async () => {
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
@@ -256,6 +312,8 @@ const RoleNew = () => {
 
     useEffect(() => {
         fetchDiscount();
+        fetchAllPermission();
+        // setNodes(root)
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const hideDialog = () => {
@@ -281,6 +339,16 @@ const RoleNew = () => {
         setProductDialog(false);
     }
 
+    const saveAPI = async (dataBody) => {
+
+        let result = await permissionService.save(dataBody);
+        console.log(`result`, result)
+        if (result?.status === 1000) {
+            fetchDiscount();
+        }
+
+    }
+
     const deleteDiscount = async (id, dataBody) => {
 
         let result = await roleService.addRoleMappingToUser(id, dataBody);
@@ -291,9 +359,11 @@ const RoleNew = () => {
         setProductDialog(false);
     }
 
-    const removeRoleMappingAPI = async (id, dataBody) => {
+    const removeRoleMappingAPI = async (id, dataBody,username) => {
 
-        let result = await roleService.removeRoleMappingToUser(id, dataBody);
+    
+        console.log(`removeRoleMappingAPI`, username)
+        let result = await roleService.removeRoleMappingToUser(id, dataBody,username);
         // console.log(`result`, result)
         if (result?.status === 1000) {
             fetchDiscount();
@@ -310,6 +380,33 @@ const RoleNew = () => {
             />
         </React.Fragment>
     );
+
+
+    const [expandedKeys, setExpandedKeys] = useState({});
+
+
+    const expandAll = () => {
+        let _expandedKeys = {};
+        for (let node of nodes) {
+            expandNode(node, _expandedKeys);
+        }
+
+        setExpandedKeys(_expandedKeys);
+    }
+
+    const collapseAll = () => {
+        setExpandedKeys({});
+    }
+
+    const expandNode = (node, _expandedKeys) => {
+        if (node.children && node.children.length) {
+            _expandedKeys[node.key] = true;
+
+            for (let child of node.children) {
+                expandNode(child, _expandedKeys);
+            }
+        }
+    }
 
 
 
@@ -402,13 +499,26 @@ const RoleNew = () => {
 
                 <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={() => setDeleteProductDialog(false)}>
                     <div className="confirmation-content">
-                        <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
-                        {productDeleteSelected && <span>Bạn có muốn thiết lập tài khoản <b>{productDeleteSelected.username}</b> thành admin ?</span>}
+
+                        <h5>Programmatic Control</h5>
+                        <div className="p-mb-4">
+                            <Button type="button" icon="pi pi-plus" label="Expand All" onClick={expandAll} className="p-mr-2" />
+                            <Button type="button" icon="pi pi-minus" label="Collapse All" onClick={collapseAll} />
+                        </div>
+                        <Tree value={nodes} expandedKeys={expandedKeys}
+                            onToggle={e => setExpandedKeys(e.value)}
+                            selectionMode="checkbox"
+                            selectionKeys={selectedKeys}
+                            onSelectionChange={e => setSelectedKeys(e.value)}
+                        />
+
+                        {/* <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
+                        {productDeleteSelected && <span>Bạn có muốn thiết lập tài khoản <b>{productDeleteSelected.username}</b> thành admin ?</span>} */}
                     </div>
                 </Dialog>
 
 
-                <Dialog visible={removeRole} style={{ width: '450px' }} header="Confirm" modal footer={removeRoletDialogFooter} onHide={()=>setRemoveRole(false)}>
+                <Dialog visible={removeRole} style={{ width: '450px' }} header="Confirm" modal footer={removeRoletDialogFooter} onHide={() => setRemoveRole(false)}>
                     <div className="confirmation-content">
                         <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
                         {productDeleteSelected && <span>Bạn có muốn thiết lập tài khoản <b>{productDeleteSelected.username}</b> thành admin ?</span>}

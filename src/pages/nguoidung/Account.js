@@ -39,7 +39,7 @@ const Account = () => {
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
 
         let result = await accountService.getAll();
-        console.log(`result`, result)
+        // console.log(`result`, result)
         if (result) {
             setData(result)
             // setProducts(result?.list)
