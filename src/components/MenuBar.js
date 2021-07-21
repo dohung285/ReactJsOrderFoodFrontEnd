@@ -165,9 +165,19 @@ export const MenuBar = () => {
     //   result = await service.getAllMenuNotRoleName();
     // }
 
+    
 
-    // console.log(`result Before`, result)
+    console.log(`result Before`, result)
     if (result) {
+
+      // let indexOfObject = result?.findIndex(e => {
+      //   return e.label == 'Hệ thống';
+      // })
+      // console.log(`indexOfObject`, indexOfObject)
+      // let resultArray = result?.splice(indexOfObject, 1);
+
+
+
       const resultWithLink = result.map(element => {
         const { items, label } = element;
         // console.log(`element`, element)

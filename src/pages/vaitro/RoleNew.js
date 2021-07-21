@@ -60,7 +60,10 @@ const RoleNew = () => {
     const [products, setProducts] = useState(null);
     const [selectedProducts, setSelectedProducts] = useState(null);
     const [globalFilter, setGlobalFilter] = useState(null);
+
     const [deleteProductDialog, setDeleteProductDialog] = useState(false);
+    const [editRoleDialog, setEditRoleDialog] = useState(false)
+
     const [removeRole, setRemoveRole] = useState(false)
     const [productDeleteSelected, setProductDeleteSelected] = useState(null);
     const [position, setPosition] = useState('center');
@@ -150,14 +153,16 @@ const RoleNew = () => {
         // setDataOrder(array)
     }
 
+
     const actionBodyTemplate = (rowData) => {
         if (rowData.username === 'hungdx') {
             return <Tag severity="success" value="Super Admin" />;
         }
         return (
             <React.Fragment>
-                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2 " onClick={() => confirmDeleteProduct(rowData)} />
-                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => confirmRemoveRole(rowData)} />
+                <Button icon="pi pi-plus" className="p-button-rounded p-button-success p-mr-2 " onClick={() => confirmDeleteProduct(rowData)} disabled={rowData.hasRoleAdmin} />
+                <Button icon="pi pi-pencil" className="p-button-rounded p-button-warning p-mr-2 " onClick={() => editRole(rowData)} disabled={!rowData.hasRoleAdmin} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => confirmRemoveRole(rowData)} disabled={!rowData.hasRoleAdmin} />
             </React.Fragment>
         );
     }
@@ -175,97 +180,89 @@ const RoleNew = () => {
     }
 
 
-    const deleteProduct = () => {
+    const fetchAllPermissionOfUser = async (username) => {
+        // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
+        let result = await permissionService.getAllPermissionOfUser(username);
+        console.log(`resultFetchAllPermissionOfUser`, result)
 
-        console.log(`object`, selectedKeys)
-        console.log(`Object.keys(selectedKeys)`, Object.keys(selectedKeys))
+        if (result?.status === 1000) {
+            // setSelectedKeys(result?.list)
+            console.log(`JSON.pase()`, JSON.parse(result?.message))
+            setSelectedKeys(JSON.parse(result?.message))
 
-
-        console.log(`productDelete`, productDeleteSelected)
-
-        const dataBody = {
-            username: productDeleteSelected.username,
-            actionIds: Object.keys(selectedKeys),
-            currentPermission: selectedKeys
         }
-
-        saveAPI(dataBody);
-
-        // console.log(`history`, history.location.pathname)
-        // console.log(`location`, location)
-
-
-        const dataBodyAddRole = [
-            {
-                id: "f68c6039-7394-4c64-a351-c87181658272",
-                name: "admin"
-            }
-        ]
-
-        // addRoleMapping;
-        addRoleMappingAPI(productDeleteSelected.id, dataBodyAddRole)
-        setSelectedKeys(null)
-        setDeleteProductDialog(false);
-        setProductDeleteSelected(null)
-        // setProduct(emptyProduct);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Thành công', life: 3000 });
     }
 
-      const removeRoleMapping = async () => {
+    const addRoleMapping = async () => {
+
+        let result = await permissionService.checkPermissionAdd(keycloak?.idTokenParsed?.preferred_username);
+        console.log(`checkPermissionAPI`, result)
+        if (result?.status === 1000) {
+            const dataBodySave = {
+                username: productDeleteSelected.username,
+                actionIds: Object.keys(selectedKeys),
+                currentPermission: selectedKeys
+            }
+            saveAPI(dataBodySave);
+
+            // console.log(`history`, history.location.pathname)
+            // console.log(`location`, location)
+
+
+            const dataBodyAddRole = [
+                {
+                    id: "f68c6039-7394-4c64-a351-c87181658272",
+                    name: "admin"
+                }
+            ]
+            // addRoleMapping;
+            addRoleMappingAPI(productDeleteSelected.id, dataBodyAddRole)
+
+
+            setSelectedKeys(null)
+            setDeleteProductDialog(false);
+            setProductDeleteSelected(null)
+            setEditRoleDialog(false)
+            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Thành công', life: 3000 });
+        } else {
+            toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Không có quyền truy cập' });
+        }
+
+        // console.log(`object`, selectedKeys)
+        // console.log(`Object.keys(selectedKeys)`, Object.keys(selectedKeys))
+        // console.log(`productDelete`, productDeleteSelected)
+
+    }
+
+
+    // hủy role admin và tất cả các quyền action
+    const removeRoleMapping = async () => {
         let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_DELETE);
         console.log(`checkPermissionAPI`, result)
         if (result?.status === 1000) {
             removeRoleMappingAPI();
         } else {
-            toast.current.show({severity: 'error', summary: 'Error Message', detail: 'Không có quyền truy cập'});
+            toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Không có quyền truy cập' });
         }
-    
-        // // console.log(`chay vao day`)
-        // // console.log(`productDeleteSelected`, productDeleteSelected)
-        // const dataBody = [
-        //     {
-        //         id: "f68c6039-7394-4c64-a351-c87181658272",
-        //         name: "admin"
-        //     }
-        // ]
-
-        // // removeRoleMapping;
-        // removeRoleMappingAPI(productDeleteSelected.id, dataBody, productDeleteSelected.username)
-
-        // setRemoveRole(false);
-        // setProductDeleteSelected(null)
-        // // setProduct(emptyProduct);
-        // toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Thành công', life: 3000 });
     }
 
+    const handleOnCloseDialog = () => {
+        setSelectedKeys(null)
+        setDeleteProductDialog(false)
+        setEditRoleDialog(false)
+    }
 
-    // const removeRoleMapping = () => {
-    //     // console.log(`chay vao day`)
-    //     // console.log(`productDeleteSelected`, productDeleteSelected)
-    //     const dataBody = [
-    //         {
-    //             id: "f68c6039-7394-4c64-a351-c87181658272",
-    //             name: "admin"
-    //         }
-    //     ]
-
-    //     // removeRoleMapping;
-    //     removeRoleMappingAPI(productDeleteSelected.id, dataBody, productDeleteSelected.username)
-
-    //     setRemoveRole(false);
-    //     setProductDeleteSelected(null)
-    //     // setProduct(emptyProduct);
-    //     toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Thành công', life: 3000 });
-    // }
-
-    // const hideDeleteProductDialog = () => {
-    //     setDeleteProductDialog(false);
-    // }
-
-    const deleteProductDialogFooter = (
+    const addRoleDialogFooter = (
         <React.Fragment>
-            <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={() => setDeleteProductDialog(false)} />
-            <Button label="Đồng ý" icon="pi pi-check" className="p-button-text" onClick={deleteProduct} />
+            <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={handleOnCloseDialog} />
+            <Button label="Đồng ý" icon="pi pi-check" className="p-button-text" onClick={addRoleMapping} />
+        </React.Fragment>
+    );
+
+    const editRoleDialogFooter = (
+        <React.Fragment>
+            <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={handleOnCloseDialog} />
+            <Button label="Đồng ý" icon="pi pi-check" className="p-button-text" onClick={addRoleMapping} />
         </React.Fragment>
     );
 
@@ -299,6 +296,18 @@ const RoleNew = () => {
     }
 
 
+    const editRole = (product) => {
+        console.log(`product`, product)
+
+        if (product.hasRoleAdmin) {
+            fetchAllPermissionOfUser(product.username)
+        }
+        setProductDeleteSelected(product);
+        setEditRoleDialog(true);
+    }
+
+
+
     const confirmRemoveRole = (product) => {
         // console.log(`product`, product)
         setProductDeleteSelected(product);
@@ -317,12 +326,35 @@ const RoleNew = () => {
             setProducts(result?.list)
         }
     }
+
+    // const checkAccountIsRootAPI = async () => {
+    //     // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
+    //     let result = await permissionService.checkAccountIsRoot(keycloak?.idTokenParsed?.preferred_username);
+    //     // console.log(`result`, result)
+    //     if (result?.status === 1000) {
+    //         setProducts(result?.list)
+    //     }
+    // }
+
     const fetchAllPermission = async () => {
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         let result = await permissionService.getAllPermission();
-        // console.log(`result`, result)
+        // console.log(`fetchAllPermission`, result)
         if (result?.status === 1000) {
-            setNodes(result?.list)
+
+            let isRoot = await permissionService.checkAccountIsRoot(keycloak?.idTokenParsed?.preferred_username);
+            if (isRoot?.status === 1000) {
+                setNodes(result?.list)
+            } else {
+
+                let indexOfObject = result?.list.findIndex(e => {
+                    return e.label == 'Vai trò';
+                })
+                let resultArray = result?.list.splice(indexOfObject, 1);
+                setNodes(result?.list)
+            }
+
+
             // fetchAllPermissionOfUser(keycloak?.idTokenParsed?.preferred_username)
 
         }
@@ -397,32 +429,6 @@ const RoleNew = () => {
         setProductDialog(false);
     }
 
-    // const removeRoleMapping = async () => {
-    //     let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_DELETE);
-    //     console.log(`checkPermissionAPI`, result)
-    //     if (result?.status === 1000) {
-    //         removeRoleMappingAPI();
-    //     } else {
-    //         toast.current.show({severity: 'error', summary: 'Error Message', detail: 'Không có quyền truy cập'});
-    //     }
-    
-    //     // // console.log(`chay vao day`)
-    //     // // console.log(`productDeleteSelected`, productDeleteSelected)
-    //     // const dataBody = [
-    //     //     {
-    //     //         id: "f68c6039-7394-4c64-a351-c87181658272",
-    //     //         name: "admin"
-    //     //     }
-    //     // ]
-
-    //     // // removeRoleMapping;
-    //     // removeRoleMappingAPI(productDeleteSelected.id, dataBody, productDeleteSelected.username)
-
-    //     // setRemoveRole(false);
-    //     // setProductDeleteSelected(null)
-    //     // // setProduct(emptyProduct);
-    //     // toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Thành công', life: 3000 });
-    // }
 
 
     const removeRoleMappingAPI = async () => {
@@ -509,7 +515,7 @@ const RoleNew = () => {
                     <Column field="email" header="Email" ></Column>
                     <Column field="username" header="Tài khoản" ></Column>
                     <Column field="hasRoleAdmin" header="Vai trò" body={renderRoleBodyTemplate} ></Column>
-                    <Column headerStyle={{ width: '8rem' }} body={actionBodyTemplate}></Column>
+                    <Column headerStyle={{ width: '10rem' }} body={actionBodyTemplate}></Column>
                 </DataTable>
 
 
@@ -570,11 +576,10 @@ const RoleNew = () => {
 
                 </Dialog>
 
-
-                <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={() => setDeleteProductDialog(false)}>
+                {/* Thêm */}
+                <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Thêm vai trò" modal footer={addRoleDialogFooter} onHide={() => { setDeleteProductDialog(false); setSelectedKeys(null) }}>
                     <div className="confirmation-content">
 
-                        <h5>Programmatic Control</h5>
                         <div className="p-mb-4">
                             <Button type="button" icon="pi pi-plus" label="Expand All" onClick={expandAll} className="p-mr-2" />
                             <Button type="button" icon="pi pi-minus" label="Collapse All" onClick={collapseAll} />
@@ -585,13 +590,26 @@ const RoleNew = () => {
                             selectionKeys={selectedKeys}
                             onSelectionChange={e => setSelectedKeys(e.value)}
                         />
+                    </div>
+                </Dialog>
+                {/* Sửa */}
+                <Dialog visible={editRoleDialog} style={{ width: '450px' }} header="Sửa vai trò" modal footer={editRoleDialogFooter} onHide={() => { setEditRoleDialog(false); setSelectedKeys(null) }}>
+                    <div className="confirmation-content">
 
-                        {/* <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
-                        {productDeleteSelected && <span>Bạn có muốn thiết lập tài khoản <b>{productDeleteSelected.username}</b> thành admin ?</span>} */}
+                        <div className="p-mb-4">
+                            <Button type="button" icon="pi pi-plus" label="Expand All" onClick={expandAll} className="p-mr-2" />
+                            <Button type="button" icon="pi pi-minus" label="Collapse All" onClick={collapseAll} />
+                        </div>
+                        <Tree value={nodes} expandedKeys={expandedKeys}
+                            onToggle={e => setExpandedKeys(e.value)}
+                            selectionMode="checkbox"
+                            selectionKeys={selectedKeys}
+                            onSelectionChange={e => setSelectedKeys(e.value)}
+                        />
                     </div>
                 </Dialog>
 
-
+                {/* Xóa */}
                 <Dialog visible={removeRole} style={{ width: '450px' }} header="Confirm" modal footer={removeRoletDialogFooter} onHide={() => setRemoveRole(false)}>
                     <div className="confirmation-content">
                         <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
