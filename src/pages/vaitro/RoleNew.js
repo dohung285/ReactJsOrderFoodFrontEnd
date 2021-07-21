@@ -22,6 +22,8 @@ import { Tree } from 'primereact/tree';
 import PermissionService from "../../service/PermissionService";
 import { cloneDeep } from "lodash";
 import { useKeycloak } from "@react-keycloak/web";
+import { checkPermissionAPI } from "../../constants/FunctionConstant";
+import { ACTION_DELETE } from "../../constants/ConstantString";
 const RoleNew = () => {
 
 
@@ -149,6 +151,9 @@ const RoleNew = () => {
     }
 
     const actionBodyTemplate = (rowData) => {
+        if (rowData.username === 'hungdx') {
+            return <Tag severity="success" value="Super Admin" />;
+        }
         return (
             <React.Fragment>
                 <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2 " onClick={() => confirmDeleteProduct(rowData)} />
@@ -198,32 +203,60 @@ const RoleNew = () => {
         ]
 
         // addRoleMapping;
-        deleteDiscount(productDeleteSelected.id, dataBodyAddRole)
+        addRoleMappingAPI(productDeleteSelected.id, dataBodyAddRole)
         setSelectedKeys(null)
         setDeleteProductDialog(false);
         setProductDeleteSelected(null)
         // setProduct(emptyProduct);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Xóa  thành công', life: 3000 });
-    }
-
-    const removeRoleMapping = () => {
-        // console.log(`chay vao day`)
-        // console.log(`productDeleteSelected`, productDeleteSelected)
-        const dataBody = [
-            {
-                id: "f68c6039-7394-4c64-a351-c87181658272",
-                name: "admin"
-            }
-        ]
-
-        // removeRoleMapping;
-        removeRoleMappingAPI(productDeleteSelected.id, dataBody, productDeleteSelected.username)
-
-        setRemoveRole(false);
-        setProductDeleteSelected(null)
-        // setProduct(emptyProduct);
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Thành công', life: 3000 });
     }
+
+      const removeRoleMapping = async () => {
+        let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_DELETE);
+        console.log(`checkPermissionAPI`, result)
+        if (result?.status === 1000) {
+            removeRoleMappingAPI();
+        } else {
+            toast.current.show({severity: 'error', summary: 'Error Message', detail: 'Không có quyền truy cập'});
+        }
+    
+        // // console.log(`chay vao day`)
+        // // console.log(`productDeleteSelected`, productDeleteSelected)
+        // const dataBody = [
+        //     {
+        //         id: "f68c6039-7394-4c64-a351-c87181658272",
+        //         name: "admin"
+        //     }
+        // ]
+
+        // // removeRoleMapping;
+        // removeRoleMappingAPI(productDeleteSelected.id, dataBody, productDeleteSelected.username)
+
+        // setRemoveRole(false);
+        // setProductDeleteSelected(null)
+        // // setProduct(emptyProduct);
+        // toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Thành công', life: 3000 });
+    }
+
+
+    // const removeRoleMapping = () => {
+    //     // console.log(`chay vao day`)
+    //     // console.log(`productDeleteSelected`, productDeleteSelected)
+    //     const dataBody = [
+    //         {
+    //             id: "f68c6039-7394-4c64-a351-c87181658272",
+    //             name: "admin"
+    //         }
+    //     ]
+
+    //     // removeRoleMapping;
+    //     removeRoleMappingAPI(productDeleteSelected.id, dataBody, productDeleteSelected.username)
+
+    //     setRemoveRole(false);
+    //     setProductDeleteSelected(null)
+    //     // setProduct(emptyProduct);
+    //     toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Thành công', life: 3000 });
+    // }
 
     // const hideDeleteProductDialog = () => {
     //     setDeleteProductDialog(false);
@@ -290,8 +323,13 @@ const RoleNew = () => {
         // console.log(`result`, result)
         if (result?.status === 1000) {
             setNodes(result?.list)
+            // fetchAllPermissionOfUser(keycloak?.idTokenParsed?.preferred_username)
+
         }
     }
+
+
+
 
     const deleteFoodGroup = async () => {
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
@@ -349,7 +387,7 @@ const RoleNew = () => {
 
     }
 
-    const deleteDiscount = async (id, dataBody) => {
+    const addRoleMappingAPI = async (id, dataBody) => {
 
         let result = await roleService.addRoleMappingToUser(id, dataBody);
         // console.log(`result`, result)
@@ -359,14 +397,50 @@ const RoleNew = () => {
         setProductDialog(false);
     }
 
-    const removeRoleMappingAPI = async (id, dataBody,username) => {
-
+    // const removeRoleMapping = async () => {
+    //     let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_DELETE);
+    //     console.log(`checkPermissionAPI`, result)
+    //     if (result?.status === 1000) {
+    //         removeRoleMappingAPI();
+    //     } else {
+    //         toast.current.show({severity: 'error', summary: 'Error Message', detail: 'Không có quyền truy cập'});
+    //     }
     
-        console.log(`removeRoleMappingAPI`, username)
-        let result = await roleService.removeRoleMappingToUser(id, dataBody,username);
+    //     // // console.log(`chay vao day`)
+    //     // // console.log(`productDeleteSelected`, productDeleteSelected)
+    //     // const dataBody = [
+    //     //     {
+    //     //         id: "f68c6039-7394-4c64-a351-c87181658272",
+    //     //         name: "admin"
+    //     //     }
+    //     // ]
+
+    //     // // removeRoleMapping;
+    //     // removeRoleMappingAPI(productDeleteSelected.id, dataBody, productDeleteSelected.username)
+
+    //     // setRemoveRole(false);
+    //     // setProductDeleteSelected(null)
+    //     // // setProduct(emptyProduct);
+    //     // toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Thành công', life: 3000 });
+    // }
+
+
+    const removeRoleMappingAPI = async () => {
+
+        const dataBody = [
+            {
+                id: "f68c6039-7394-4c64-a351-c87181658272",
+                name: "admin"
+            }
+        ]
+        console.log(`removeRoleMappingAPI`, productDeleteSelected.username)
+        let result = await roleService.removeRoleMappingToUser(productDeleteSelected.id, dataBody, productDeleteSelected.username);
         // console.log(`result`, result)
         if (result?.status === 1000) {
             fetchDiscount();
+            setRemoveRole(false);
+            setProductDeleteSelected(null)
+            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Thành công', life: 3000 });
         }
         setProductDialog(false);
     }
@@ -521,9 +595,11 @@ const RoleNew = () => {
                 <Dialog visible={removeRole} style={{ width: '450px' }} header="Confirm" modal footer={removeRoletDialogFooter} onHide={() => setRemoveRole(false)}>
                     <div className="confirmation-content">
                         <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
-                        {productDeleteSelected && <span>Bạn có muốn thiết lập tài khoản <b>{productDeleteSelected.username}</b> thành admin ?</span>}
+                        {productDeleteSelected && <span>Bạn có muốn hủy thiết lập tài khoản <b>{productDeleteSelected.username}</b> thành admin ?</span>}
                     </div>
                 </Dialog>
+
+
 
 
             </div>

@@ -49,8 +49,8 @@ const Content = () => {
       <section>
         <Switch>
           {/* {showContent(router)} */}
-          <PrivateRoute roles={['RealmAdmin']} path="/user" component={Account} />
-          <PrivateRoute roles={['RealmAdmin']} component={RoleNew} path="/role" exact />
+          <PrivateRoute roles={['admin']} path="/user" component={Account} />
+          <PrivateRoute roles={['admin']} component={RoleNew} path="/role" exact />
 
           <Route component={Home} path="/" exact />
           <Route component={Home} path="/home" exact />

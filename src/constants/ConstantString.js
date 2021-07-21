@@ -16,3 +16,10 @@ export const RETYPE_PASSWORD_UNLIKE = "Mật khẩu không giống nhau";
 export const MESSAGE_EMAIL_FORMAT_ERROR = "Không đúng định dạng email";
 export const MESSAGE_PHONE_FORMAT_ERROR = "Số điện thoại phải gồm có 10 số";
 
+
+export const ACTION_ADD = "ADD"
+export const ACTION_EDIT = "EDIT";
+export const ACTION_DELETE = "DELETE";
+// export const ACTION_ADD = "Số điện thoại phải gồm có 10 số";
+
+

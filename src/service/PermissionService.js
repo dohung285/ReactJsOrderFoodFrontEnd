@@ -3,28 +3,33 @@ import {
 } from "../constants/ConstantUrlAPI";
 import { TypeMethodConstantEnum } from "../helper/MethodAPIConstant";
 import FetchAPI from "./FetchAPI";
-  
-  class PermissionService extends FetchAPI {
 
-      //lấy ra tất cả các quyền thuộc về user
-      async getAllPermission(){
-        let url = `${PREFIX_URL_ORDERFOOD}/permission`; 
-         return await this.request(url,null, TypeMethodConstantEnum.GET);
-     }
+class PermissionService extends FetchAPI {
 
-    // //lấy ra tất cả các quyền thuộc về user
-    // async getAllPermissionByUser(){
-    //    let url = `${PREFIX_URL_NHOMQUYEN}/ndnq/getNdNq`; ///taxsearch/cybertax/search-service//nhomquyen/search-all
-    //     return await this.request(url,null, TypeMethodConstantEnum.GET);
-    // }
-
-    //save
-    async save(dataBody){
-      let url = `${PREFIX_URL_ORDERFOOD}/permission`; 
-       return await this.request(url,dataBody, TypeMethodConstantEnum.POST);
-   }
-
-
+  //lấy ra tất cả các quyền trong hệ thống
+  async getAllPermission() {
+    let url = `${PREFIX_URL_ORDERFOOD}/permission`;
+    return await this.request(url, null, TypeMethodConstantEnum.GET);
   }
-  export default PermissionService;
-  
+
+  //lấy ra tất cả các quyền thuộc về user
+  async getAllPermissionOfUser(username) {
+    let url = `${PREFIX_URL_ORDERFOOD}/permission/${username}`;
+    return await this.request(url, null, TypeMethodConstantEnum.GET);
+  }
+
+  //save
+  async save(dataBody) {
+    let url = `${PREFIX_URL_ORDERFOOD}/permission`;
+    return await this.request(url, dataBody, TypeMethodConstantEnum.POST);
+  }
+
+   //save
+   async checkPermission(username, pathName, action) {
+    let url = `${PREFIX_URL_ORDERFOOD}/permission/check?username=${username}&pathName=${pathName}&action=${action}`;
+    return await this.request(url, null, TypeMethodConstantEnum.GET);
+  }
+
+
+}
+export default PermissionService;
