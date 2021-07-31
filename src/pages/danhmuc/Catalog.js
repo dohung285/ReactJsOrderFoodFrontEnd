@@ -75,7 +75,7 @@ export const Catalog = ({ match }) => {
             <div className="p-col-12">
                 <div className="product-list-item">
                     <Link to={`/food/${data.id}`} className="linkFoodDetail">
-                        <img src={`../../img/${data.path}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
+                        <img src={data.path} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
                         <div className="product-list-detail">
                             <div className="product-name">{data.name}</div>
                             <Rating value={data.rating} readOnly cancel={false}></Rating>
@@ -100,18 +100,13 @@ export const Catalog = ({ match }) => {
                 <div className="product-grid-item card">
                     <Link to={`/food/${data.id}`} className="linkFoodDetail">
                         <div className="product-grid-item-content">
-                            <img src={`../../img/${data.path}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
+                            <img src={data.path} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
                             <div className="product-name">{data.name}</div>
                             <Rating value={data.rating} readOnly cancel={false}></Rating>
                         </div>
                     </Link>
                     <div className="product-grid-item-bottom">
                         <span className="product-price">{data.price} VND</span>
-                        {/* <Button
-                            icon="pi pi-shopping-cart"
-                            label="Mua"
-                            onClick={() => onBuyProduct(data.id)}
-                        ></Button> */}
                     </div>
 
 

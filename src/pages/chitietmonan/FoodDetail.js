@@ -74,7 +74,7 @@ export const FoodDetail = ({ match }) => {
         // console.log(`keycloak`, keycloak?.idTokenParsed?.preferred_username)
 
         const result = await foodService.getFoodDetailByFoodId(foodId);
-        // console.log(`result`, result)
+        console.log(`result`, result)
         if (result?.status == 1000) {
             // console.log(`có vao day`, result?.object)
 
@@ -84,6 +84,7 @@ export const FoodDetail = ({ match }) => {
             const { price, percent } = result?.object;
             let money = null;
             if (percent === null) {
+             
                 //th giảm giá bằng 0
                 money = valueAmount * price
             } else {
@@ -124,6 +125,29 @@ export const FoodDetail = ({ match }) => {
             {
                 ...orderDetailObj,
                 amount: e.value
+            }
+        )
+
+        let price = products?.price;
+        let amount = e.value;
+        let percent = products?.percent;
+        let  money = null;
+
+        if (percent === null) {
+             
+            //th giảm giá bằng 0
+            money = valueAmount * price
+            // console.log(`case nay percent`, money)
+        } else {
+            // có giảm giá
+            money = (valueAmount * price) - (valueAmount * price * percent) / 100
+        }
+
+
+        setOrderDetailObj(
+            {
+                ...orderDetailObj,
+                money: money
             }
         )
 
@@ -168,7 +192,7 @@ export const FoodDetail = ({ match }) => {
     const myRef = React.createRef();
 
     const handleTab = index => {
-        setCurrentImage(products.listImage[index]);
+        setCurrentImage(products?.listImage[index]);
         const images = myRef.current.children;
         for (let i = 0; i < images.length; i++) {
             images[i].className = images[i].className.replace("active", "");
@@ -178,7 +202,8 @@ export const FoodDetail = ({ match }) => {
 
     useEffect(() => {
         if (products?.listImage) {
-            setCurrentImage(products.listImage[0]);
+            console.log(`products?.listImage[0]`, products?.listImage[0])
+            setCurrentImage(products?.listImage[0]);
         }
     }, [products])
     useEffect(() => {
@@ -405,7 +430,7 @@ export const FoodDetail = ({ match }) => {
 
                 <div className="details" >
                     <div className="big-img">
-                        <img src={'/img/' + currentImage} alt="" key={index} />
+                        <img src={currentImage} alt="" key={index} />
                     </div>
 
                     <div className="box">

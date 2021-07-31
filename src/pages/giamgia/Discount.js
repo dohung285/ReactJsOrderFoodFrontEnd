@@ -43,8 +43,8 @@ const Discount = () => {
         {
             name: '',
             percent: 0,
-            startDate: moment().format("DD/MM/yy HH:mm:ss"),
-            endDate: moment().format("DD/MM/yy HH:mm:ss")
+            startDate: moment().format("DD/MM/yy "),
+            endDate: moment().format("DD/MM/yy")
         }
     )
 
@@ -72,7 +72,7 @@ const Discount = () => {
             setObjDiscount(
                 {
                     ...objDiscount,
-                    startDate: moment(e.value).format("DD/MM/yy HH:mm:ss")
+                    startDate: moment(e.value).format("DD/MM/yy")
                 }
             )
 
@@ -81,7 +81,7 @@ const Discount = () => {
             setObjDiscount(
                 {
                     ...objDiscount,
-                    endDate: moment(e.value).format("DD/MM/yy HH:mm:ss")
+                    endDate: moment(e.value).format("DD/MM/yy")
                 }
             )
 
@@ -118,9 +118,19 @@ const Discount = () => {
     }
 
     const bodyStartDate = (rowData) => {
+        console.log(`rowData`, rowData.startDate)
+        // return (
+           
+        //     <React.Fragment>
+              
+        //         <Moment format="DD/MM/YYYY hh:mm:ss">{rowData.startDate}</Moment>
+        //         {/* <span>{moment(rowData.startDate).format("DD/MM/yy HH:mm:ss")}</span> */}
+        //     </React.Fragment>
+        // );
         return (
             <React.Fragment>
-                <Moment format="DD/MM/YYYY">{rowData.startDate}</Moment>
+                {/* <span className="p-column-title">Date</span> */}
+                <span>{ moment(rowData.startDate).format("DD/MM/yy")}</span>
             </React.Fragment>
         );
     }
@@ -228,6 +238,8 @@ const Discount = () => {
     }
     const saveDiscount = async () => {
 
+        console.log(`objDiscount`, objDiscount)
+
         let result = await discountService.save(objDiscount);
         // console.log(`result`, result)
         if (result?.status === 1000) {
@@ -236,8 +248,8 @@ const Discount = () => {
                 {
                     name: '',
                     percent: 0,
-                    startDate: moment().format("DD/MM/yy HH:mm:ss"),
-                    endDate: moment().format("DD/MM/yy HH:mm:ss")
+                    startDate: moment().format("DD/MM/yy"),
+                    endDate: moment().format("DD/MM/yy")
                 }
             )
             fetchDiscount();
@@ -292,8 +304,16 @@ const Discount = () => {
                     <Column field="id" header="Id" ></Column>
                     <Column field="name" header="Tên" ></Column>
                     <Column field="percent" header="%" ></Column>
-                    <Column field="startDate" body={bodyStartDate} header="Ngày bắt đầu" ></Column>
-                    <Column field="endDate" body={bodyEndDate} header="Ngày kết thúc" ></Column>
+                    <Column
+                        field="startDate"
+                        body={bodyStartDate}
+                        header="Ngày bắt đầu"
+                    ></Column>
+                    <Column
+                        field="endDate"
+                        body={bodyEndDate}
+                        header="Ngày kết thúc"
+                    ></Column>
                     <Column headerStyle={{ width: '4rem' }} body={actionBodyTemplate}></Column>
                 </DataTable>
 

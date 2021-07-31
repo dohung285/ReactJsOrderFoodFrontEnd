@@ -34,12 +34,13 @@ class FetchAPI extends Component {
         .catch((response: any) => this.handleResponse(response));
       return result.data;
     } catch (error) {
+      // console.log('error', error)
       console.log(JSON.stringify(error));
     } finally {
     }
   }
 
-  public handleResponse(error: any) {
+  public handleResponse(error: any) { // ctr + /
     // const { keycloak } = useKeycloak();
     const [keycloak] = useKeycloak();
     const response = error.response;

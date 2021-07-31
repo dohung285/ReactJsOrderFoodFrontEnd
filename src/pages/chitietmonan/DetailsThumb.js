@@ -11,7 +11,7 @@ export const DetailsThumb = (props) => {
              <div className="thumb" ref={myRef}>
                 {
                 images?.map((img, index) =>(
-                    <img src={'/img/'+img} alt="" key={index} 
+                    <img src={img} alt="" key={index} 
                     onClick={() => tab(index)}
                     />
                 ))

@@ -155,19 +155,8 @@ export const MenuBar = () => {
   // console.log(`keycloak`, keycloak?.realmAccess?.roles.toString());
 
   const fetchMenuBar = async () => {
-
-    // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
-
     let result = await service.getAllMenuNotRoleName();
-    // if (keycloak && keycloak.authenticated) {
-    //   result = await service.getAllMenuByRoleName(keycloak?.realmAccess?.roles.toString());
-    // } else {
-    //   result = await service.getAllMenuNotRoleName();
-    // }
-
-    
-
-    console.log(`result Before`, result)
+    // console.log(`result Before`, result)
     if (result) {
 
       // let indexOfObject = result?.findIndex(e => {
