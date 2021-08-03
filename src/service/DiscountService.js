@@ -14,6 +14,13 @@ class DiscountService extends FetchAPI {
         return await this.request(url, null, TypeMethodConstantEnum.GET);
     }
 
+
+    async getAllForFood() {
+        let url = `${PREFIX_URL_ORDERFOOD}/discountId-foods`;
+        return await this.request(url, null, TypeMethodConstantEnum.GET);
+    }
+
+
     async save(dataBody) {
         let url = `${PREFIX_URL_ORDERFOOD}/discount`;
         return await this.request(url, dataBody, TypeMethodConstantEnum.POST);

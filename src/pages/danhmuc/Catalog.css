@@ -101,6 +101,20 @@
     height: 100%;
 }
 
+.product-has-discount{
+    background: #ffcdd2;
+    color: #c63737;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.product-no-discount{
+    background: #c8e6c9;
+    color: #256029;
+    font-weight: 700;
+    font-size: 18px;
+}
+
 
 
 

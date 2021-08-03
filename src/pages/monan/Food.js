@@ -223,7 +223,7 @@ export const Food = () => {
         return (
             <div className="p-d-flex p-ai-center p-flex-wrap">
                 <div className="p-d-flex p-ai-center" style={{ width: '40%' }}>
-                    <img alt={file.name} role="presentation" src={file.objectURL} width={100} />
+                    <img alt={file.name} role="presentation" src={file.objectURL} width={50}  />
                     <span className="p-d-flex p-dir-col p-text-left p-ml-3">
                         {file.name}
                         <small>{new Date().toLocaleDateString()}</small>

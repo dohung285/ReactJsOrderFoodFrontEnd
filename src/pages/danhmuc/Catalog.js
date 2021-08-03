@@ -31,7 +31,7 @@ export const Catalog = ({ match }) => {
     const fetchFoodByFoodGroup = async () => {
 
         const result = await catalogService.getAllFoodByFoodGroup(1, 5, idCatalog);
-        // console.log(`result`, result)
+        console.log(`fetchFoodByFoodGroup`, result)
         if (result?.status == 1000) {
             // console.log(`có vao day`, result?.response?.listReturn)
             setData(result?.response?.listReturn)
@@ -96,22 +96,49 @@ export const Catalog = ({ match }) => {
 
     const renderGridItem = (data) => {
         return (
-            <div className="p-col-12 p-md-3">
-                <div className="product-grid-item card">
-                    <Link to={`/food/${data.id}`} className="linkFoodDetail">
+            <>
+                <div className="p-col-12 p-md-3">
+                    <div className="product-grid-item card">
+                        <Link to={`/food/${data.id}`} className="linkFoodDetail">
+                            <div className="product-grid-item-content">
+                                <img src={data.path} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
+                                <div className="product-name">{data.name}</div>
+                                <Rating value={data.rating} readOnly cancel={false}></Rating>
+                            </div>
+                        </Link>
+                        <div className="product-grid-item-bottom">
+                            <span className="product-price">{data.price} VND</span>
+                            {data.percent && <span className="product-has-discount">- {data.percent} %</span>}
+                            {data.percent === null && <span className="product-no-discount">- 0 %</span>}
+                        </div>
+
+
+                    </div>
+                </div>
+
+                {/* <div className="p-col-12 p-md-4">
+                    <div className="product-grid-item card">
+                        <div className="product-grid-item-top">
+                            <div>
+                                <i className="pi pi-tag product-category-icon"></i>
+                                <span className="product-category">{data.category}</span>
+                            </div>
+                            <span className={`product-badge status-${data.inventoryStatus.toLowerCase()}`}>{data.inventoryStatus}</span>
+                        </div>
                         <div className="product-grid-item-content">
-                            <img src={data.path} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
+                            <img src={`showcase/demo/images/product/${data.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
                             <div className="product-name">{data.name}</div>
+                            <div className="product-description">{data.description}</div>
                             <Rating value={data.rating} readOnly cancel={false}></Rating>
                         </div>
-                    </Link>
-                    <div className="product-grid-item-bottom">
-                        <span className="product-price">{data.price} VND</span>
+                        <div className="product-grid-item-bottom">
+                            <span className="product-price">${data.price}</span>
+                            <Button icon="pi pi-shopping-cart" label="Add to Cart" disabled={data.inventoryStatus === 'OUTOFSTOCK'}></Button>
+                        </div>
                     </div>
+                </div> */}
 
-
-                </div>
-            </div>
+            </>
         );
     }
     const renderHeader = () => {

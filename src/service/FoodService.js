@@ -18,7 +18,22 @@ class FoodService extends FetchAPI {
         return await this.request(url, data, TypeMethodConstantEnum.POST);
     }
 
+    async updateDiscountIdToFoods(data) {
+        let url = `${PREFIX_URL_ORDERFOOD}/food/update-discountid`;
+        return await this.request(url, data, TypeMethodConstantEnum.PUT);
+    }
 
+    async getAllFoodForDiscount() {
+        let url = `${PREFIX_URL_ORDERFOOD}/food/all`;
+        return await this.request(url, null, TypeMethodConstantEnum.GET);
+    }
+
+    async getAllFoodHadDiscount() {
+        let url = `${PREFIX_URL_ORDERFOOD}/food/had-discount`;
+        return await this.request(url, null, TypeMethodConstantEnum.GET);
+    }
+
+ 
 
 
 }

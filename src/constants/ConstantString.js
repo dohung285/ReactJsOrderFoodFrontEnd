@@ -15,6 +15,7 @@ export const RETYPE_PASSWORD_UNLIKE = "Mật khẩu không giống nhau";
 
 export const MESSAGE_EMAIL_FORMAT_ERROR = "Không đúng định dạng email";
 export const MESSAGE_PHONE_FORMAT_ERROR = "Số điện thoại phải gồm có 10 số";
+export const MESSAGE_REQUIRE_PERCENT_LONHON_0= "Phần trăm giảm giá phải lớn hơn 0";
 
 
 export const ACTION_ADD = "ADD"

@@ -3,15 +3,19 @@
 import { useKeycloak } from '@react-keycloak/web';
 import * as moment from "moment";
 import { Button } from 'primereact/button';
+import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Dialog } from 'primereact/dialog';
+import { Dropdown } from 'primereact/dropdown';
 import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
+import { Rating } from 'primereact/rating';
 import { Toast } from 'primereact/toast';
 import React, { useEffect, useRef, useState } from 'react';
 import { MESSAGE_PHONE_FORMAT_ERROR, MESSAGE_REQUIRE, NOT_NUMBER } from '../../constants/ConstantString';
 import { isNumber } from '../../constants/FunctionConstant';
 import CardService from '../../service/CardService';
+import CommentService from '../../service/CommentService';
 import FoodService from '../../service/FoodService';
 import OrderService from '../../service/OrderService';
 import DetailsThumb from './DetailsThumb';
@@ -24,10 +28,12 @@ export const FoodDetail = ({ match }) => {
     const foodService = new FoodService();
     const cardService = new CardService();
     const orderService = new OrderService();
+    const commentService = new CommentService();
 
     const [currentImage, setCurrentImage] = useState('')
 
     const [valueAmount, setValueAmount] = useState(1)
+    const [stars, setStars] = useState([])
 
     const [keycloak] = useKeycloak();
     const toast = useRef(null);
@@ -35,19 +41,19 @@ export const FoodDetail = ({ match }) => {
 
 
     const showSuccess = (message) => {
-        toast.current.show({ severity: 'Thành công', summary: 'Success Message', detail: message, life: 3000 });
+        toast.current.show({ severity: 'success', summary: 'Success Message', detail: message, life: 3000 });
     }
 
     const showInfo = (message) => {
-        toast.current.show({ severity: 'Thông tin', summary: 'Info Message', detail: message, life: 3000 });
+        toast.current.show({ severity: 'info', summary: 'Info Message', detail: message, life: 3000 });
     }
 
     const showWarn = (message) => {
-        toast.current.show({ severity: 'Cảnh báo', summary: 'Warn Message', detail: message, life: 3000 });
+        toast.current.show({ severity: 'warn', summary: 'Warn Message', detail: message, life: 3000 });
     }
 
     const showError = (message) => {
-        toast.current.show({ severity: 'Lỗi', summary: 'Lỗi', detail: message, life: 3000 });
+        toast.current.show({ severity: 'error', summary: 'Lỗi', detail: message, life: 3000 });
     }
 
 
@@ -69,12 +75,26 @@ export const FoodDetail = ({ match }) => {
         money: null
     })
 
+    const [objectCommentErrors, setObjectCommentErrors] = useState({
+    
+        rating: 0,
+        comment: ''
+
+    })
+
+    const [objectComment, setObjectComment] = useState({
+        foodId: foodId,
+        username: keycloak?.idTokenParsed?.preferred_username,
+        rating: 0,
+        content: ''
+    })
+
     const fetchFoodDetailByFoodId = async () => {
 
         // console.log(`keycloak`, keycloak?.idTokenParsed?.preferred_username)
 
         const result = await foodService.getFoodDetailByFoodId(foodId);
-        console.log(`result`, result)
+        // console.log(`result`, result)
         if (result?.status == 1000) {
             // console.log(`có vao day`, result?.object)
 
@@ -84,7 +104,7 @@ export const FoodDetail = ({ match }) => {
             const { price, percent } = result?.object;
             let money = null;
             if (percent === null) {
-             
+
                 //th giảm giá bằng 0
                 money = valueAmount * price
             } else {
@@ -109,7 +129,7 @@ export const FoodDetail = ({ match }) => {
         // console.log(`product.cardId`, product.cardId)
 
         let result = await orderService.saveOrder(objParam);
-        console.log(`result`, result)
+        console.log(`saveOrderFood`, result)
         if (result?.status === 1000) {
 
             // fetchFoodIntoCard();
@@ -117,6 +137,51 @@ export const FoodDetail = ({ match }) => {
         }
 
     }
+
+    const countStarAPI = async () => {
+
+        // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
+        // console.log(`product.cardId`, product.cardId)
+
+        let result = await commentService.countStar(foodId);
+        // console.log(`countStarAPI`, result)
+        if (result?.status === 1000) {
+            setStars(result?.object);
+        }
+
+    }
+
+   
+
+    const getAllCommentByFoodIdAPI = async () => {
+
+        // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
+        // console.log(`product.cardId`, product.cardId)
+
+        let result = await commentService.getAllCommentByFoodId(foodId);
+        console.log(`getAllCommentByFoodIdAPI`, result)
+        if (result?.status === 1000) {
+            setComments(result?.list)
+        }
+
+    }
+
+    const saveCommentAPI = async (dataBody) => {
+
+        // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
+        // console.log(`product.cardId`, product.cardId)
+
+        let result = await commentService.save(dataBody);
+        console.log(`saveCommentAPI`, result)
+        if (result?.status === 1000) {
+            showSuccess('Thành công!')
+            getAllCommentByFoodIdAPI();
+        }
+
+    }
+
+
+
 
     const onChangeAmount = (e) => {
         // console.log(`e`, e);
@@ -131,10 +196,10 @@ export const FoodDetail = ({ match }) => {
         let price = products?.price;
         let amount = e.value;
         let percent = products?.percent;
-        let  money = null;
+        let money = null;
 
         if (percent === null) {
-             
+
             //th giảm giá bằng 0
             money = valueAmount * price
             // console.log(`case nay percent`, money)
@@ -162,7 +227,7 @@ export const FoodDetail = ({ match }) => {
             username: keycloak?.idTokenParsed?.preferred_username,
         }
 
-        console.log(`cardBody`, cardBody)
+        // console.log(`cardBody`, cardBody)
 
         const result = await cardService.saveCard(cardBody);
         // console.log(`result`, result)
@@ -173,8 +238,8 @@ export const FoodDetail = ({ match }) => {
 
     const onByProduct = () => {
         // console.log(`products`, products)
-        console.log(`orderDetailObj`, orderDetailObj)
-        console.log(`orderObj`, orderObj)
+        // console.log(`orderDetailObj`, orderDetailObj)
+        // console.log(`orderObj`, orderObj)
 
         setDisplayBasic(true)
 
@@ -202,18 +267,23 @@ export const FoodDetail = ({ match }) => {
 
     useEffect(() => {
         if (products?.listImage) {
-            console.log(`products?.listImage[0]`, products?.listImage[0])
+            // console.log(`products?.listImage[0]`, products?.listImage[0])
             setCurrentImage(products?.listImage[0]);
         }
     }, [products])
     useEffect(() => {
         fetchFoodDetailByFoodId();
+        countStarAPI();
+        getAllCommentByFoodIdAPI()
         // myRef.current.children[index].className = "active";
 
     }, [])
 
 
     const [displayBasic, setDisplayBasic] = useState(false);
+    const [displayComment, setDisplayComment] = useState(false)
+
+
     const [position, setPosition] = useState('center');
     const dt = useRef(null);
 
@@ -246,11 +316,15 @@ export const FoodDetail = ({ match }) => {
 
     const dialogFuncMap = {
         'displayBasic': setDisplayBasic,
+        'displayComment': setDisplayComment,
 
     }
 
     const onHide = (name) => {
         dialogFuncMap[`${name}`](false);
+
+        setPhoneErrors({})
+        setAddressErrors({})
     }
 
 
@@ -269,6 +343,26 @@ export const FoodDetail = ({ match }) => {
                     icon="pi pi-check"
                     // onClick={() => onHide(name)}
                     onClick={() => handleOnYesDialog('displayBasic')}
+                    autoFocus
+                />
+            </div>
+        );
+    };
+
+    const renderCommentFooter = (name) => {
+        return (
+            <div>
+                <Button
+                    label="Hủy"
+                    icon="pi pi-times"
+                    onClick={() => onHide('displayComment')}
+                    className="p-button-text"
+                />
+                <Button
+                    label="Đồng ý"
+                    icon="pi pi-check"
+                    // onClick={() => onHide(name)}
+                    onClick={() => handleOnYesDialogComment('displayComment')}
                     autoFocus
                 />
             </div>
@@ -315,11 +409,86 @@ export const FoodDetail = ({ match }) => {
             )
         }
 
+        if (eTN === 'rating') {
+            // console.log(`valueRating`, value)
+            if (value > 0) {
+                setObjectCommentErrors(
+                    {
+                        ...objectCommentErrors,
+                        rating: ''
+                    }
+                )
+            } else {
+                setObjectCommentErrors(
+                    {
+                        ...objectCommentErrors,
+                        rating: MESSAGE_REQUIRE
+                    }
+                )
+            }
+
+            setObjectComment(
+                {
+                    ...objectComment,
+                    rating: e.target.value
+                }
+            )
+        }
+
+        if (eTN === 'comment') {
+            if (value.length > 0) {
+                setObjectCommentErrors(
+                    {
+                        ...objectCommentErrors,
+                        comment: ''
+                    }
+                )
+            } else {
+                setObjectCommentErrors(
+                    {
+                        ...objectCommentErrors,
+                        comment: MESSAGE_REQUIRE
+                    }
+                )
+            }
+            setObjectComment(
+                {
+                    ...objectComment,
+                    content: e.target.value
+                }
+            )
+        }
+
 
     }
 
     const [addressErrors, setAddressErrors] = useState({});
     const [phoneErrors, setPhoneErrors] = useState({});
+
+    const formValidationComment = () => {
+        const ratingErrors = {}
+        const commentErrors = {}
+        let isValid = true;
+
+        if (objectComment.rating === 0) {
+            ratingErrors.required = MESSAGE_REQUIRE
+            isValid = false
+        }
+
+        if (objectComment.content === '') {
+            commentErrors.required = MESSAGE_REQUIRE
+            isValid = false
+        }
+
+        setObjectCommentErrors(
+            {
+                ...objectCommentErrors,
+                rating: ratingErrors,
+                comment: commentErrors
+            }
+        )
+        return isValid;
+    }
 
     const formValidation = () => {
         // console.log(`formValidation`)
@@ -411,10 +580,104 @@ export const FoodDetail = ({ match }) => {
 
             // xong thì tắt dialog
             onHide(name)
-
-
         }
 
+    }
+
+    const handleOnYesDialogComment = (name) => {
+
+
+        if (formValidationComment()) {
+
+            console.log(`objecComment`, objectComment)
+            saveCommentAPI(objectComment);
+            // getAllCommentByFoodIdAPI();
+
+            onHide(name)
+        }
+
+    }
+
+
+    useEffect(() => {
+        // setComments(data)
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+    const [comments, setComments] = useState(null)
+    const [layout, setLayout] = useState('list');
+    const [sortKey, setSortKey] = useState(null);
+    const [sortOrder, setSortOrder] = useState(null);
+    const [sortField, setSortField] = useState(null);
+    const sortOptions = [
+        { label: 'Price High to Low', value: '!price' },
+        { label: 'Price Low to High', value: 'price' },
+    ];
+
+    const onSortChange = (event) => {
+        const value = event.value;
+
+        if (value.indexOf('!') === 0) {
+            setSortOrder(-1);
+            setSortField(value.substring(1, value.length));
+            setSortKey(value);
+        }
+        else {
+            setSortOrder(1);
+            setSortField(value);
+            setSortKey(value);
+        }
+    }
+
+    const renderListItem = (data) => {
+        return (
+            <div className="p-col-12">
+                <div className="product-list-item">
+                    <img style={{ width: '80px' }} src={`showcase/demo/images/product/${data.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
+                    <div className="product-list-detail">
+                        <div className="product-name" style={{ fontSize: '1rem', fontWeight: '500' }}>{data.username}</div>
+                        <div className="product-description" style={{ fontSize: '1rem', fontWeight: '300' }}>{data.content}</div>
+                        <Rating value={data.rating} readOnly cancel={false}></Rating>
+                        {/* <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.category}</span> */}
+                    </div>
+                    <div className="product-list-action">
+                        {/* <span className="product-price">${data.price}</span> */}
+                        {/* <Button icon="pi pi-shopping-cart" label="Add to Cart" disabled={data.inventoryStatus === 'OUTOFSTOCK'}></Button>
+                        <span className={`product-badge status-${data.inventoryStatus.toLowerCase()}`}>{data.inventoryStatus}</span> */}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+
+    const itemTemplate = (comment, layout) => {
+        if (!comment) {
+            return;
+        }
+
+        if (layout === 'list')
+            return renderListItem(comment);
+
+    }
+
+    const renderHeader = () => {
+        return (
+            <div className="p-grid p-nogutter">
+                <div className="p-col-6" style={{ textAlign: 'left' }}>
+                    <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Sort By Price" onChange={onSortChange} />
+                </div>
+                <div className="p-col-6" style={{ textAlign: 'right' }}>
+                    <DataViewLayoutOptions layout={layout} onChange={(e) => setLayout(e.value)} />
+                </div>
+            </div>
+        );
+    }
+
+    const header = renderHeader();
+
+    const handleOnCommet = () => {
+        //    keycloak.logout();
+        setDisplayComment(true)
     }
 
 
@@ -452,129 +715,266 @@ export const FoodDetail = ({ match }) => {
 
                         <Button icon="pi pi-shopping-cart" label="Giỏ hàng" style={{ marginRight: '30px' }} onClick={() => saveCard()}></Button>
                         <Button icon="pi pi-shopping-cart" label="Mua ngay" onClick={() => onByProduct()} ></Button>
-
-
                     </div>
                 </div>
 
 
 
-                <Dialog header="Đặt hàng" visible={displayBasic} style={{ width: '50vw' }} footer={renderFooter('displayBasic')} onHide={() => onHide('displayBasic')}>
-                    <div className="p-fluid">
-                        <div className="p-field p-grid">
-                            <label htmlFor="tenkhachhang" className="p-col-12 p-md-3">Tên khách hàng <span className="item-required"> *</span></label>
-                            <div className="p-col-12 p-md-9">
-                                <InputText id="tenkhachhang" type="text" value={orderObj.username} readOnly={true} />
-                            </div>
-                        </div>
-
-                        <div className="p-field p-grid">
-                            <label htmlFor="address" className="p-col-12 p-md-3">Địa chỉ  <span className="item-required"> *</span></label>
-                            <div className="p-col-12 p-md-9">
-                                <InputTextarea
-                                    className={Object.keys(addressErrors).length > 0 ? "error" : null}
-                                    name="address"
-                                    rows={2}
-                                    cols={30}
-                                    autoResize
-                                    value={orderObj.address}
-                                    onChange={handleOnChange} />
-                                {Object.keys(addressErrors).map((keyIndex, key) => {
-                                    return <span className="errorMessage" key={key} >{addressErrors[keyIndex]} <br></br></span>
-                                })}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="p-fluid">
-                        <div className="p-field p-grid">
-                            <label htmlFor="phone" className="p-col-12 p-md-3">Số điện thoại <span className="item-required">*</span></label>
-                            <div className="p-col-12 p-md-9">
-                                <InputText
-                                    className={Object.keys(phoneErrors).length > 0 ? "error" : null}
-                                    id="phone"
-                                    name="phone"
-                                    type="text"
-                                    value={orderObj.phone}
-                                    onChange={handleOnChange} />
-                                {Object.keys(phoneErrors).map((keyIndex, key) => {
-                                    return <span
-                                        className="errorMessage"
-                                        key={key}
-                                    >{phoneErrors[keyIndex]}
-                                        <br></br>
-                                    </span>
-                                })}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="p-fluid">
-                        <div className="p-field p-grid">
-                            <label htmlFor="note" className="p-col-12 p-md-3">Ghi chú</label>
-                            <div className="p-col-12 p-md-9">
-                                <InputTextarea
-                                    name="note"
-                                    rows={4}
-                                    cols={30}
-                                    autoResize
-                                    value={orderObj.note}
-                                    onChange={handleOnChange} />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="datatable-crud-demo ">
-
-                        <div className="p-field p-grid">
-                            <label htmlFor="name" className="p-col-12 p-md-3">Tên món ăn <span className="item-required"> *</span></label>
-                            <div className="p-col-12 p-md-9">
-                                <InputText id="name" type="text" value={products.name} readOnly={true} />
-                            </div>
-                        </div>
-
-                        <div className="p-field p-grid">
-                            <label htmlFor="price" className="p-col-12 p-md-3">Giá <span className="item-required"> *</span></label>
-                            <div className="p-col-12 p-md-9">
-                                <InputText id="price" type="text" value={`${products.price} VNĐ`} readOnly={true} />
-                            </div>
-                        </div>
-
-                        <div className="p-field p-grid">
-                            <label htmlFor="amount" className="p-col-12 p-md-3">Số lượng <span className="item-required"> *</span></label>
-                            <div className="p-col-12 p-md-9">
-                                <InputText id="amount" type="text" value={valueAmount} readOnly={true} />
-                            </div>
-                        </div>
-
-                        <div className="p-field p-grid">
-                            <label htmlFor="discount" className="p-col-12 p-md-3">Giám giá <span className="item-required"> *</span></label>
-                            <div className="p-col-12 p-md-9">
-                                <InputText id="discount" type="text" value={`${((products.percent === null) ? 0 : products.percent)} %`} onChange={handleOnChange} readOnly={true} />
-                            </div>
-                        </div>
-
-                        <div className="p-field p-grid">
-                            <label htmlFor="money" className="p-col-12 p-md-3">Tiền <span className="item-required"> *</span></label>
-                            <div className="p-col-12 p-md-9">
-                                <InputText id="money" type="text" value={`${orderDetailObj.money} VNĐ`} onChange={handleOnChange} readOnly={true} />
-                            </div>
-                        </div>
-
-
-
-                        {/* <DataTable ref={dt}
-                            value={products}
-                            dataKey="id"
-                        >
-                            <Column field="cardId" header="Id" ></Column>
-                            <Column field="name" header="Tên" ></Column>
-                            <Column field="price" header="Giá" body={priceBodyTemplate} ></Column>
-                            <Column field="amount" header="Số lượng"  ></Column>
-                            <Column header="Giảm giá" body={discountBodyTemplate} ></Column>
-                            <Column field="money" header="Thành tiền" />
-                        </DataTable> */}
-                    </div>
-                </Dialog>
             </div>
+
+            <div className="app card">
+
+                <div className="p-d-flex p-flex-row ">
+
+                </div>
+
+                <div className="p-d-flex p-jc-between p-pl-6 p-pt-4">
+                    <div>
+                        <span className="heading ">Đánh giá</span>
+
+                    </div>
+
+                    <div>
+                        <Rating className="p-pt-2" value={5} readOnly stars={5} cancel={false} />
+                    </div>
+
+                    <div className="p-mr-4">
+                        <Button label="Bình luận" className="p-button-raised p-button-success p-button-text" onClick={handleOnCommet} />
+                    </div>
+                </div>
+
+
+
+
+                <hr style={{ border: '3px solid #f1f1f1' }} />
+                <div className="row">
+                    <div className="side">
+                        <div>5 sao</div>
+                    </div>
+                    <div className="middle">
+                        <div className="bar-container">
+                            <div className="bar-5" />
+                        </div>
+                    </div>
+                    <div className="side right">
+                        <div>{stars[0]}</div>
+                    </div>
+                    <div className="side">
+                        <div>4 sao</div>
+                    </div>
+                    <div className="middle">
+                        <div className="bar-container">
+                            <div className="bar-4" />
+                        </div>
+                    </div>
+                    <div className="side right">
+                        {/* <div>63</div> */}
+                        <div>{stars[1]}</div>
+                    </div>
+                    <div className="side">
+                        <div>3 sao</div>
+                    </div>
+                    <div className="middle">
+                        <div className="bar-container">
+                            <div className="bar-3" />
+                        </div>
+                    </div>
+                    <div className="side right">
+                        {/* <div>15</div> */}
+                        <div>{stars[2]}</div>
+                    </div>
+                    <div className="side">
+                        <div>2 sao</div>
+                    </div>
+                    <div className="middle">
+                        <div className="bar-container">
+                            <div className="bar-2" />
+                        </div>
+                    </div>
+                    <div className="side right">
+                        {/* <div>6</div> */}
+                        <div>{stars[3]}</div>
+                    </div>
+                    <div className="side">
+                        <div>1 sao</div>
+                    </div>
+                    <div className="middle">
+                        <div className="bar-container">
+                            <div className="bar-1" />
+                        </div>
+                    </div>
+                    <div className="side right">
+                        {/* <div>20</div> */}
+                        <div>{stars[4]}</div>
+                    </div>
+                </div>
+
+                <div className="dataview-demo p-pt-4">
+                    <div className="card">
+                        <DataView
+                            value={comments}
+                            layout={layout}
+                            // header={header}
+                            itemTemplate={itemTemplate}
+                            paginator
+                            rows={5}
+                            sortOrder={sortOrder}
+                            sortField={sortField}
+                        />
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <Dialog
+                header="Đánh giá sản phẩm"
+                visible={displayComment}
+                style={{ width: '50vw' }}
+                footer={renderCommentFooter('displayBasic')}
+                onHide={() => onHide('displayComment')}
+            >
+                <div className="p-fluid">
+                    <div className="p-field">
+                        <label htmlFor="rating">Đánh giá <span className="item-required">*</span></label>
+                        <Rating
+                            className={Object.keys(objectCommentErrors.rating).length > 0 ? "error" : null}
+                            name="rating"
+                            id="rating"
+                            cancel={false}
+                            value={objectComment.rating}
+                            onChange={handleOnChange}
+                        />
+                        {Object.keys(objectCommentErrors.rating).map((keyIndex, key) => {
+                            return <span className="errorMessage" key={key} >{objectCommentErrors.rating[keyIndex]} <br></br></span>
+                        })}
+                    </div>
+                    <div className="p-field">
+                        <label htmlFor="comment">Bình luận <span className="item-required">*</span></label>
+                        <InputTextarea
+                            className={Object.keys(objectCommentErrors.comment).length > 0 ? "error" : null}
+                            name="comment"
+                            id="comment"
+                            rows={5}
+                            cols={30}
+                            value={objectComment.content}
+                            onChange={handleOnChange} />
+                        {Object.keys(objectCommentErrors.comment).map((keyIndex, key) => {
+                            return <span className="errorMessage" key={key} >{objectCommentErrors.comment[keyIndex]} <br></br></span>
+                        })}
+                    </div>
+                </div>
+            </Dialog>
+
+
+
+
+            <Dialog header="Đặt hàng" visible={displayBasic} style={{ width: '50vw' }} footer={renderFooter('displayBasic')} onHide={() => onHide('displayBasic')}>
+                <div className="p-fluid">
+                    <div className="p-field p-grid">
+                        <label htmlFor="tenkhachhang" className="p-col-12 p-md-3">Tên khách hàng <span className="item-required"> *</span></label>
+                        <div className="p-col-12 p-md-9">
+                            <InputText id="tenkhachhang" type="text" value={orderObj.username} readOnly={true} />
+                        </div>
+                    </div>
+
+                    <div className="p-field p-grid">
+                        <label htmlFor="address" className="p-col-12 p-md-3">Địa chỉ  <span className="item-required"> *</span></label>
+                        <div className="p-col-12 p-md-9">
+                            <InputTextarea
+                                className={Object.keys(addressErrors).length > 0 ? "error" : null}
+                                name="address"
+                                rows={2}
+                                cols={30}
+                                autoResize
+                                value={orderObj.address}
+                                onChange={handleOnChange} />
+                            {Object.keys(addressErrors).map((keyIndex, key) => {
+                                return <span className="errorMessage" key={key} >{addressErrors[keyIndex]} <br></br></span>
+                            })}
+                        </div>
+                    </div>
+                </div>
+                <div className="p-fluid">
+                    <div className="p-field p-grid">
+                        <label htmlFor="phone" className="p-col-12 p-md-3">Số điện thoại <span className="item-required">*</span></label>
+                        <div className="p-col-12 p-md-9">
+                            <InputText
+                                className={Object.keys(phoneErrors).length > 0 ? "error" : null}
+                                id="phone"
+                                name="phone"
+                                type="text"
+                                value={orderObj.phone}
+                                onChange={handleOnChange} />
+                            {Object.keys(phoneErrors).map((keyIndex, key) => {
+                                return <span
+                                    className="errorMessage"
+                                    key={key}
+                                >{phoneErrors[keyIndex]}
+                                    <br></br>
+                                </span>
+                            })}
+                        </div>
+                    </div>
+                </div>
+                <div className="p-fluid">
+                    <div className="p-field p-grid">
+                        <label htmlFor="note" className="p-col-12 p-md-3">Ghi chú</label>
+                        <div className="p-col-12 p-md-9">
+                            <InputTextarea
+                                name="note"
+                                rows={4}
+                                cols={30}
+                                autoResize
+                                value={orderObj.note}
+                                onChange={handleOnChange} />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="datatable-crud-demo ">
+
+                    <div className="p-field p-grid">
+                        <label htmlFor="name" className="p-col-12 p-md-3">Tên món ăn <span className="item-required"> *</span></label>
+                        <div className="p-col-12 p-md-9">
+                            <InputText id="name" type="text" value={products.name} readOnly={true} />
+                        </div>
+                    </div>
+
+                    <div className="p-field p-grid">
+                        <label htmlFor="price" className="p-col-12 p-md-3">Giá <span className="item-required"> *</span></label>
+                        <div className="p-col-12 p-md-9">
+                            <InputText id="price" type="text" value={`${products.price} VNĐ`} readOnly={true} />
+                        </div>
+                    </div>
+
+                    <div className="p-field p-grid">
+                        <label htmlFor="amount" className="p-col-12 p-md-3">Số lượng <span className="item-required"> *</span></label>
+                        <div className="p-col-12 p-md-9">
+                            <InputText id="amount" type="text" value={valueAmount} readOnly={true} />
+                        </div>
+                    </div>
+
+                    <div className="p-field p-grid">
+                        <label htmlFor="discount" className="p-col-12 p-md-3">Giám giá <span className="item-required"> *</span></label>
+                        <div className="p-col-12 p-md-9">
+                            <InputText id="discount" type="text" value={`${((products.percent === null) ? 0 : products.percent)} %`} onChange={handleOnChange} readOnly={true} />
+                        </div>
+                    </div>
+
+                    <div className="p-field p-grid">
+                        <label htmlFor="money" className="p-col-12 p-md-3">Tiền <span className="item-required"> *</span></label>
+                        <div className="p-col-12 p-md-9">
+                            <InputText id="money" type="text" value={`${orderDetailObj.money} VNĐ`} onChange={handleOnChange} readOnly={true} />
+                        </div>
+                    </div>
+                </div>
+            </Dialog>
+
+
+
+
         </div>
     );
 

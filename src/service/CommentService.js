@@ -24,7 +24,17 @@ class CommentService extends FetchAPI {
         let url = `${PREFIX_URL_ORDERFOOD}/comment/${commentId}`;
         return await this.request(url, null, TypeMethodConstantEnum.DELETE);
     }
+    async countStar(foodId) {
+        let url = `${PREFIX_URL_ORDERFOOD}/countStar?foodId=${foodId}`;
+        return await this.request(url, null, TypeMethodConstantEnum.GET);
+    }
 
+    async getAllCommentByFoodId(foodId) {
+        let url = `${PREFIX_URL_ORDERFOOD}/comment/${foodId}`;
+        return await this.request(url, null, TypeMethodConstantEnum.GET);
+    }
+
+   
 
 }
 export default CommentService;
