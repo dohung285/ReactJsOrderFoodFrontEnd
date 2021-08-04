@@ -111,8 +111,8 @@ export const ListOrder = () => {
 
     const searchBodyTemplate = () => {
         return (
-            <Link to="/time-line"  >
-                <Button icon="pi pi-eye" className="p-button-rounded p-button-success">
+            <Link to="/time-line" style={{textDecoration: 'none'}} >
+                <Button icon="pi pi-eye" className="p-button-rounded p-button-success" style={{textDecoration: 'none'}}>
                     {/* <span  >Xem</span> */}
                 </Button>
             </Link>

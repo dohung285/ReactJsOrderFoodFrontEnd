@@ -8,6 +8,7 @@ import { useRole } from "../hooks/useRole";
 import { Badge } from 'primereact/badge';
 import MenuService from "../service/MenuService";
 import CardService from "../service/CardService";
+import Axios from 'axios';
 
 
 export const MenuBar = () => {
@@ -98,45 +99,46 @@ export const MenuBar = () => {
     {
       label: "Nộp thuế",
       icon: "pi pi-fw pi-desktop",
-      items: [
-        {
-          label: "Lập giấy nộp tiền",
-          icon: "pi pi-fw pi-user-plus",
-          permission: PERMISSION_NT_LGNT,
-          command: () => history.push('/lap-giay-nop-tien')
-        },
-        {
-          label: "Lập giấy nộp tiền thay",
-          icon: "pi pi-fw pi-user-plus",
-          permission: PERMISSION_NT_LGNTT,
-          command: () => history.push('/lap-giay-nop-tien-thay')
-        },
-        {
-          label: "Tra cứu giấy nộp tiền",
-          icon: "pi pi-fw pi-user-plus",
-          permission: PERMISSION_NT_TCGNT,
-          command: () => history.push("/tra-cuu-giay-nop-tien"),
-        },
-        {
-          label: "Tra cứu thông báo",
-          icon: "pi pi-fw pi-user-plus",
-          permission: PERMISSION_NT_TCTB,
-          command: () => history.push("/tra-cuu-thong-bao"),
-        },
-        {
-          label: "Lập thư tra soát",
-          icon: "pi pi-fw pi-user-plus",
-          permission: PERMISSION_NT_LTTS,
-          command: () => history.push("/lap-thu-tra-soat"),
-        },
-        {
-          label: "Tra cứu thư tra soát",
-          icon: "pi pi-fw pi-user-plus",
-          permission: PERMISSION_NT_TCTTS,
-          command: () => history.push("/tra-cuu-thu-tra-soat"),
-        }
+      command: () => history.push("/fake-nopthue")
+      // items: [
+      //   {
+      //     label: "Lập giấy nộp tiền",
+      //     icon: "pi pi-fw pi-user-plus",
+      //     permission: PERMISSION_NT_LGNT,
+      //     command: () => history.push('/lap-giay-nop-tien')
+      //   },
+      //   {
+      //     label: "Lập giấy nộp tiền thay",
+      //     icon: "pi pi-fw pi-user-plus",
+      //     permission: PERMISSION_NT_LGNTT,
+      //     command: () => history.push('/lap-giay-nop-tien-thay')
+      //   },
+      //   {
+      //     label: "Tra cứu giấy nộp tiền",
+      //     icon: "pi pi-fw pi-user-plus",
+      //     permission: PERMISSION_NT_TCGNT,
+      //     command: () => history.push("/tra-cuu-giay-nop-tien"),
+      //   },
+      //   {
+      //     label: "Tra cứu thông báo",
+      //     icon: "pi pi-fw pi-user-plus",
+      //     permission: PERMISSION_NT_TCTB,
+      //     command: () => history.push("/tra-cuu-thong-bao"),
+      //   },
+      //   {
+      //     label: "Lập thư tra soát",
+      //     icon: "pi pi-fw pi-user-plus",
+      //     permission: PERMISSION_NT_LTTS,
+      //     command: () => history.push("/lap-thu-tra-soat"),
+      //   },
+      //   {
+      //     label: "Tra cứu thư tra soát",
+      //     icon: "pi pi-fw pi-user-plus",
+      //     permission: PERMISSION_NT_TCTTS,
+      //     command: () => history.push("/tra-cuu-thu-tra-soat"),
+      //   }
 
-      ],
+      // ],
     },
 
   ];
@@ -154,36 +156,113 @@ export const MenuBar = () => {
 
   // console.log(`keycloak`, keycloak?.realmAccess?.roles.toString());
 
+
   const fetchMenuBar = async () => {
-    let result = await service.getAllMenuNotRoleName();
-    // console.log(`result Before`, result)
-    if (result) {
+    Axios.get(`http://localhost:8085/api/menu/byNotRole`)
+      .then(res => {
+        console.log(`res`, res.data)
+        let result = res.data
 
-      // let indexOfObject = result?.findIndex(e => {
-      //   return e.label == 'Hệ thống';
-      // })
-      // console.log(`indexOfObject`, indexOfObject)
-      // let resultArray = result?.splice(indexOfObject, 1);
+        if (result) {
+
+          let arrayTmp = [];
+          let x = result.forEach(element => {
+            // console.log(`element`, element)
+            let arrayItems = []
+            if (element.label !== 'Trang chủ' && element.label !== 'Giới thiệu' && element.label !== 'Liên hệ') {
+              const y = element?.items.forEach(item => {
+                // console.log(`items`, item)
+                const objItems = {
+                  icon: item.icon,
+                  label: item.label,
+                  command: () => history.push(`${item.command}`)
+                }
+                // console.log(`objItems`, objItems)
+                arrayItems.push(objItems)
+              })
+
+              const objHasItems = {
+                icon: element.icon,
+                label: element.label,
+                items: arrayItems
+              }
+              arrayTmp.push(objHasItems)
 
 
 
-      const resultWithLink = result.map(element => {
-        const { items, label } = element;
-        // console.log(`element`, element)
-        if (items.length === 0 && label === 'Trang chủ') {
-          history.push('/home')
+
+            }
+            else {
+              const obj = {
+                icon: element.icon,
+                label: element.label,
+                command: () => history.push(`${element.command}`)
+              }
+              // console.log(`obj`, obj)
+              arrayTmp.push(obj)
+            }
+          });
+          setItems(arrayTmp);
         }
-        const itemsWithLink = items.map(item => {
 
-          const { command: url } = item;
-          return { ...item, command: () => history.push(`${url}`) }
-        })
-        return { ...element, items: itemsWithLink }
+
+
+
+
+      }).catch(err => {
+        console.log("Error getDistinctDmcqt()", err);
+
       })
 
-      setItems(resultWithLink);
-    }
   };
+
+
+
+  // const fetchMenuBar = async () => {
+  //   let result = await service.getAllMenuNotRoleName();
+  //   // console.log(`fetchMenuBar`, result)
+  //   if (result) {
+
+  //     let arrayTmp = [];
+  //     let x = result.forEach(element => {
+  //       // console.log(`element`, element)
+  //       let arrayItems = []
+  //       if (element.label !== 'Trang chủ' && element.label !== 'Giới thiệu' && element.label !== 'Liên hệ') {
+  //         const y = element?.items.forEach(item => {
+  //           // console.log(`items`, item)
+  //           const objItems = {
+  //             icon: item.icon,
+  //             label: item.label,
+  //             command: () => history.push(`${item.command}`)
+  //           }
+  //           // console.log(`objItems`, objItems)
+  //           arrayItems.push(objItems)
+  //         })
+
+  //         const objHasItems = {
+  //           icon: element.icon,
+  //           label: element.label,
+  //           items: arrayItems
+  //         }
+  //         arrayTmp.push(objHasItems)
+
+
+
+
+  //       }
+  //       else {
+  //         const obj = {
+  //           icon: element.icon,
+  //           label: element.label,
+  //           command: () => history.push(`${element.command}`)
+  //         }
+  //         // console.log(`obj`, obj)
+  //         arrayTmp.push(obj)
+  //       }
+  //     });
+  //     setItems(arrayTmp);
+  //   }
+  // };
 
   const fetchNumberCard = async () => {
     // console.log(`username`, keycloak?.idTokenParsed?.preferred_username)
@@ -200,7 +279,7 @@ export const MenuBar = () => {
 
   useEffect(() => {
     fetchMenuBar()
-    fetchNumberCard()
+    // fetchNumberCard()
   }, []);
 
   // const {keycloak} = useKeycloak();

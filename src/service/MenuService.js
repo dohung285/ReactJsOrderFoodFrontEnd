@@ -17,6 +17,12 @@ class MenuService extends FetchAPI {
     }
 
 
+    async getAllMenuNotRoleNamePublicService() {
+     
+        let url = `${PREFIX_URL_ORDERFOOD}/menu/public/byRoleName`;
+        return await this.request(url, null, TypeMethodConstantEnum.GET);
+    }
+
 
     // async saveRole(dataBody) {
     //   let url = `${PREFIX_URL_NHOMQUYEN}/nhomquyen/save`;

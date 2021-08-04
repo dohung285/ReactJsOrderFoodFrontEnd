@@ -17,4 +17,6 @@ export const PREFIX_URL_NOPTOKHAI = "http://localhost:9003/noptkservice/cybertax
 
 export const PREFIX_URL_ORDERFOOD = "/orderfood/api";
 
+export const PREFIX_URL_PUBLIC_API = "/public/api";
+
 // REACT_APP_BASE_API_URL=http://10.30.1.26:8080/

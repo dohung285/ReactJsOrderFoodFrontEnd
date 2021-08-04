@@ -33,7 +33,7 @@ const AppRouter = ({ keycloak, keycloakInitialized }) => {
 
   return (
     <div>
-      {keycloak && !keycloak.authenticated && (
+      {/* {keycloak && !keycloak.authenticated && (
 
         <Button
           label="Đăng nhập"
@@ -41,8 +41,8 @@ const AppRouter = ({ keycloak, keycloakInitialized }) => {
           onClick={() => keycloak.login()}
         />
       )}
-      {keycloak && keycloak.authenticated && <Main />}
-      {/* <Main /> */}
+      {keycloak && keycloak.authenticated && <Main />} */}
+      <Main />
 
     </div>
   );
