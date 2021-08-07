@@ -1,19 +1,22 @@
 
 
-import React, { useEffect, useState } from 'react';
-import CatalogService from '../../service/CatalogService';
-import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
+import axios from 'axios';
 import { Button } from 'primereact/button';
-import { Rating } from 'primereact/rating';
+import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Dropdown } from 'primereact/dropdown';
-// import '../danhmuc/Catalog.css'
-import './Catalog.css'
+import { Rating } from 'primereact/rating';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import CatalogService from '../../service/CatalogService';
+// import '../danhmuc/Catalog.css'
+import './Catalog.css';
 
 
 export const Catalog = ({ match }) => {
     // console.log(`match`, match.params.id)
     let idCatalog = match.params.id;
+
+    // const {card,setCard}  =  useContext(CardContext)
 
     const catalogService = new CatalogService();
     const [data, setData] = useState([])
@@ -27,16 +30,35 @@ export const Catalog = ({ match }) => {
     ];
 
 
-
     const fetchFoodByFoodGroup = async () => {
 
-        const result = await catalogService.getAllFoodByFoodGroup(1, 5, idCatalog);
-        console.log(`fetchFoodByFoodGroup`, result)
-        if (result?.status == 1000) {
-            // console.log(`có vao day`, result?.response?.listReturn)
-            setData(result?.response?.listReturn)
-        }
+        axios.get(`http://localhost:8082/services/orderfood/api/food/byFoodGroup?foodGroupId=${idCatalog}`)
+            .then(res => {
+                //   console.log(`res`, res?.data?.response?.listReturn)
+                let result = res?.data?.response?.listReturn
+                if (result) {
+                    setData(result)
+                }
+            }).catch(err => {
+                console.log("Error fetchFoodByFoodGroup()", { ...err });
+            })
+
+
+
+
     };
+
+
+
+    // const fetchFoodByFoodGroup = async () => {
+
+    //     const result = await catalogService.getAllFoodByFoodGroup(1, 5, idCatalog);
+    //     console.log(`fetchFoodByFoodGroup`, result)
+    //     if (result?.status == 1000) {
+    //         // console.log(`có vao day`, result?.response?.listReturn)
+    //         setData(result?.response?.listReturn)
+    //     }
+    // };
 
 
     useEffect(() => {
@@ -83,9 +105,7 @@ export const Catalog = ({ match }) => {
                     </Link>
                     <div className="product-list-action">
                         <span className="product-price">{data.price} VND</span>
-                        <Button
-                            icon="pi pi-shopping-cart"
-                            label="Giỏ hàng" ></Button>
+                        <Button icon="pi pi-shopping-cart" label="Giỏ hàng" ></Button>
                     </div>
 
                 </div>
@@ -93,6 +113,7 @@ export const Catalog = ({ match }) => {
             </div>
         );
     }
+   
 
     const renderGridItem = (data) => {
         return (
@@ -110,6 +131,7 @@ export const Catalog = ({ match }) => {
                             <span className="product-price">{data.price} VND</span>
                             {data.percent && <span className="product-has-discount">- {data.percent} %</span>}
                             {data.percent === null && <span className="product-no-discount">- 0 %</span>}
+                            {/* <Button icon="pi pi-shopping-cart" onClick={() => addToCard(data)} ></Button> */}
                         </div>
 
 

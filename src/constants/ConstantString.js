@@ -18,6 +18,10 @@ export const MESSAGE_PHONE_FORMAT_ERROR = "Số điện thoại phải gồm có
 export const MESSAGE_REQUIRE_PERCENT_LONHON_0= "Phần trăm giảm giá phải lớn hơn 0";
 
 
+export const AUTHENTICATED = "authenticated"
+export const DATA_CARD = "DATA_CARD"
+
+
 export const ACTION_ADD = "ADD"
 export const ACTION_EDIT = "EDIT";
 export const ACTION_DELETE = "DELETE";

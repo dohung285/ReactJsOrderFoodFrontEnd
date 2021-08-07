@@ -9,13 +9,14 @@ import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import CardService from '../../service/CardService';
 import OrderService from '../../service/OrderService';
 import './Card.css';
 import * as moment from "moment";
-import { MESSAGE_PHONE_FORMAT_ERROR, MESSAGE_REQUIRE, NOT_NUMBER } from '../../constants/ConstantString';
+import { DATA_CARD, MESSAGE_PHONE_FORMAT_ERROR, MESSAGE_REQUIRE, NOT_NUMBER } from '../../constants/ConstantString';
 import { isNumber } from '../../constants/FunctionConstant';
+import { CardContext } from '../../context/CardContext';
 
 
 
@@ -23,6 +24,8 @@ import { isNumber } from '../../constants/FunctionConstant';
 
 export const Card = ({ match }) => {
     // console.log(`match`, match.params.username)
+
+    const { card, setCard } = useContext(CardContext)
 
 
     const [keycloak] = useKeycloak();
@@ -128,6 +131,7 @@ export const Card = ({ match }) => {
         console.log(`result`, result)
         if (result?.status === 1000) {
 
+
             // fetchFoodIntoCard();
             toast.current.show({ severity: 'success', summary: 'Thành công', detail: 'Thành công', life: 3000 });
         }
@@ -180,7 +184,11 @@ export const Card = ({ match }) => {
 
 
     useEffect(() => {
-        fetchFoodIntoCard();
+        // fetchFoodIntoCard();
+        let data = sessionStorage.getItem(DATA_CARD)
+        // console.log(`data`, data)
+        setProducts1(JSON.parse(data))
+
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 
@@ -261,7 +269,22 @@ export const Card = ({ match }) => {
         // setProduct(_products);
         // console.log(`productDelete`, product)
 
-        deleteFoodIntoCard();
+        // deleteFoodIntoCard();
+
+        //Xóa trên table
+        let remain = products1.filter((item => item.cardId !== product.cardId));
+        console.log(`remain`, remain)
+        setProducts1(remain)
+
+        //trên giỏ hàng 
+        setCard((card - 1))
+
+        //trong session
+        let dataCard = (sessionStorage.getItem(DATA_CARD)?.length < 0 || sessionStorage.getItem(DATA_CARD) === null || sessionStorage.getItem(DATA_CARD) === undefined) ? [] : JSON.parse(sessionStorage.getItem(DATA_CARD))
+        console.log(`dataCard`, dataCard)
+        let dataCardRemain = dataCard.filter((item => item.cardId !== product.cardId));
+        console.log(`dataCardRemain`, dataCardRemain)
+        sessionStorage.setItem(DATA_CARD, JSON.stringify(dataCardRemain))
 
         setDeleteProductDialog(false);
         setProduct(emptyProduct);
@@ -302,15 +325,18 @@ export const Card = ({ match }) => {
         // let _products = products.filter(val => !selectedProducts.includes(val));
         // setProducts(_products);
 
-        console.log(`selectedProducts`, Object.values(selectedProducts))
-        let strCardIds = '';
-        selectedProducts.map(e => {
-            console.log(`e.cardId`, e.cardId)
-            strCardIds += e.cardId + ','
-        })
-        console.log(`strCardIds`, strCardIds)
+        // console.log(`selectedProducts`, Object.values(selectedProducts))
+        // let strCardIds = '';
+        // selectedProducts.map(e => {
+        //     console.log(`e.cardId`, e.cardId)
+        //     strCardIds += e.cardId + ','
+        // })
+        // console.log(`strCardIds`, strCardIds)
 
-        deleteAllFoodIntoCard(strCardIds);
+        // deleteAllFoodIntoCard(strCardIds);
+        sessionStorage.removeItem(DATA_CARD)
+        setProducts1(null)
+        setCard(0)
 
 
         setDeleteProductsDialog(false);
@@ -343,7 +369,17 @@ export const Card = ({ match }) => {
 
     const onClickHandleOrderButton = () => {
         // console.log(`selectedProducts`, selectedProducts)
-        onClick('displayBasic')
+        if (!keycloak.authenticated) {
+            keycloak.login();
+            console.log(`username`, username)
+            // let username = keycloak?.idTokenParsed?.preferred_username;
+            // if (username != undefined) {
+            //     sessionStorage.setItem('username', username)
+            // }
+        } {
+            onClick('displayBasic')
+        }
+
     }
 
     const leftToolbarTemplate = () => {
@@ -373,7 +409,7 @@ export const Card = ({ match }) => {
         if (rowData.percent === null) {
             return <span>{`0 %`}</span>
         } else {
-            return rowData.percent
+            return <span>{`${rowData.percent} %`}</span>
         }
     }
 
@@ -419,22 +455,22 @@ export const Card = ({ match }) => {
 
     const productDialogFooter = (
         <React.Fragment>
-            <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" className="p-button-text" onClick={saveProduct} />
+            <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+            <Button label="Đồng ý" icon="pi pi-check" className="p-button-text" onClick={saveProduct} />
         </React.Fragment>
     );
 
     const deleteProductDialogFooter = (
         <React.Fragment>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteProductDialog} />
-            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={deleteProduct} />
+            <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={hideDeleteProductDialog} />
+            <Button label="Đồng ý" icon="pi pi-check" className="p-button-text" onClick={deleteProduct} />
         </React.Fragment>
     );
 
     const deleteProductsDialogFooter = (
         <React.Fragment>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteProductsDialog} />
-            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={deleteSelectedProducts} />
+            <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={hideDeleteProductsDialog} />
+            <Button label="Đồng ý" icon="pi pi-check" className="p-button-text" onClick={deleteSelectedProducts} />
         </React.Fragment>
     );
 
@@ -524,6 +560,8 @@ export const Card = ({ match }) => {
             }
             console.log(`objParam`, objParam)
 
+            // console.log(`keycloak`, keycloak?.idTokenParsed);
+
             saveOrderFood(objParam)
             setSelectedProducts(null);
 
@@ -573,6 +611,11 @@ export const Card = ({ match }) => {
     // const [chooseAddress, setChooseAddress] = useState(null);
 
     const handleOnSelectedChange = (e) => {
+        console.log(`username`, username)
+        setObjOrder({
+            ...objOrder,
+            username: username
+        })
         let array = [];
         setSelectedProducts(e.value)
         e.value.forEach(element => {
@@ -585,7 +628,7 @@ export const Card = ({ match }) => {
     // console.log(`keycloak`, keycloak?.idTokenParsed)
 
     const [objOrder, setObjOrder] = useState({
-        username: keycloak?.idTokenParsed?.preferred_username,
+        username: sessionStorage.getItem('username'),
         address: '',
         phone: '',
         note: '',
@@ -704,7 +747,7 @@ export const Card = ({ match }) => {
                             <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
                             <Column field="cardId" header="Id" ></Column>
                             <Column field="name" header="Tên" ></Column>
-                            <Column field="price" header="Giá" body={priceBodyTemplate} ></Column>
+                            {/* <Column field="price" header="Giá" body={priceBodyTemplate} ></Column> */}
                             <Column field="amount" header="Số lượng" editor={(props) => amountEditor('products1', props)} ></Column>
                             <Column header="Ảnh" body={imageBodyTemplate}></Column>
 
@@ -738,7 +781,7 @@ export const Card = ({ match }) => {
                         <div className="p-field p-grid">
                             <label htmlFor="tenkhachhang" className="p-col-12 p-md-3">Tên khách hàng <span className="item-required"> *</span></label>
                             <div className="p-col-12 p-md-9">
-                                <InputText id="tenkhachhang" type="text" value={objOrder.username} onChange={handleOnChange} readOnly={true} />
+                                <InputText id="tenkhachhang" type="text" value={objOrder.username || ''} onChange={handleOnChange} readOnly={true} />
                             </div>
                         </div>
 

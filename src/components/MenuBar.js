@@ -1,14 +1,16 @@
 import { useKeycloak } from "@react-keycloak/web";
+import Axios from 'axios';
+import { Badge } from 'primereact/badge';
 import { Menubar } from "primereact/menubar";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import logo from "../asset/images/lg-order-food.png";
-import { PERMISSION_CTS, PERMISSION_ND, PERMISSION_NTK_DKHS, PERMISSION_NTK_DKNHS, PERMISSION_NTK_TCHS, PERMISSION_NTK_TKHS, PERMISSION_NT_LGNT, PERMISSION_NT_LGNTT, PERMISSION_NT_LTTS, PERMISSION_NT_TCGNT, PERMISSION_NT_TCTB, PERMISSION_NT_TCTTS, PERMISSION_QLDK, PERMISSION_TTDN, PERMISSION_VT } from "../constants/PermissionString";
-import { useRole } from "../hooks/useRole";
-import { Badge } from 'primereact/badge';
-import MenuService from "../service/MenuService";
+import { AUTHENTICATED } from "../constants/ConstantString";
+import { PERMISSION_CTS, PERMISSION_ND, PERMISSION_NTK_DKHS, PERMISSION_NTK_DKNHS, PERMISSION_NTK_TCHS, PERMISSION_NTK_TKHS, PERMISSION_QLDK, PERMISSION_TTDN, PERMISSION_VT } from "../constants/PermissionString";
+import { CardContext } from "../context/CardContext";
 import CardService from "../service/CardService";
-import Axios from 'axios';
+import MenuService from "../service/MenuService";
+
 
 
 export const MenuBar = () => {
@@ -154,14 +156,28 @@ export const MenuBar = () => {
   const service = new MenuService();
   const cardService = new CardService();
 
+  const { card, setCard } = useContext(CardContext)
+
   // console.log(`keycloak`, keycloak?.realmAccess?.roles.toString());
 
+  // console.log(`keycloak`, keycloak?.authenticated);
 
   const fetchMenuBar = async () => {
-    Axios.get(`http://localhost:8085/api/menu/byNotRole`)
+
+    // console.log(`card`, card)
+
+
+    // console.log(`keycloak.authenticated`, localStorage.getItem(AUTHENTICATED))
+
+    Axios.get(`http://localhost:8082/services/orderfood/api/menu/byWithRole`)
       .then(res => {
-        console.log(`res`, res.data)
+        // console.log(`res`, res.data)
         let result = res.data
+        // let arrayRemain = result;
+        // if (!localStorage.getItem(AUTHENTICATED)){
+        //    arrayRemain = result.filter(item => item.label !== "Hệ thống");
+        //   console.log(`arrayRemain`, arrayRemain)
+        // }
 
         if (result) {
 
@@ -187,10 +203,6 @@ export const MenuBar = () => {
                 items: arrayItems
               }
               arrayTmp.push(objHasItems)
-
-
-
-
             }
             else {
               const obj = {
@@ -204,16 +216,9 @@ export const MenuBar = () => {
           });
           setItems(arrayTmp);
         }
-
-
-
-
-
       }).catch(err => {
         console.log("Error getDistinctDmcqt()", err);
-
       })
-
   };
 
 
@@ -245,10 +250,6 @@ export const MenuBar = () => {
   //           items: arrayItems
   //         }
   //         arrayTmp.push(objHasItems)
-
-
-
-
   //       }
   //       else {
   //         const obj = {
@@ -275,12 +276,13 @@ export const MenuBar = () => {
   }
 
 
-
-
   useEffect(() => {
+    //gọi hàm fetchMenu khi đã đăng nhập
     fetchMenuBar()
-    // fetchNumberCard()
+
   }, []);
+
+
 
   // const {keycloak} = useKeycloak();
 
@@ -296,98 +298,132 @@ export const MenuBar = () => {
   const onClickLogo = () => {
     history.push('/')
   }
+
+  const handleLogin = () => {
+    keycloak.login();
+    localStorage.setItem(AUTHENTICATED, true);
+  }
+
+
+
   const start = <img alt="logo" src={logo} height="40" className="p-mr-2" onClick={onClickLogo} />;
   const end = (
-
-
-
     <ul
       className={"p-menubar-root-list menubar-right"}
       role="menubar"
     >
 
-      <li >
+      {/* <li >
         <Link to={`/card/${keycloak?.idTokenParsed?.preferred_username}`}>
           <Badge value={cardNumber} severity="danger" className="p-mr-2" />
+        </Link>
+      </li> */}
+
+      <li >
+        <Link to={`/card`}>
+          <i className="pi pi-shopping-cart p-mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '1.5rem' }}><Badge value={`${card}`} severity="danger" ></Badge></i>
         </Link>
       </li>
 
 
-      <li
-        role="none"
-        className={active ? "p-menuitem p-menuitem-active" : "p-menuitem"}
-        onMouseOver={onMouseOver}
-        onMouseOut={() => setActive(false)}
-      >
-        <span role="menuitem" className="p-menuitem-link" aria-haspopup="true">
-          <span className="p-menuitem-text">
-            {keycloak?.authenticated ? keycloak?.idTokenParsed?.name : ""}
-          </span>
-          <span className="p-submenu-icon pi pi-angle-down" />
-        </span>
-        <ul className="p-submenu-list menu-admin" role="menu">
-          <li role="none">
-            <Link
-              role="menuitem"
-              to="/list-order"
-              className="p-menuitem-link"
-              aria-haspopup="false"
-            >
-              <span className="pi pi-user" style={{ marginRight: "0.5rem" }} />
-              <span className="p-menuitem-text">Đơn hàng</span>
-            </Link>
+      {!keycloak?.authenticated &&
+        <div className="p-d-flex">
+          <li className="p-mr-2" >
+            <span onClick={() => handleLogin()}>Đăng nhập</span>
           </li>
 
-          <li role="none">
-            <Link
-              role="menuitem"
-              to="/user-infor"
-              className="p-menuitem-link"
-              aria-haspopup="false"
-            >
-              <span className="pi pi-user" style={{ marginRight: "0.5rem" }} />
-              <span className="p-menuitem-text">Thông tin</span>
-            </Link>
+          <li >
+            <span onClick={() => keycloak.register()} >Đăng ký</span>
           </li>
 
+        </div>
 
-          <li role="none"
+      }
+
+
+      {
+        !!keycloak?.authenticated && (
+          <li
+            role="none"
+            className={active ? "p-menuitem p-menuitem-active" : "p-menuitem"}
+            onMouseOver={onMouseOver}
+            onMouseOut={() => setActive(false)}
           >
-            <Link
-              to="/change-password"
-              role="menuitem"
-              className="p-menuitem-link"
-              aria-haspopup="false"
-            >
-              <span className="pi pi-key" style={{ marginRight: "0.5rem" }} />
-              <span className="p-menuitem-text" >Đổi mật khẩu</span>
-            </Link>
-          </li>
-          {!!keycloak?.authenticated && (
-            <li role="none">
-              <span
-                // href="/login"
-                role="menuitem"
-                className="p-menuitem-link"
-                aria-haspopup="false"
-                // onClick={() =>{ keycloak.logout()}}
-                onClick={handleLogout}
-              >
-                <span
-                  className="pi pi-sign-out"
-                  style={{ marginRight: "0.5rem" }}
-                />
-                <span className="p-menuitem-text">Đăng xuất</span>
+            <span role="menuitem" className="p-menuitem-link" aria-haspopup="true">
+              <span className="p-menuitem-text">
+                {keycloak?.authenticated ? keycloak?.idTokenParsed?.name : ""}
               </span>
-            </li>
-          )}
-        </ul>
-      </li>
+              <span className="p-submenu-icon pi pi-angle-down" />
+            </span>
 
-    </ul>
+            <ul className="p-submenu-list menu-admin" role="menu">
+              <li role="none">
+                <Link
+                  role="menuitem"
+                  to="/list-order"
+                  className="p-menuitem-link"
+                  aria-haspopup="false"
+                >
+                  <span className="pi pi-user" style={{ marginRight: "0.5rem" }} />
+                  <span className="p-menuitem-text">Đơn hàng</span>
+                </Link>
+              </li>
+
+              <li role="none">
+                <Link
+                  role="menuitem"
+                  to="/user-infor"
+                  className="p-menuitem-link"
+                  aria-haspopup="false"
+                >
+                  <span className="pi pi-user" style={{ marginRight: "0.5rem" }} />
+                  <span className="p-menuitem-text">Thông tin</span>
+                </Link>
+              </li>
 
 
+              <li role="none">
+                <Link
+                  to="/change-password"
+                  role="menuitem"
+                  className="p-menuitem-link"
+                  aria-haspopup="false"
+                >
+                  <span className="pi pi-key" style={{ marginRight: "0.5rem" }} />
+                  <span className="p-menuitem-text" >Đổi mật khẩu</span>
+                </Link>
+              </li>
+
+
+
+              <li role="none">
+                <span
+                  // href="/login"
+                  role="menuitem"
+                  className="p-menuitem-link"
+                  aria-haspopup="false"
+                  // onClick={() =>{ keycloak.logout()}}
+                  onClick={handleLogout}
+                >
+                  <span
+                    className="pi pi-sign-out"
+                    style={{ marginRight: "0.5rem" }}
+                  />
+                  <span className="p-menuitem-text">Đăng xuất</span>
+                </span>
+              </li>
+
+            </ul>
+          </li>
+        )
+      }
+
+
+
+    </ul >
   );
+
+
   return (
     <div>
       <div>

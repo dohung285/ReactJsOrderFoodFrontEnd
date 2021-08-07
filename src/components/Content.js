@@ -12,9 +12,11 @@ import Order from "../pages/donhang/Order";
 import TimeLineOrder from "../pages/donhang/TimeLineOrder";
 import Discount from "../pages/giamgia/Discount";
 import Card from "../pages/giohang/Card";
+import About from "../pages/gioithieu/About";
 
 
 import Home from "../pages/Home";
+import Contact from "../pages/lienhe/Contact";
 import Food from "../pages/monan/Food";
 import Account from "../pages/nguoidung/Account";
 import User from "../pages/nguoidung/User";
@@ -59,7 +61,8 @@ const Content = () => {
           <Route component={Catalog} path="/catalog/:id"  />
 
           <Route component={FoodDetail} path="/food/:id"  />
-           <Route component={Card} path="/card/:username" exact />
+           {/* <Route component={Card} path="/card/:username" exact /> */}
+           <Route component={Card} path="/card" exact />
 
            <Route component={ChangePassword} path="/change-password" exact />
            <Route component={ListOrder} path="/list-order" exact />
@@ -73,6 +76,9 @@ const Content = () => {
            <Route component={Discount} path="/discount" exact />
            <Route component={Report} path="/report" exact />
            <Route component={Order} path="/order" exact />
+
+           <Route component={About} path="/about" exact />
+           <Route component={Contact} path="/contact" exact />
 
 
           <Route component={NotFound} />

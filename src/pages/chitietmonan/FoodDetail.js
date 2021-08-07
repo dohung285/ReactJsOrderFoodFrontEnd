@@ -1,6 +1,7 @@
 
 
 import { useKeycloak } from '@react-keycloak/web';
+import axios from 'axios';
 import * as moment from "moment";
 import { Button } from 'primereact/button';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
@@ -11,9 +12,10 @@ import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Rating } from 'primereact/rating';
 import { Toast } from 'primereact/toast';
-import React, { useEffect, useRef, useState } from 'react';
-import { MESSAGE_PHONE_FORMAT_ERROR, MESSAGE_REQUIRE, NOT_NUMBER } from '../../constants/ConstantString';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { DATA_CARD, MESSAGE_PHONE_FORMAT_ERROR, MESSAGE_REQUIRE, NOT_NUMBER } from '../../constants/ConstantString';
 import { isNumber } from '../../constants/FunctionConstant';
+import { CardContext } from '../../context/CardContext';
 import CardService from '../../service/CardService';
 import CommentService from '../../service/CommentService';
 import FoodService from '../../service/FoodService';
@@ -25,6 +27,8 @@ export const FoodDetail = ({ match }) => {
     // console.log(`match`, match.params.id)
     let foodId = match.params.id;
 
+    const { card, setCard } = useContext(CardContext)
+
     const foodService = new FoodService();
     const cardService = new CardService();
     const orderService = new OrderService();
@@ -34,6 +38,8 @@ export const FoodDetail = ({ match }) => {
 
     const [valueAmount, setValueAmount] = useState(1)
     const [stars, setStars] = useState([])
+
+    // const [dataOfCard, setdataOfCard] = useState([])
 
     const [keycloak] = useKeycloak();
     const toast = useRef(null);
@@ -76,7 +82,7 @@ export const FoodDetail = ({ match }) => {
     })
 
     const [objectCommentErrors, setObjectCommentErrors] = useState({
-    
+
         rating: 0,
         comment: ''
 
@@ -89,39 +95,70 @@ export const FoodDetail = ({ match }) => {
         content: ''
     })
 
+    // const fetchFoodDetailByFoodId = async () => {
+    //     // console.log(`keycloak`, keycloak?.idTokenParsed?.preferred_username)
+    //     const result = await foodService.getFoodDetailByFoodId(foodId);
+    //     // console.log(`result`, result)
+    //     if (result?.status == 1000) {
+    //         // console.log(`có vao day`, result?.object)
+
+    //         setProducts(result?.object);
+    //         // tạo sẵn dữ liệu
+    //         const { price, percent } = result?.object;
+    //         let money = null;
+    //         if (percent === null) {
+
+    //             //th giảm giá bằng 0
+    //             money = valueAmount * price
+    //         } else {
+    //             // có giảm giá
+    //             money = (valueAmount * price) - (valueAmount * price * percent) / 100
+    //         }
+    //         //update orderDetailObj
+    //         setOrderDetailObj(
+    //             {
+    //                 ...orderDetailObj,
+    //                 money: money
+    //             }
+    //         )
+    //     }
+    // };
+
     const fetchFoodDetailByFoodId = async () => {
 
-        // console.log(`keycloak`, keycloak?.idTokenParsed?.preferred_username)
+        axios.get(`http://localhost:8082/services/orderfood/api/food/foodDetail?foodId=${foodId}`)
+            .then(res => {
+                // console.log(`res`, res?.data?.object)
+                let result = res?.data?.object
+                if (result) {
 
-        const result = await foodService.getFoodDetailByFoodId(foodId);
-        // console.log(`result`, result)
-        if (result?.status == 1000) {
-            // console.log(`có vao day`, result?.object)
+                    setProducts(result);
+                    // tạo sẵn dữ liệu
+                    const { price, percent } = result;
+                    let money = null;
+                    if (percent === null) {
 
-            setProducts(result?.object);
-
-            // tạo sẵn dữ liệu
-            const { price, percent } = result?.object;
-            let money = null;
-            if (percent === null) {
-
-                //th giảm giá bằng 0
-                money = valueAmount * price
-            } else {
-                // có giảm giá
-                money = (valueAmount * price) - (valueAmount * price * percent) / 100
-            }
-
-            //update orderDetailObj
-            setOrderDetailObj(
-                {
-                    ...orderDetailObj,
-                    money: money
+                        //th giảm giá bằng 0
+                        money = valueAmount * price
+                    } else {
+                        // có giảm giá
+                        money = (valueAmount * price) - (valueAmount * price * percent) / 100
+                    }
+                    //update orderDetailObj
+                    setOrderDetailObj(
+                        {
+                            ...orderDetailObj,
+                            money: money
+                        }
+                    )
                 }
-            )
-
-        }
+            }).catch(err => {
+                console.log("Error fetchFoodDetailByFoodId()", { ...err });
+            })
     };
+
+
+
 
     const saveOrderFood = async (objParam) => {
 
@@ -129,7 +166,7 @@ export const FoodDetail = ({ match }) => {
         // console.log(`product.cardId`, product.cardId)
 
         let result = await orderService.saveOrder(objParam);
-        console.log(`saveOrderFood`, result)
+        // console.log(`saveOrderFood`, result)
         if (result?.status === 1000) {
 
             // fetchFoodIntoCard();
@@ -138,33 +175,65 @@ export const FoodDetail = ({ match }) => {
 
     }
 
+    // const countStarAPI = async () => {
+    //     // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
+    //     // console.log(`product.cardId`, product.cardId)
+    //     let result = await commentService.countStar(foodId);
+    //     // console.log(`countStarAPI`, result)
+    //     if (result?.status === 1000) {
+    //         setStars(result?.object);
+    //     }
+
+    // }
+
     const countStarAPI = async () => {
 
-        // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
-        // console.log(`product.cardId`, product.cardId)
-
-        let result = await commentService.countStar(foodId);
-        // console.log(`countStarAPI`, result)
-        if (result?.status === 1000) {
-            setStars(result?.object);
-        }
-
+        axios.get(`http://localhost:8082/services/orderfood/api/countStar?foodId=${foodId}`)
+            .then(res => {
+                // console.log(`res`, res?.data?.object)
+                let result = res?.data?.object
+                if (result) {
+                    setStars(result);
+                }
+            }).catch(err => {
+                console.log("Error countStarAPI()", { ...err });
+            })
     }
 
-   
+
+    // const getAllCommentByFoodIdAPI = async () => {
+
+    //     // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
+    //     // console.log(`product.cardId`, product.cardId)
+
+    //     let result = await commentService.getAllCommentByFoodId(foodId);
+    //     console.log(`getAllCommentByFoodIdAPI`, result)
+    //     if (result?.status === 1000) {
+    //         setComments(result?.list)
+    //     }
+
+    // }
 
     const getAllCommentByFoodIdAPI = async () => {
 
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         // console.log(`product.cardId`, product.cardId)
-
-        let result = await commentService.getAllCommentByFoodId(foodId);
-        console.log(`getAllCommentByFoodIdAPI`, result)
-        if (result?.status === 1000) {
-            setComments(result?.list)
-        }
-
+        axios.get(`http://localhost:8082/services/orderfood/api/comment/${foodId}`)
+            .then(res => {
+                // console.log(`res`, res?.data?.list)
+                let result = res?.data?.list
+                if (result) {
+                    setComments(result)
+                }
+            }).catch(err => {
+                console.log("Error getAllCommentByFoodIdAPI()", { ...err });
+            })
     }
+
+
+
+
+
 
     const saveCommentAPI = async (dataBody) => {
 
@@ -219,29 +288,65 @@ export const FoodDetail = ({ match }) => {
     }
 
 
-    const saveCard = async () => {
+    const saveCard = async (products) => {
 
-        const cardBody = {
-            foodId: foodId,
+        // console.log(`products`, products)
+        const obj = {
+            cardId: products?.id,
+            name: products?.name,
+            price: products?.price,
             amount: valueAmount,
-            username: keycloak?.idTokenParsed?.preferred_username,
+            imagePath: products?.listImage[0],
+            percent: products.percent
         }
 
-        // console.log(`cardBody`, cardBody)
+        // Lấy ra được mảng hiện tại trong session
+        let dataCard = (sessionStorage.getItem(DATA_CARD)?.length < 0  || sessionStorage.getItem(DATA_CARD) === null || sessionStorage.getItem(DATA_CARD) === undefined )? [] : JSON.parse(sessionStorage.getItem(DATA_CARD))
+        console.log(`dataCard`, dataCard)
 
-        const result = await cardService.saveCard(cardBody);
-        // console.log(`result`, result)
-        if (result?.status == 1000) {
-            showSuccess("Thêm vào giỏ hàng thành công!")
+        // Kiểm tra xem nó đã tồn tại hay chưa nếu rồi thì update nó
+        let x = dataCard?.filter(e => e.cardId === obj.cardId);
+        if (x?.length > 0){
+            let objIndex = dataCard.findIndex((item => item.cardId == obj.cardId));
+            console.log(`objIndex`, objIndex)
+            //update
+            dataCard[objIndex] = obj
+            console.log(`after dataCard`, dataCard)
+        }else{
+            dataCard.push(obj)
+            setCard(1 + card)
         }
+
+        sessionStorage.setItem(DATA_CARD, JSON.stringify(dataCard))
+
+       
+
+        // if (!keycloak.authenticated) {
+        //     keycloak.login();
+        // } else {
+
+        // const cardBody = {
+        //     foodId: foodId,
+        //     amount: valueAmount,
+        //     username: keycloak?.idTokenParsed?.preferred_username,
+        // }
+        // const result = await cardService.saveCard(cardBody);
+        // // console.log(`result`, result)
+        // if (result?.status == 1000) {
+        //     showSuccess("Thêm vào giỏ hàng thành công!")
+        // }
+
+        // }
+
     };
 
     const onByProduct = () => {
-        // console.log(`products`, products)
-        // console.log(`orderDetailObj`, orderDetailObj)
-        // console.log(`orderObj`, orderObj)
+        if (!keycloak.authenticated) {
+            keycloak.login();
+        } else {
+            setDisplayBasic(true)
+        }
 
-        setDisplayBasic(true)
 
     }
 
@@ -265,6 +370,8 @@ export const FoodDetail = ({ match }) => {
         images[index].className = "active";
     };
 
+    let dataOfCard = [];
+
     useEffect(() => {
         if (products?.listImage) {
             // console.log(`products?.listImage[0]`, products?.listImage[0])
@@ -275,6 +382,8 @@ export const FoodDetail = ({ match }) => {
         fetchFoodDetailByFoodId();
         countStarAPI();
         getAllCommentByFoodIdAPI()
+
+
         // myRef.current.children[index].className = "active";
 
     }, [])
@@ -676,8 +785,12 @@ export const FoodDetail = ({ match }) => {
     const header = renderHeader();
 
     const handleOnCommet = () => {
-        //    keycloak.logout();
-        setDisplayComment(true)
+        if (!keycloak.authenticated) {
+            keycloak.login();
+        } else {
+            setDisplayComment(true)
+        }
+
     }
 
 
@@ -713,7 +826,7 @@ export const FoodDetail = ({ match }) => {
                             <InputNumber inputId="minmax-buttons" value={valueAmount} onValueChange={e => onChangeAmount(e)} mode="decimal" showButtons min={0} max={20} />
                         </div>
 
-                        <Button icon="pi pi-shopping-cart" label="Giỏ hàng" style={{ marginRight: '30px' }} onClick={() => saveCard()}></Button>
+                        <Button icon="pi pi-shopping-cart" label="Giỏ hàng" style={{ marginRight: '30px' }} onClick={() => saveCard(products)}></Button>
                         <Button icon="pi pi-shopping-cart" label="Mua ngay" onClick={() => onByProduct()} ></Button>
                     </div>
                 </div>
