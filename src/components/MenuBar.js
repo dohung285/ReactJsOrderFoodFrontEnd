@@ -1,5 +1,6 @@
 import { useKeycloak } from "@react-keycloak/web";
 import Axios from 'axios';
+import { includes } from "lodash";
 import { Badge } from 'primereact/badge';
 import { Menubar } from "primereact/menubar";
 import React, { useContext, useEffect, useState } from "react";
@@ -10,6 +11,7 @@ import { PERMISSION_CTS, PERMISSION_ND, PERMISSION_NTK_DKHS, PERMISSION_NTK_DKNH
 import { CardContext } from "../context/CardContext";
 import CardService from "../service/CardService";
 import MenuService from "../service/MenuService";
+import PermissionService from "../service/PermissionService";
 
 
 
@@ -152,15 +154,29 @@ export const MenuBar = () => {
   const [keycloak] = useKeycloak();
 
   const [cardNumber, setCardNumber] = useState(0)
+  const [arrayPermissionOfUser, setArrayPermissionOfUser] = useState([])
 
   const service = new MenuService();
   const cardService = new CardService();
+  const permissionService = new PermissionService();
 
   const { card, setCard } = useContext(CardContext)
 
   // console.log(`keycloak`, keycloak?.realmAccess?.roles.toString());
 
-  // console.log(`keycloak`, keycloak?.authenticated);
+  // console.log(`keycloak`, keycloak);
+
+
+  const fetchAllNameOfSystemByUsernameAPI = async (username) => {
+    let result = await permissionService.getAllNameOfSystemByUsername(username);
+    console.log(`fetchAllNameOfSystemByUsernameAPI`, result)
+    if (result?.status === 1000) {
+      // console.log(`object`, result?.list)
+      setArrayPermissionOfUser(result?.list)
+      return result?.list
+    }
+    return null
+  }
 
   const fetchMenuBar = async () => {
 
@@ -173,29 +189,64 @@ export const MenuBar = () => {
       .then(res => {
         // console.log(`res`, res.data)
         let result = res.data
-        // let arrayRemain = result;
-        // if (!localStorage.getItem(AUTHENTICATED)){
-        //    arrayRemain = result.filter(item => item.label !== "Hệ thống");
-        //   console.log(`arrayRemain`, arrayRemain)
-        // }
 
-        if (result) {
+        let arrayRemain = result;
+        if (!keycloak?.authenticated) {
+          arrayRemain = result.filter(item => item.label !== "Hệ thống");
+          // console.log(`arrayRemain`, arrayRemain)
+
+        } else {
+          // fetchAllNameOfSystemByUsernameAPI(keycloak?.idTokenParsed?.preferred_username)
+        }
+
+
+
+        if (arrayRemain) {
 
           let arrayTmp = [];
-          let x = result.forEach(element => {
+          let x = arrayRemain.forEach(element => {
             // console.log(`element`, element)
             let arrayItems = []
             if (element.label !== 'Trang chủ' && element.label !== 'Giới thiệu' && element.label !== 'Liên hệ') {
-              const y = element?.items.forEach(item => {
-                // console.log(`items`, item)
-                const objItems = {
-                  icon: item.icon,
-                  label: item.label,
-                  command: () => history.push(`${item.command}`)
-                }
-                // console.log(`objItems`, objItems)
-                arrayItems.push(objItems)
-              })
+
+              if (element.label === 'Hệ thống' && keycloak?.authenticated && keycloak?.idTokenParsed?.preferred_username !== 'hungdx') {
+                // console.log("chuẩn")
+                // console.log(`element?.items`, element?.items)
+
+                fetchAllNameOfSystemByUsernameAPI(keycloak?.idTokenParsed?.preferred_username).then(data => {
+                  console.log(`data`, data)
+
+                  const filteredArray = element?.items.filter(value => data.includes(value.label));
+                  console.log(`filteredArray`, filteredArray)
+
+
+                  const y = filteredArray.forEach(item => {
+                    // console.log(`items`, item)
+                    const objItems = {
+                      icon: item.icon,
+                      label: item.label,
+                      command: () => history.push(`${item.command}`)
+                    }
+                    // console.log(`objItems`, objItems)
+                    arrayItems.push(objItems)
+                  })
+                })
+
+              } else {
+                const y = element?.items.forEach(item => {
+                  // console.log(`items`, item)
+                  const objItems = {
+                    icon: item.icon,
+                    label: item.label,
+                    command: () => history.push(`${item.command}`)
+                  }
+                  // console.log(`objItems`, objItems)
+                  arrayItems.push(objItems)
+                })
+              }
+
+
+
 
               const objHasItems = {
                 icon: element.icon,
@@ -205,6 +256,7 @@ export const MenuBar = () => {
               arrayTmp.push(objHasItems)
             }
             else {
+
               const obj = {
                 icon: element.icon,
                 label: element.label,
@@ -214,6 +266,7 @@ export const MenuBar = () => {
               arrayTmp.push(obj)
             }
           });
+
           setItems(arrayTmp);
         }
       }).catch(err => {
@@ -280,7 +333,7 @@ export const MenuBar = () => {
     //gọi hàm fetchMenu khi đã đăng nhập
     fetchMenuBar()
 
-  }, []);
+  }, [keycloak.authenticated]);
 
 
 

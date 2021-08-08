@@ -70,12 +70,12 @@ const Content = () => {
 
            <Route component={UserInfor} path="/user-infor" exact />
 
-           <Route component={Food} path="/food" exact />
-           <Route component={FoodGroup} path="/food-group" exact />
-           <Route component={Rating} path="/rating" exact />
-           <Route component={Discount} path="/discount" exact />
-           <Route component={Report} path="/report" exact />
-           <Route component={Order} path="/order" exact />
+           <PrivateRoute roles={['admin']} component={Food} path="/food" exact />
+           <PrivateRoute roles={['admin']} component={FoodGroup} path="/food-group" exact />
+           <PrivateRoute roles={['admin']} component={Rating} path="/rating" exact />
+           <PrivateRoute roles={['admin']} component={Discount} path="/discount" exact />
+           <PrivateRoute roles={['admin']} component={Report} path="/report" exact />
+           <PrivateRoute roles={['admin']} component={Order} path="/order" exact />
 
            <Route component={About} path="/about" exact />
            <Route component={Contact} path="/contact" exact />

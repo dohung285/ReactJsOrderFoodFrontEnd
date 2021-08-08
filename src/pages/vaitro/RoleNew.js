@@ -297,7 +297,7 @@ const RoleNew = () => {
 
 
     const editRole = (product) => {
-        console.log(`product`, product)
+        // console.log(`product`, product)
 
         if (product.hasRoleAdmin) {
             fetchAllPermissionOfUser(product.username)
