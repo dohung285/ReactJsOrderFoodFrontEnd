@@ -1,6 +1,7 @@
 
 
 
+import { useKeycloak } from "@react-keycloak/web";
 import * as moment from "moment";
 import { Button } from 'primereact/button';
 import { Calendar } from 'primereact/calendar';
@@ -13,9 +14,20 @@ import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import React, { useEffect, useRef, useState } from 'react';
 import Moment from "react-moment";
+import { useHistory } from "react-router-dom";
+import { ACTION_DELETE, EXPRITIME_HIDER_LOADER, NOT_PERMISSION } from "../../constants/ConstantString";
+import useFullPageLoader from "../../hooks/useFullPageLoader";
 import CommentService from "../../service/CommentService";
+import PermissionService from "../../service/PermissionService";
 
 const Rating = () => {
+
+    const [loader, showLoader, hideLoader] = useFullPageLoader();
+
+    const history = useHistory();
+    const [keycloak] = useKeycloak();
+
+    const permissionService = new PermissionService();
 
     const toast = useRef(null);
     const dt = useRef(null);
@@ -33,6 +45,14 @@ const Rating = () => {
     const [txtName, setTxtName] = useState(null);
     const [date16, setDate16] = useState(null);
     const [value4, setValue4] = useState(50);
+
+    const showSuccess = (message) => {
+        toast.current.show({ severity: 'success', summary: 'Success Message', detail: message, life: 3000 });
+    }
+
+    const showError = (message) => {
+        toast.current.show({ severity: 'error', summary: 'Error Message', detail: message, life: 10000 });
+    }
 
 
     
@@ -108,11 +128,20 @@ const Rating = () => {
         // setDataOrder(array)
     }
 
+    const handleDeleteComment = async (rowData) => {
+        let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_DELETE);
+        if (result?.status === 1000) {
+            confirmDeleteProduct(rowData)
+        } else {
+            showError(NOT_PERMISSION)
+        }
+    }
+
     const actionBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
                 {/* <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2" onClick={() => editProduct(rowData)} /> */}
-                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => confirmDeleteProduct(rowData)} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => handleDeleteComment(rowData)} />
             </React.Fragment>
         );
     }
@@ -152,8 +181,8 @@ const Rating = () => {
 
     const deleteProductDialogFooter = (
         <React.Fragment>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteProductDialog} />
-            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={deleteProduct} />
+            <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={hideDeleteProductDialog} />
+            <Button label="Xác nhận" icon="pi pi-check" className="p-button-text" onClick={deleteProduct} />
         </React.Fragment>
     );
 
@@ -192,12 +221,14 @@ const Rating = () => {
     }
 
     const fetchDiscount = async () => {
+        showLoader()
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         let result = await commentService.getAll();
         // console.log(`result`, result)
         if (result?.status === 1000) {
             setProducts(result?.list)
         }
+        setTimeout(hideLoader, EXPRITIME_HIDER_LOADER);
     }
 
     const deleteFoodGroup = async () => {
@@ -355,7 +386,7 @@ const Rating = () => {
                 </Dialog>
 
 
-                <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
+                <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Xác nhận" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
                     <div className="confirmation-content">
                         <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
                         {/* {product && <span>Bạn có chắc chắn muốn xóa <b>{product.name}</b>?</span>} */}
@@ -366,6 +397,7 @@ const Rating = () => {
 
 
             </div>
+            {loader}
         </div>
     )
 }

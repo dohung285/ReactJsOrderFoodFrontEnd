@@ -1,5 +1,6 @@
 
 
+import { useKeycloak } from '@react-keycloak/web';
 import { forEach } from 'lodash';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
@@ -14,16 +15,23 @@ import { Toolbar } from 'primereact/toolbar';
 import { Tooltip } from 'primereact/tooltip';
 import React, { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { MESSAGE_REQUIRE, NOT_NUMBER } from '../../constants/ConstantString';
+import { ACTION_ADD, EXPRITIME_HIDER_LOADER, MESSAGE_REQUIRE, NOT_NUMBER } from '../../constants/ConstantString';
 import { isNumber } from '../../constants/FunctionConstant';
+import useFullPageLoader from '../../hooks/useFullPageLoader';
 import FoodGroupService from '../../service/FoodGroupService';
 import FoodService, { saveFood } from '../../service/FoodService';
+import PermissionService from '../../service/PermissionService';
 
 import './Food.css'
 
 export const Food = () => {
 
+    const [loader, showLoader, hideLoader] = useFullPageLoader();
+
     const history = useHistory();
+    const [keycloak] = useKeycloak();
+
+    const permissionService = new PermissionService();
 
     const toast = useRef(null);
     const fileUploadRef = useRef(null);
@@ -132,12 +140,14 @@ export const Food = () => {
     const foodService = new FoodService();
 
     const getAllFoodGroupAPI = async () => {
+        showLoader()
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         let result = await foodGroupService.getAllFoodGroup();
         // console.log(`result`, result)
         if (result?.status === 1000) {
             setFoodGroup(result?.list)
         }
+        setTimeout(hideLoader, EXPRITIME_HIDER_LOADER);
     }
 
     useEffect(() => {
@@ -223,7 +233,7 @@ export const Food = () => {
         return (
             <div className="p-d-flex p-ai-center p-flex-wrap">
                 <div className="p-d-flex p-ai-center" style={{ width: '40%' }}>
-                    <img alt={file.name} role="presentation" src={file.objectURL} width={50}  />
+                    <img alt={file.name} role="presentation" src={file.objectURL} width={50} />
                     <span className="p-d-flex p-dir-col p-text-left p-ml-3">
                         {file.name}
                         <small>{new Date().toLocaleDateString()}</small>
@@ -317,41 +327,43 @@ export const Food = () => {
     }
 
 
-    //Đây
-    const handleSaveFood = () => {
 
-        if (formValidation()) {
-            // console.log(`handleSaveFood`, totalSize)
-            // console.log(`arrayImage`, arrayImage)
+    const handleSaveFood = async () => {
 
-            try {
-                let formData = new FormData();
-                formData.append("files", arrayImage[0]);
-                formData.append("files", arrayImage[1]);
-                formData.append("files", arrayImage[2]);
-                formData.append("files", arrayImage[3]);
+        let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_ADD);
+        if (result?.status === 1000) {
+            if (formValidation()) {
+                // console.log(`handleSaveFood`, totalSize)
+                // console.log(`arrayImage`, arrayImage)
 
-                formData.append("name", objectSave.name);
-                formData.append("price", objectSave.price);
-                formData.append("groupId", selectedFoodGroup?.id);
-                formData.append("desciption", objectSave.description);
+                try {
+                    let formData = new FormData();
+                    formData.append("files", arrayImage[0]);
+                    formData.append("files", arrayImage[1]);
+                    formData.append("files", arrayImage[2]);
+                    formData.append("files", arrayImage[3]);
+
+                    formData.append("name", objectSave.name);
+                    formData.append("price", objectSave.price);
+                    formData.append("groupId", selectedFoodGroup?.id);
+                    formData.append("desciption", objectSave.description);
 
 
-                // formData.append("name", 'a');
-                // formData.append("price", 100);
-                // formData.append("groupId", 11);
-                // formData.append("desciption", 'aaaaaaaaaaaaaaa');
+                    // formData.append("name", 'a');
+                    // formData.append("price", 100);
+                    // formData.append("groupId", 11);
+                    // formData.append("desciption", 'aaaaaaaaaaaaaaa');
 
-                saveFoodAPI(formData);
-            } catch (e) {
-                console.log(`e`, e)
+                    saveFoodAPI(formData);
+                } catch (e) {
+                    console.log(`e`, e)
+                }
             }
-
-
-
-            // history.push('/')
-            // console.log(`selectedFoodGroup`, selectedFoodGroup)
+        } else {
+            showError("Bạn không có quyền")
         }
+
+
     }
 
     const handleOnChange = (e) => {
@@ -574,14 +586,14 @@ export const Food = () => {
 
 
 
-                        <Button label="Save" onClick={handleSaveFood} className="p-mr-6 p-ml-6 p-d-inline" />
+                        <Button label="Thêm" onClick={handleSaveFood} className="p-mr-6 p-ml-6 p-d-inline" />
 
                     </div>
                 </div>
             </div>
 
 
-
+            {loader}
         </div>
 
     )

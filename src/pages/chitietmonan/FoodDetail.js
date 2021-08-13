@@ -933,6 +933,7 @@ export const FoodDetail = ({ match }) => {
                             rows={5}
                             sortOrder={sortOrder}
                             sortField={sortField}
+                            emptyMessage= "Không có dữ liệu"
                         />
                     </div>
                 </div>

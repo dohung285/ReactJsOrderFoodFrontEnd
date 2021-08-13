@@ -7,6 +7,8 @@ import { Dropdown } from 'primereact/dropdown';
 import { Rating } from 'primereact/rating';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { EXPRITIME_HIDER_LOADER } from '../../constants/ConstantString';
+import useFullPageLoader from '../../hooks/useFullPageLoader';
 import CatalogService from '../../service/CatalogService';
 // import '../danhmuc/Catalog.css'
 import './Catalog.css';
@@ -15,6 +17,9 @@ import './Catalog.css';
 export const Catalog = ({ match }) => {
     // console.log(`match`, match.params.id)
     let idCatalog = match.params.id;
+
+
+    const [loader, showLoader, hideLoader] = useFullPageLoader();
 
     // const {card,setCard}  =  useContext(CardContext)
 
@@ -25,12 +30,13 @@ export const Catalog = ({ match }) => {
     const [sortOrder, setSortOrder] = useState(null);
     const [sortField, setSortField] = useState(null);
     const sortOptions = [
-        { label: 'Price High to Low', value: '!price' },
-        { label: 'Price Low to High', value: 'price' },
+        { label: 'Cao đến thấp', value: '!price' },
+        { label: 'Thấp đến cao', value: 'price' },
     ];
 
 
     const fetchFoodByFoodGroup = async () => {
+        showLoader();
 
         axios.get(`http://localhost:8082/services/orderfood/api/food/byFoodGroup?foodGroupId=${idCatalog}`)
             .then(res => {
@@ -42,6 +48,8 @@ export const Catalog = ({ match }) => {
             }).catch(err => {
                 console.log("Error fetchFoodByFoodGroup()", { ...err });
             })
+
+            setTimeout(hideLoader, EXPRITIME_HIDER_LOADER);
 
 
 
@@ -113,7 +121,7 @@ export const Catalog = ({ match }) => {
             </div>
         );
     }
-   
+
 
     const renderGridItem = (data) => {
         return (
@@ -167,11 +175,11 @@ export const Catalog = ({ match }) => {
         return (
             <div className="p-grid p-nogutter">
                 <div className="p-col-6" style={{ textAlign: 'left' }}>
-                    <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Sort By Price" onChange={onSortChange} />
+                    <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Sắp xếp theo giá" onChange={onSortChange} />
                 </div>
-                <div className="p-col-6" style={{ textAlign: 'right' }}>
+                {/* <div className="p-col-6" style={{ textAlign: 'right' }}>
                     <DataViewLayoutOptions layout={layout} onChange={(e) => setLayout(e.value)} />
-                </div>
+                </div> */}
             </div>
         );
     }
@@ -193,15 +201,23 @@ export const Catalog = ({ match }) => {
 
             <div className="dataview-demo">
                 <div className="card">
-                    <DataView value={data} layout={layout} header={header}
-                        itemTemplate={itemTemplate} paginator rows={5}
-                        sortOrder={sortOrder} sortField={sortField} />
+                    <DataView
+                        value={data}
+                        layout={layout}
+                        header={header}
+                        itemTemplate={itemTemplate}
+                        paginator
+                        rows={8}
+                        sortOrder={sortOrder}
+                        sortField={sortField}
+                        emptyMessage="Không có dữ liệu"
+                    />
                 </div>
             </div>
 
 
 
-
+            {loader}
         </div>
     )
 }

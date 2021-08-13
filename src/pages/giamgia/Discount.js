@@ -18,14 +18,24 @@ import { Toast } from 'primereact/toast';
 import FoodService from '../../service/FoodService';
 
 import './Discount.css'
-import { MESSAGE_REQUIRE, MESSAGE_REQUIRE_PERCENT_LONHON_0 } from '../../constants/ConstantString';
+import { ACTION_ADD, ACTION_CREATE, ACTION_DELETE, ACTION_EDIT, EXPRITIME_HIDER_LOADER, MESSAGE_REQUIRE, MESSAGE_REQUIRE_PERCENT_LONHON_0, NOT_PERMISSION } from '../../constants/ConstantString';
+import PermissionService from '../../service/PermissionService';
+import { useKeycloak } from '@react-keycloak/web';
+import { useHistory } from 'react-router-dom';
+import useFullPageLoader from '../../hooks/useFullPageLoader';
 
 const Discount = () => {
+
+    const [loader, showLoader, hideLoader] = useFullPageLoader();
 
     const toast = useRef(null);
     const dt = useRef(null);
     const dtDiscount = useRef(null);
     const dtUpdateDiscount = useRef(null);
+
+    const history = useHistory();
+    const permissionService = new PermissionService();
+    const [keycloak] = useKeycloak();
 
 
 
@@ -289,11 +299,20 @@ const Discount = () => {
         // setDataOrder(array)
     }
 
+    const handleDeleteDiscount = async (rowData) => {
+        let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_DELETE);
+        if (result?.status === 1000) {
+            confirmDeleteProduct(rowData)
+        } else {
+            showError(NOT_PERMISSION)
+        }
+    }
+
     const actionBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
                 {/* <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2" onClick={() => editProduct(rowData)} /> */}
-                <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => confirmDeleteProduct(rowData)} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => handleDeleteDiscount(rowData)} />
             </React.Fragment>
         );
     }
@@ -349,12 +368,34 @@ const Discount = () => {
         </React.Fragment>
     );
 
+
+
+
+
+    const handleAddDiscount = async () => {
+        let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_ADD);
+        if (result?.status === 1000) {
+            seTdiscountDialog(true)
+        } else {
+            showError(NOT_PERMISSION)
+        }
+    }
+
+    const handleEditDiscount = async () => {
+        let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_EDIT);
+        if (result?.status === 1000) {
+            seTupdadteDiscountDialog(true)
+        } else {
+            showError(NOT_PERMISSION)
+        }
+    }
+
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
                 <Button label="Thêm" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={onClickHandleOrderButton} />
-                <Button label="Tạo giảm giá" icon="pi pi-check-circle" className="p-button-warning p-mr-2" onClick={() => seTdiscountDialog(true)} />
-                <Button label="Sửa giảm giá" icon="pi pi-pencil" className="p-button-help p-mr-2" onClick={() => seTupdadteDiscountDialog(true)} />
+                <Button label="Tạo giảm giá" icon="pi pi-check-circle" className="p-button-warning p-mr-2" onClick={() => handleAddDiscount()} />
+                <Button label="Sửa giảm giá" icon="pi pi-pencil" className="p-button-help p-mr-2" onClick={() => handleEditDiscount()} />
             </React.Fragment>
         )
     }
@@ -372,10 +413,13 @@ const Discount = () => {
 
     }
 
-    const onClickHandleOrderButton = () => {
-        // console.log(`selectedProducts`, selectedProducts)
-        // onClick('displayBasic')
-        openNew();
+    const onClickHandleOrderButton = async () => {
+        let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_CREATE);
+        if (result?.status === 1000) {
+            openNew();
+        } else {
+            showError(NOT_PERMISSION)
+        }
     }
 
 
@@ -386,39 +430,47 @@ const Discount = () => {
     }
 
     const fetchDiscount = async () => {
+        showLoader()
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         let result = await discountService.getAll();
         // console.log(`result`, result)
         if (result?.status === 1000) {
             setProducts(result?.list)
         }
+        setTimeout(hideLoader, EXPRITIME_HIDER_LOADER);
     }
 
     const fetchFoodForDiscountAPI = async () => {
+        showLoader()
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         let result = await foodService.getAllFoodForDiscount();
         // console.log(`result`, result)
         if (result?.status === 1000) {
             setFoodForDiscount(result?.list)
         }
+        setTimeout(hideLoader, EXPRITIME_HIDER_LOADER);
     }
 
     const fetchFoodHadDiscountAPI = async () => {
+        showLoader()
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         let result = await foodService.getAllFoodHadDiscount();
         console.log(`fetchFoodHadDiscountAPI`, result)
         if (result?.status === 1000) {
             setUpdateFoodForDiscount(result?.list)
         }
+        setTimeout(hideLoader, EXPRITIME_HIDER_LOADER);
     }
 
     const fetchAllDiscountAPI = async () => {
+        showLoader()
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         let result = await discountService.getAllForFood();
         // console.log(`result`, result)
         if (result?.status === 1000) {
             setDiscountDropdown(result?.list)
         }
+        setTimeout(hideLoader, EXPRITIME_HIDER_LOADER);
     }
 
     const addDiscountIdToFoodsAPI = async (dataBody) => {
@@ -509,7 +561,7 @@ const Discount = () => {
                     }
                 )
                 fetchDiscount();
-            }else{
+            } else {
                 showError(result?.message)
             }
             setProductDialog(false);
@@ -844,7 +896,7 @@ const Discount = () => {
                     header="Thêm nhóm món ăn" modal className="p-fluid"
                     footer={productDialogFooter} onHide={hideDialog}>
                     <div className="p-field">
-                        <label htmlFor="name">Tên <span className="item-required"> *</span> </label>
+                        <label htmlFor="name">Tên <span className="item-required">*</span> </label>
                         <InputText
                             className={Object.keys(objecErrors.name).length > 0 ? "error" : null}
                             id="name"
@@ -1042,6 +1094,7 @@ const Discount = () => {
 
 
             </div>
+            {loader}
         </div>
     )
 }

@@ -19,8 +19,8 @@ class FoodGroupService extends FetchAPI {
         return await this.request(url, dataBody, TypeMethodConstantEnum.POST);
     }
 
-    async deleteFoodGroupById() {
-        let url = `${PREFIX_URL_ORDERFOOD}/foodGroup`;
+    async deleteFoodGroupById(foodGroupId) {
+        let url = `${PREFIX_URL_ORDERFOOD}/foodGroup/${foodGroupId}`;
         return await this.request(url, null, TypeMethodConstantEnum.DELETE);
     }
 

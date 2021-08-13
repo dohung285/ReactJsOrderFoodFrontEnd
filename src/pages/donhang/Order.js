@@ -14,8 +14,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import Moment from "react-moment";
 import OrderStatusService from "../../service/OrderStatusService";
 import { RadioButton } from 'primereact/radiobutton';
+import { useHistory } from "react-router-dom";
+import PermissionService from "../../service/PermissionService";
+import { useKeycloak } from "@react-keycloak/web";
+import { ACTION_DELETE, ACTION_EDIT, EXPRITIME_HIDER_LOADER, NOT_PERMISSION } from "../../constants/ConstantString";
+import useFullPageLoader from "../../hooks/useFullPageLoader";
 
 const Order = () => {
+
+    const [loader, showLoader, hideLoader] = useFullPageLoader();
+
+
     const toast = useRef(null);
     const dt = useRef(null);
     const [products, setProducts] = useState(null);
@@ -34,6 +43,10 @@ const Order = () => {
         null
     )
 
+
+    const history = useHistory();
+    const permissionService = new PermissionService();
+    const [keycloak] = useKeycloak();
 
 
 
@@ -111,10 +124,28 @@ const Order = () => {
         // setDataOrder(array)
     }
 
-    const editProduct = (product) => {
-        console.log(`product`, product)
-        setOrderObject(product)
-        setProductDialog(true);
+    const showSuccess = (message) => {
+        toast.current.show({ severity: 'success', summary: 'Success Message', detail: message, life: 3000 });
+    }
+
+    const showError = (message) => {
+        toast.current.show({ severity: 'error', summary: 'Error Message', detail: message, life: 10000 });
+    }
+
+
+    const editProduct = async (product) => {
+
+        let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_EDIT);
+        if (result?.status === 1000) {
+            // console.log(`product`, product)
+            setOrderObject(product)
+            setProductDialog(true);
+        } else {
+            showError(NOT_PERMISSION)
+        }
+
+
+        
     }
 
     const actionBodyTemplate = (rowData) => {
@@ -201,12 +232,14 @@ const Order = () => {
     }
 
     const fetchDiscount = async () => {
+        showLoader()
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         let result = await orderStatusService.getAll();
         // console.log(`result`, result)
         if (result?.status === 1000) {
             setProducts(result?.list)
         }
+        setTimeout(hideLoader, EXPRITIME_HIDER_LOADER);
     }
 
     const deleteFoodGroup = async () => {
@@ -411,6 +444,7 @@ const Order = () => {
 
 
             </div>
+            {loader}
         </div>
     )
 }

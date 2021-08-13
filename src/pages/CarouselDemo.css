@@ -8,7 +8,9 @@
 
 .carousel-demo .product-item .product-image {
     width: 50%;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    box-shadow: 0 3px 6px rgb(0 0 0 / 16%), 0 3px 6px rgb(0 0 0 / 23%);
+    width: 171px;
+    height: 171px;
 }
 
 .product-item {
@@ -18,3 +20,4 @@
 .product-item-content {
     height: 95%;
 }
+

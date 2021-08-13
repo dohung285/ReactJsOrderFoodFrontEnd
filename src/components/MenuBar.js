@@ -6,9 +6,10 @@ import { Menubar } from "primereact/menubar";
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import logo from "../asset/images/lg-order-food.png";
-import { AUTHENTICATED } from "../constants/ConstantString";
+import { AUTHENTICATED, EXPRITIME_HIDER_LOADER } from "../constants/ConstantString";
 import { PERMISSION_CTS, PERMISSION_ND, PERMISSION_NTK_DKHS, PERMISSION_NTK_DKNHS, PERMISSION_NTK_TCHS, PERMISSION_NTK_TKHS, PERMISSION_QLDK, PERMISSION_TTDN, PERMISSION_VT } from "../constants/PermissionString";
 import { CardContext } from "../context/CardContext";
+import useFullPageLoader from "../hooks/useFullPageLoader";
 import CardService from "../service/CardService";
 import MenuService from "../service/MenuService";
 import PermissionService from "../service/PermissionService";
@@ -16,6 +17,9 @@ import PermissionService from "../service/PermissionService";
 
 
 export const MenuBar = () => {
+
+
+  const [loader, showLoader, hideLoader] = useFullPageLoader();
 
   let history = useHistory();
   function handleLogout() {
@@ -180,6 +184,7 @@ export const MenuBar = () => {
 
   const fetchMenuBar = async () => {
 
+    showLoader()
     // console.log(`card`, card)
 
 
@@ -272,6 +277,8 @@ export const MenuBar = () => {
       }).catch(err => {
         console.log("Error getDistinctDmcqt()", err);
       })
+
+      setTimeout(hideLoader,EXPRITIME_HIDER_LOADER)
   };
 
 
@@ -482,6 +489,7 @@ export const MenuBar = () => {
       <div>
         <Menubar model={items} start={start} end={end} />
       </div>
+      {loader}
     </div>
   );
 };

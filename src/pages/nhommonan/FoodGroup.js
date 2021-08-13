@@ -6,14 +6,19 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
+import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
+import { EXPRITIME_HIDER_LOADER, MESSAGE_REQUIRE } from '../../constants/ConstantString';
+import useFullPageLoader from '../../hooks/useFullPageLoader';
 import FoodGroupService from '../../service/FoodGroupService';
 // import { classNames } from 'primereact/utils';
 
 
 
 export const FoodGroup = () => {
+
+    const [loader, showLoader, hideLoader] = useFullPageLoader();
 
     const toast = useRef(null);
     const dt = useRef(null);
@@ -29,6 +34,43 @@ export const FoodGroup = () => {
     const foodGroupService = new FoodGroupService();
     const [productDialog, setProductDialog] = useState(false);
     const [txtName, setTxtName] = useState(null);
+
+    //errors
+    const [objecErrors, setObjecErrors] = useState({
+        name: {}
+    })
+
+
+    const showSuccess = (message) => {
+        toast.current.show({ severity: 'success', summary: 'Success Message', detail: message, life: 3000 });
+    }
+
+    const showError = (message) => {
+        toast.current.show({ severity: 'error', summary: 'Error Message', detail: message, life: 10000 });
+    }
+
+
+    const formValidation = () => {
+
+        const nameErrors = {}
+
+        let isValid = true;
+
+        // name
+        if (txtName === null) {
+            nameErrors.required = MESSAGE_REQUIRE;
+            isValid = false;
+        }
+
+        setObjecErrors(
+            {
+                ...objecErrors,
+                name: nameErrors
+            }
+        )
+
+        return isValid;
+    }
 
 
     const handleOnSelectedChange = (e) => {
@@ -51,15 +93,13 @@ export const FoodGroup = () => {
     }
 
     const deleteProduct = () => {
-        // let _products = products.filter(val => val.id !== product.id);
-        // setProduct(_products);
-        // console.log(`productDelete`, product)
 
-        // deleteFoodIntoCard();
+        deleteFoodGroup();
 
         setDeleteProductDialog(false);
         // setProduct(emptyProduct);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Xóa sản phẩm khỏi giỏ hàng thành công', life: 3000 });
+        // toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Xóa sản phẩm khỏi giỏ hàng thành công', life: 3000 });
+        showSuccess('Xóa thành công!')
     }
 
     const hideDeleteProductDialog = () => {
@@ -68,8 +108,8 @@ export const FoodGroup = () => {
 
     const deleteProductDialogFooter = (
         <React.Fragment>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteProductDialog} />
-            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={deleteProduct} />
+            <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={hideDeleteProductDialog} />
+            <Button label="Đồng ý" icon="pi pi-check" className="p-button-text" onClick={deleteProduct} />
         </React.Fragment>
     );
 
@@ -107,23 +147,25 @@ export const FoodGroup = () => {
     }
 
     const fetchFoodGroup = async () => {
+        showLoader();
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         let result = await foodGroupService.getAllFoodGroup();
         // console.log(`result`, result)
         if (result?.status === 1000) {
             setProducts(result?.list)
         }
+        setTimeout(hideLoader, EXPRITIME_HIDER_LOADER);
     }
 
     const deleteFoodGroup = async () => {
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
-        // let result = await foodGroupService.deleteFoodIntoCardByUsername(product.cardId);
-        // // console.log(`result`, result)
-        // if (result?.status === 1000) {
-        //     // setData(result?.response.listReturn)
-        //     setProductDeleteSelected({})
-        //     fetchFoodGroup();
-        // }
+        let result = await foodGroupService.deleteFoodGroupById(productDeleteSelected?.id);
+        // console.log(`result`, result)
+        if (result?.status === 1000) {
+            // setData(result?.response.listReturn)
+            setProductDeleteSelected({})
+            fetchFoodGroup();
+        }
     }
 
     const openNew = () => {
@@ -142,19 +184,24 @@ export const FoodGroup = () => {
     }
     const saveFoodGroup = async () => {
 
-        const dataBody = {
-            name: txtName
+        if (formValidation()) {
+
+            const dataBody = {
+                name: txtName
+            }
+
+            let result = await foodGroupService.saveFoodGroup(dataBody);
+            // console.log(`result`, result)
+            if (result?.status === 1000) {
+                // setTxtName(null);
+                fetchFoodGroup();
+            }
+
+            setProductDialog(false);
+
         }
 
-        let result = await foodGroupService.saveFoodGroup(dataBody);
-        // console.log(`result`, result)
-        if (result?.status === 1000) {
-            // setTxtName(null);
-            fetchFoodGroup();
-        }
 
-
-        setProductDialog(false);
     }
 
     const productDialogFooter = (
@@ -167,10 +214,33 @@ export const FoodGroup = () => {
     );
 
 
+    const handleOnChange = (e) => {
+
+        if (e?.target?.value?.length > 0) {
+            setObjecErrors(
+                {
+                    ...objecErrors,
+                    name: ''
+                }
+            )
+        } else {
+            setObjecErrors(
+                {
+                    ...objecErrors,
+                    name: MESSAGE_REQUIRE
+                }
+            )
+        }
+
+        setTxtName(e.target.value)
+    }
+
 
     return (
         <div className="card">
             <div className="card-body">
+
+                <Toast ref={toast} />
 
                 <Toolbar className="p-mb-4" left={leftToolbarTemplate} ></Toolbar>
 
@@ -190,7 +260,7 @@ export const FoodGroup = () => {
                     {/* <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column> */}
                     <Column field="id" header="Id" ></Column>
                     <Column field="name" header="Tên" ></Column>
-                    {/* <Column body={actionBodyTemplate}></Column> */}
+                    <Column headerStyle={{ width: '4rem' }} body={actionBodyTemplate}></Column>
                 </DataTable>
 
 
@@ -198,52 +268,19 @@ export const FoodGroup = () => {
                     header="Thêm nhóm món ăn" modal className="p-fluid"
                     footer={productDialogFooter} onHide={hideDialog}>
                     <div className="p-field">
-                        <label htmlFor="name">Tên nhóm</label>
-                        <InputText id="name"
-                            defaultValue={txtName} onChange={(e) => setTxtName(e.target.value)}
+                        <label htmlFor="name">Tên nhóm <span className="item-required"> *</span></label>
+                        <InputText
+                            className={Object.keys(objecErrors.name).length > 0 ? "error" : null}
+                            id="name"
+                            defaultValue={txtName}
+                            onChange={(e) => handleOnChange(e)}
                             required
-                        //     autoFocus
-                        // className={classNames({ 'p-invalid': submitted && !txtName })}
+                            autoFocus
                         />
-                        {/* {submitted && !product.name && <small className="p-error">Name is required.</small>} */}
+                        {Object.keys(objecErrors.name).map((keyIndex, key) => {
+                            return <span className="errorMessage" key={key} >{objecErrors.name[keyIndex]} </span>
+                        })}
                     </div>
-                    {/* <div className="p-field">
-                    <label htmlFor="description">Description</label>
-                    <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
-                </div> */}
-
-                    {/* <div className="p-field">
-                    <label className="p-mb-3">Category</label>
-                    <div className="p-formgrid p-grid">
-                        <div className="p-field-radiobutton p-col-6">
-                            <RadioButton inputId="category1" name="category" value="Accessories" onChange={onCategoryChange} checked={product.category === 'Accessories'} />
-                            <label htmlFor="category1">Accessories</label>
-                        </div>
-                        <div className="p-field-radiobutton p-col-6">
-                            <RadioButton inputId="category2" name="category" value="Clothing" onChange={onCategoryChange} checked={product.category === 'Clothing'} />
-                            <label htmlFor="category2">Clothing</label>
-                        </div>
-                        <div className="p-field-radiobutton p-col-6">
-                            <RadioButton inputId="category3" name="category" value="Electronics" onChange={onCategoryChange} checked={product.category === 'Electronics'} />
-                            <label htmlFor="category3">Electronics</label>
-                        </div>
-                        <div className="p-field-radiobutton p-col-6">
-                            <RadioButton inputId="category4" name="category" value="Fitness" onChange={onCategoryChange} checked={product.category === 'Fitness'} />
-                            <label htmlFor="category4">Fitness</label>
-                        </div>
-                    </div>
-                </div> */}
-
-                    {/* <div className="p-formgrid p-grid">
-                    <div className="p-field p-col">
-                        <label htmlFor="price">Price</label>
-                        <InputNumber id="price" value={product.price} onValueChange={(e) => onInputNumberChange(e, 'price')} mode="currency" currency="USD" locale="en-US" />
-                    </div>
-                    <div className="p-field p-col">
-                        <label htmlFor="quantity">Quantity</label>
-                        <InputNumber id="quantity" value={product.quantity} onValueChange={(e) => onInputNumberChange(e, 'quantity')} integeronly />
-                    </div>
-                </div> */}
                 </Dialog>
 
 
@@ -258,6 +295,7 @@ export const FoodGroup = () => {
 
 
             </div>
+            {loader}
         </div>
     )
 }

@@ -10,6 +10,11 @@ import FetchAPI from "./FetchAPI";
 
 class OrderService extends FetchAPI {
 
+    async getAllYearInOrder(page,size) {
+        let url = `${PREFIX_URL_ORDERFOOD}/order/allYear`;
+        return await this.request(url, null, TypeMethodConstantEnum.GET);
+    }
+
   
     async saveOrder(orderBody) {
         let url = `${PREFIX_URL_ORDERFOOD}/order`;

@@ -15,6 +15,8 @@ import React, { useEffect, useRef, useState } from "react";
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 import Moment from "react-moment";
 import "react-toastify/dist/ReactToastify.css";
+import { EXPRITIME_HIDER_LOADER } from "../../constants/ConstantString";
+import useFullPageLoader from "../../hooks/useFullPageLoader";
 import AccountService from "../../service/AccountService";
 
 
@@ -27,6 +29,8 @@ import AccountService from "../../service/AccountService";
 
 const Account = () => {
 
+    const [loader, showLoader, hideLoader] = useFullPageLoader();
+
 
     const [keycloak] = useKeycloak();
 
@@ -35,6 +39,7 @@ const Account = () => {
     const [data, setData] = useState([])
 
     const fetchAllAccount = async () => {
+        showLoader()
 
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
 
@@ -44,6 +49,7 @@ const Account = () => {
             setData(result)
             // setProducts(result?.list)
         }
+        setTimeout(hideLoader, EXPRITIME_HIDER_LOADER);
     }
 
 
@@ -411,6 +417,7 @@ const Account = () => {
 
 
             </div>
+            {loader}
         </div>
     )
 }

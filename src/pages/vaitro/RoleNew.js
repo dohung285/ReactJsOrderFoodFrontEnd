@@ -23,7 +23,8 @@ import PermissionService from "../../service/PermissionService";
 import { cloneDeep } from "lodash";
 import { useKeycloak } from "@react-keycloak/web";
 import { checkPermissionAPI } from "../../constants/FunctionConstant";
-import { ACTION_DELETE } from "../../constants/ConstantString";
+import { ACTION_DELETE, EXPRITIME_HIDER_LOADER } from "../../constants/ConstantString";
+import useFullPageLoader from "../../hooks/useFullPageLoader";
 const RoleNew = () => {
 
 
@@ -76,6 +77,8 @@ const RoleNew = () => {
     const [productDialog, setProductDialog] = useState(false);
 
     const [keycloak] = useKeycloak();
+
+    const [loader, showLoader, hideLoader] = useFullPageLoader();
 
 
 
@@ -181,6 +184,7 @@ const RoleNew = () => {
 
 
     const fetchAllPermissionOfUser = async (username) => {
+        showLoader();
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         let result = await permissionService.getAllPermissionOfUser(username);
         console.log(`resultFetchAllPermissionOfUser`, result)
@@ -191,6 +195,7 @@ const RoleNew = () => {
             setSelectedKeys(JSON.parse(result?.message))
 
         }
+        setTimeout(hideLoader, EXPRITIME_HIDER_LOADER);
     }
 
     const addRoleMapping = async () => {
@@ -319,12 +324,14 @@ const RoleNew = () => {
 
 
     const fetchDiscount = async () => {
+        showLoader()
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         let result = await roleService.getAllUserAndRole();
         // console.log(`result`, result)
         if (result?.status === 1000) {
             setProducts(result?.list)
         }
+        setTimeout(hideLoader, EXPRITIME_HIDER_LOADER)
     }
 
     // const checkAccountIsRootAPI = async () => {
@@ -337,6 +344,7 @@ const RoleNew = () => {
     // }
 
     const fetchAllPermission = async () => {
+        showLoader();
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         let result = await permissionService.getAllPermission();
         // console.log(`fetchAllPermission`, result)
@@ -354,7 +362,7 @@ const RoleNew = () => {
                 setNodes(result?.list)
             }
 
-
+            setTimeout(hideLoader, EXPRITIME_HIDER_LOADER)
             // fetchAllPermissionOfUser(keycloak?.idTokenParsed?.preferred_username)
 
         }
@@ -410,16 +418,19 @@ const RoleNew = () => {
     }
 
     const saveAPI = async (dataBody) => {
+        showLoader()
 
         let result = await permissionService.save(dataBody);
         console.log(`result`, result)
         if (result?.status === 1000) {
             fetchDiscount();
         }
+        setTimeout(hideLoader, EXPRITIME_HIDER_LOADER)
 
     }
 
     const addRoleMappingAPI = async (id, dataBody) => {
+        
 
         let result = await roleService.addRoleMappingToUser(id, dataBody);
         // console.log(`result`, result)
@@ -621,6 +632,7 @@ const RoleNew = () => {
 
 
             </div>
+            {loader}
         </div>
     )
 }

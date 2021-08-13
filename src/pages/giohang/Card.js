@@ -741,6 +741,7 @@ export const Card = ({ match }) => {
                             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
                             currentPageReportTemplate="Tổng {totalRecords} món"
                             globalFilter={globalFilter}
+                            emptyMessage="Không có dữ liệu"
                         // header={header}
                         >
 

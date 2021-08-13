@@ -25,6 +25,10 @@ export const DATA_CARD = "DATA_CARD"
 export const ACTION_ADD = "ADD"
 export const ACTION_EDIT = "EDIT";
 export const ACTION_DELETE = "DELETE";
-// export const ACTION_ADD = "Số điện thoại phải gồm có 10 số";
+export const ACTION_CREATE = "CREATE";
+
+
+export const NOT_PERMISSION = "Bạn không có quyền!"
+
 
 
