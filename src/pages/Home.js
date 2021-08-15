@@ -87,9 +87,9 @@ export const Home = () => {
         { "id": "1004", "code": "h456wer53", "name": "Phở bát đàn", "description": "Product Description", "image": "pho-bat-dan.jpg", "price": 15, "category": "Accessories", "quantity": 73, "inventoryStatus": "INSTOCK", "rating": 4 },
         { "id": "1005", "code": "av2231fwg", "name": "Xôi xéo", "description": "Product Description", "image": "xoi-xeo.jpg", "price": 120, "category": "Accessories", "quantity": 0, "inventoryStatus": "OUTOFSTOCK", "rating": 4 },
         { "id": "1006", "code": "bib36pfvm", "name": "Bún bò huế", "description": "Product Description", "image": "bun-bo-hue.jpg", "price": 32, "category": "Accessories", "quantity": 5, "inventoryStatus": "LOWSTOCK", "rating": 3 },
-        { "id": "1007", "code": "mbvjkgip5", "name": "Galaxy Earrings", "description": "Product Description", "image": "galaxy-earrings.jpg", "price": 34, "category": "Accessories", "quantity": 23, "inventoryStatus": "INSTOCK", "rating": 5 },
-        { "id": "1008", "code": "vbb124btr", "name": "Game Controller", "description": "Product Description", "image": "game-controller.jpg", "price": 99, "category": "Electronics", "quantity": 2, "inventoryStatus": "LOWSTOCK", "rating": 4 },
-        { "id": "1009", "code": "cm230f032", "name": "Gaming Set", "description": "Product Description", "image": "gaming-set.jpg", "price": 299, "category": "Electronics", "quantity": 63, "inventoryStatus": "INSTOCK", "rating": 3 }
+        { "id": "1007", "code": "mbvjkgip5", "name": "Humberger bò", "description": "Product Description", "image": "5.jpg", "price": 34, "category": "Accessories", "quantity": 23, "inventoryStatus": "INSTOCK", "rating": 5 },
+        { "id": "1008", "code": "vbb124btr", "name": "Humberger gà", "description": "Product Description", "image": "6.jpg", "price": 99, "category": "Electronics", "quantity": 2, "inventoryStatus": "LOWSTOCK", "rating": 4 },
+        { "id": "1009", "code": "cm230f032", "name": "Humberger thập cẩm", "description": "Product Description", "image": "7.jpg", "price": 299, "category": "Electronics", "quantity": 63, "inventoryStatus": "INSTOCK", "rating": 3 }
     ]
 
 
@@ -189,8 +189,8 @@ export const Home = () => {
                     <div className="product-grid-item-content">
 
                         <img src={`http://localhost:8083/downloadFile/che-com-dau-xanh.jpg`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
-
-                        {/* <img src={`../../img/banh-mi-nuong-muoi-ot.jpg`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} /> */}
+{/* 
+                        <img src={`../../img/ab1.jpg`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} /> */}
                         <div className="product-name">{data.name}</div>
                         <div className="product-description">{data.description}</div>
                         <Rating value={data.rating} readOnly cancel={false}></Rating>
@@ -234,25 +234,35 @@ export const Home = () => {
         <div>
 
             <div className="carousel-demo">
-                <div className="card">
-                    <Carousel value={carousel} numVisible={3} numScroll={1} responsiveOptions={responsiveOptions} className="custom-carousel" circular
-                        autoplayInterval={3000} itemTemplate={productTemplate} />
-                </div>
+                {/* <div className="card">
+                </div> */}
+                <Carousel
+                    value={carousel}
+                    numVisible={3}
+                    numScroll={1}
+                    responsiveOptions={responsiveOptions}
+                    className="custom-carousel"
+                    circular
+                    autoplayInterval={3000}
+                    itemTemplate={productTemplate}
+                />
             </div>
 
 
             <div className="dataview-demo">
-                <div className="card">
-                    <DataView
-                        value={products}
-                        layout={layout}
-                        //    header={header}
-                        itemTemplate={itemTemplate}
-                        // paginator
-                        rows={6}
-                        sortOrder={sortOrder}
-                        sortField={sortField} />
-                </div>
+                {/* <div className="card">
+                  
+                </div> */}
+                <DataView
+                    value={products}
+                    layout={layout}
+                    //    header={header}
+                    itemTemplate={itemTemplate}
+                    // paginator
+                    rows={6}
+                    sortOrder={sortOrder}
+                    sortField={sortField}
+                />
             </div>
 
         </div>

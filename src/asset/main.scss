@@ -28,7 +28,7 @@ section {
 }
 
 footer {
-  background-color: #777;
+  // background-color: #777;
   padding: 10px;
   text-align: center;
   color: white;
@@ -128,4 +128,65 @@ footer {
 
 .show {
   display: flex !important;
+}
+
+
+.page {
+  font-family: Montserrat, Arial, sans-serif;
+  .content {
+  }
+  .footer {
+      height: 370px;
+      // background-color: #000;
+      background-color: #404552;;
+      display: flex;
+      color: rgb(241, 234, 234);
+      padding-top: 10px;
+      .left {
+          float: left;
+          width: 20%;
+      }
+      .center {
+          width: 60%;
+          display: flex;
+          flex-direction: column;
+          padding-top: 50px;
+
+          .top {
+              width: 100%;
+              display: flex;
+              flex-direction: row;
+              padding-bottom: 50px;
+              border-bottom: 1px solid #8b88884d;
+              .textFirst {
+                  width: 25%;
+                  margin: 0 10px auto;
+                  border-right: 1px solid #8b88884d;
+              }
+              .textTwo {
+                  width: 25%;
+                  margin: 0 10px auto;
+                  border-right: 1px solid #8b88884d;
+              }
+              .textThree {
+                  width: 25%;
+                  margin: 0 10px auto;
+                  border-right: 1px solid #8b88884d;
+              }
+              .textFour {
+                  width: 25%;
+                  margin: 0 10px auto;
+              }
+          }
+          .bottom {
+              margin-top: 50px;
+              display: flex;
+              justify-content: space-between;
+          }
+      }
+      .right {
+          float: left;
+          width: 20%;
+      }
+  }
 }

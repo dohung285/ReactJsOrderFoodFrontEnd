@@ -868,8 +868,8 @@ const Discount = () => {
                     paginator rows={10}
                     rowsPerPageOptions={[5, 10, 25]}
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                    currentPageReportTemplate="Tổng {totalRecords} món"
+                        currentPageReportTemplate="Tổng {totalRecords} bản ghi"
+                    currentPageReportTemplate="Tổng {totalRecords} bản ghi"
                     globalFilter={globalFilter}
                     header={headerDiscount}
                 >
@@ -991,7 +991,8 @@ const Discount = () => {
                             rows={5}
                             rowsPerPageOptions={[5, 10, 20]}
                             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+                            currentPageReportTemplate="Tổng {totalRecords} bản ghi"
+
                             globalFilter={globalFilter}
                             header={header}>
 
@@ -1014,7 +1015,7 @@ const Discount = () => {
                             rows={5}
                             rowsPerPageOptions={[5, 10, 20]}
                             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+                            currentPageReportTemplate="Tổng {totalRecords} bản ghi"
                             globalFilter={globalFilterForFoodSelected}
                             header={headerTableSelectDiscount}>
 
@@ -1048,7 +1049,7 @@ const Discount = () => {
                             rows={5}
                             rowsPerPageOptions={[5, 10, 20]}
                             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+                                currentPageReportTemplate="Tổng {totalRecords} bản ghi"
                             globalFilter={globalFilterForFoodUpdateSelected}
                             header={headerUpdateDiscount}>
                             <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
@@ -1068,7 +1069,7 @@ const Discount = () => {
                             rows={5}
                             rowsPerPageOptions={[5, 10, 20]}
                             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+                                currentPageReportTemplate="Tổng {totalRecords} bản ghi"
                             globalFilter={globalFilterForFoodUnUpdateSelected}
                             header={headerTableUpdateSelectDiscount}>
                             <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>

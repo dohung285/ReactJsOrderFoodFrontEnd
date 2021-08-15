@@ -1,4 +1,4 @@
-export const EXPRITIME_HIDER_LOADER = 1000;
+export const EXPRITIME_HIDER_LOADER = 100;
 
 export const TOKEN = "TOKEN";
 

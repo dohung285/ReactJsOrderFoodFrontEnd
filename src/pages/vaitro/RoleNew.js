@@ -499,6 +499,16 @@ const RoleNew = () => {
         }
     }
 
+    const header = (
+        <div className="table-header">
+            <span className="p-input-icon-left">
+                <i className="pi pi-search" />
+                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Tìm kiếm..." />
+            </span>
+        </div>
+    );
+
+
 
 
     return (
@@ -512,6 +522,7 @@ const RoleNew = () => {
                     selection={selectedProducts}
                     onSelectionChange={(e) => handleOnSelectedChange(e)}
                     dataKey="id"
+                    header={header}
                     paginator rows={10}
                     rowsPerPageOptions={[5, 10, 25]}
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"

@@ -55,9 +55,9 @@ const Rating = () => {
     }
 
 
-    
+
     const commentService = new CommentService();
-    
+
 
     const [objDiscount, setObjDiscount] = useState(
         {
@@ -163,7 +163,7 @@ const Rating = () => {
     }
 
     const deleteProduct = () => {
-       
+
         console.log(`productDelete`, productDeleteSelected)
 
         // deleteFoodIntoCard();
@@ -296,6 +296,15 @@ const Rating = () => {
         </React.Fragment>
     );
 
+    const header = (
+        <div className="table-header">
+            <span className="p-input-icon-left">
+                <i className="pi pi-search" />
+                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Tìm kiếm..." />
+            </span>
+        </div>
+    );
+
 
 
     return (
@@ -309,11 +318,12 @@ const Rating = () => {
                     selection={selectedProducts}
                     onSelectionChange={(e) => handleOnSelectedChange(e)}
                     dataKey="id"
+                    header={header}
                     paginator rows={10}
                     rowsPerPageOptions={[5, 10, 25]}
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                    currentPageReportTemplate="Tổng {totalRecords} món"
+                    currentPageReportTemplate="Tổng {totalRecords} bản ghi"
                     globalFilter={globalFilter}
                 // header={header}
                 >
@@ -323,7 +333,7 @@ const Rating = () => {
                     <Column field="foodName" header="Tên" ></Column>
                     <Column field="content" header="Nội dung" ></Column>
                     <Column field="username" header="Khách hàng" ></Column>
-                    <Column field="rating"  header="Đánh giá" ></Column>
+                    <Column field="rating" header="Đánh giá" ></Column>
                     <Column headerStyle={{ width: '4rem' }} body={actionBodyTemplate}></Column>
                 </DataTable>
 

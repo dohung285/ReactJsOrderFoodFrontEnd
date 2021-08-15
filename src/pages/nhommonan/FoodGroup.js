@@ -235,6 +235,15 @@ export const FoodGroup = () => {
         setTxtName(e.target.value)
     }
 
+    const header = (
+        <div className="table-header">
+            <span className="p-input-icon-left">
+                <i className="pi pi-search" />
+                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Tìm kiếm..." />
+            </span>
+        </div>
+    );
+
 
     return (
         <div className="card">
@@ -248,11 +257,12 @@ export const FoodGroup = () => {
                     selection={selectedProducts}
                     onSelectionChange={(e) => handleOnSelectedChange(e)}
                     dataKey="id"
+                    header={header}
                     paginator rows={10}
                     rowsPerPageOptions={[5, 10, 25]}
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                    currentPageReportTemplate="Tổng {totalRecords} món"
+                    currentPageReportTemplate="Tổng {totalRecords} bản ghi"
                     globalFilter={globalFilter}
                 // header={header}
                 >

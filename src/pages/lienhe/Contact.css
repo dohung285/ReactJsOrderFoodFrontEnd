@@ -1,0 +1,24 @@
+.rowOne{
+    display: flex;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: 700;
+    color: #584545f2;
+    
+}
+
+.rowTwo{
+    display: flex;
+    justify-content: center;
+}
+.rowTwo span {
+    justify-content: center;
+    display: flex;
+}
+
+
+
+
+.p-card-body{
+    /* background-color: #f1f3f6; */
+}

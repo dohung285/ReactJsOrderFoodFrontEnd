@@ -9,6 +9,7 @@ import logo from "../asset/images/lg-order-food.png";
 import { AUTHENTICATED, EXPRITIME_HIDER_LOADER } from "../constants/ConstantString";
 import { PERMISSION_CTS, PERMISSION_ND, PERMISSION_NTK_DKHS, PERMISSION_NTK_DKNHS, PERMISSION_NTK_TCHS, PERMISSION_NTK_TKHS, PERMISSION_QLDK, PERMISSION_TTDN, PERMISSION_VT } from "../constants/PermissionString";
 import { CardContext } from "../context/CardContext";
+import { MenuContext } from "../context/MenuContext";
 import useFullPageLoader from "../hooks/useFullPageLoader";
 import CardService from "../service/CardService";
 import MenuService from "../service/MenuService";
@@ -20,8 +21,22 @@ export const MenuBar = () => {
 
 
   const [loader, showLoader, hideLoader] = useFullPageLoader();
-
   let history = useHistory();
+
+  const [keycloak] = useKeycloak();
+
+  const [cardNumber, setCardNumber] = useState(0)
+  const [arrayPermissionOfUser, setArrayPermissionOfUser] = useState([])
+
+  const service = new MenuService();
+  const cardService = new CardService();
+  const permissionService = new PermissionService();
+
+  const { card, setCard } = useContext(CardContext)
+
+  const {menu, setMenu} = useContext(MenuContext)
+
+
   function handleLogout() {
     history.push("/");
     return keycloak.logout();
@@ -155,16 +170,7 @@ export const MenuBar = () => {
 
 
 
-  const [keycloak] = useKeycloak();
 
-  const [cardNumber, setCardNumber] = useState(0)
-  const [arrayPermissionOfUser, setArrayPermissionOfUser] = useState([])
-
-  const service = new MenuService();
-  const cardService = new CardService();
-  const permissionService = new PermissionService();
-
-  const { card, setCard } = useContext(CardContext)
 
   // console.log(`keycloak`, keycloak?.realmAccess?.roles.toString());
 
@@ -183,13 +189,7 @@ export const MenuBar = () => {
   }
 
   const fetchMenuBar = async () => {
-
     showLoader()
-    // console.log(`card`, card)
-
-
-    // console.log(`keycloak.authenticated`, localStorage.getItem(AUTHENTICATED))
-
     Axios.get(`http://localhost:8082/services/orderfood/api/menu/byWithRole`)
       .then(res => {
         // console.log(`res`, res.data)
@@ -198,14 +198,7 @@ export const MenuBar = () => {
         let arrayRemain = result;
         if (!keycloak?.authenticated) {
           arrayRemain = result.filter(item => item.label !== "Hệ thống");
-          // console.log(`arrayRemain`, arrayRemain)
-
-        } else {
-          // fetchAllNameOfSystemByUsernameAPI(keycloak?.idTokenParsed?.preferred_username)
         }
-
-
-
         if (arrayRemain) {
 
           let arrayTmp = [];
@@ -215,8 +208,6 @@ export const MenuBar = () => {
             if (element.label !== 'Trang chủ' && element.label !== 'Giới thiệu' && element.label !== 'Liên hệ') {
 
               if (element.label === 'Hệ thống' && keycloak?.authenticated && keycloak?.idTokenParsed?.preferred_username !== 'hungdx') {
-                // console.log("chuẩn")
-                // console.log(`element?.items`, element?.items)
 
                 fetchAllNameOfSystemByUsernameAPI(keycloak?.idTokenParsed?.preferred_username).then(data => {
                   console.log(`data`, data)
@@ -250,9 +241,6 @@ export const MenuBar = () => {
                 })
               }
 
-
-
-
               const objHasItems = {
                 icon: element.icon,
                 label: element.label,
@@ -278,7 +266,7 @@ export const MenuBar = () => {
         console.log("Error getDistinctDmcqt()", err);
       })
 
-      setTimeout(hideLoader,EXPRITIME_HIDER_LOADER)
+    setTimeout(hideLoader, EXPRITIME_HIDER_LOADER)
   };
 
 
@@ -339,7 +327,6 @@ export const MenuBar = () => {
   useEffect(() => {
     //gọi hàm fetchMenu khi đã đăng nhập
     fetchMenuBar()
-
   }, [keycloak.authenticated]);
 
 
