@@ -1,19 +1,24 @@
 
 
 
-import {  PREFIX_URL_ORDERFOOD } from "../constants/ConstantUrlAPI";
+import { PREFIX_URL_ORDERFOOD } from "../constants/ConstantUrlAPI";
 import { TypeMethodConstantEnum } from "../helper/MethodAPIConstant";
 import FetchAPI from "./FetchAPI";
 
 class CatalogService extends FetchAPI {
 
-  
-    async getAllFoodByFoodGroup(page,size,foodGroup) {
+
+    async getAllFoodByFoodGroup(page, size, foodGroup) {
         let url = `${PREFIX_URL_ORDERFOOD}/food/byFoodGroup?page=${page}&size=${size}&foodGroupId=${foodGroup}`;
         return await this.request(url, null, TypeMethodConstantEnum.GET);
     }
 
-  
+    async searchFoodLikeNameAndFoodGroup(txtName, foodGroup) {
+        let url = `${PREFIX_URL_ORDERFOOD}/food/search?foodGroupId=${foodGroup}&foodName=${txtName}`;
+        return await this.request(url, null, TypeMethodConstantEnum.GET);
+    }
+
+
 
 
 

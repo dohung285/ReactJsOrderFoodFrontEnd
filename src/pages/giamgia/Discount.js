@@ -128,9 +128,9 @@ const Discount = () => {
             percentErrors.required = MESSAGE_REQUIRE_PERCENT_LONHON_0;
             isValid = false;
         }
-        console.log(`dateNow`, dateNow)
-        console.log(`new Date()`, new Date(objDiscount.startDate).getDay())
-        console.log(`dateNow.getTime()`, dateNow.getDay())
+        // console.log(`dateNow`, dateNow)
+        // console.log(`new Date()`, new Date(objDiscount.startDate).getDay())
+        // console.log(`dateNow.getTime()`, dateNow.getDay())
         //startDate
         if (objDiscount.startDate === '') {
             startDateErrors.required = MESSAGE_REQUIRE;
@@ -393,9 +393,9 @@ const Discount = () => {
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <Button label="Thêm" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={onClickHandleOrderButton} />
-                <Button label="Tạo giảm giá" icon="pi pi-check-circle" className="p-button-warning p-mr-2" onClick={() => handleAddDiscount()} />
-                <Button label="Sửa giảm giá" icon="pi pi-pencil" className="p-button-help p-mr-2" onClick={() => handleEditDiscount()} />
+                <Button label="Thêm" icon="pi pi-plus-circle" className="p-button-success p-mr-2" onClick={onClickHandleOrderButton} />
+                <Button label="Tạo" icon="pi pi-check-circle" className="p-button-warning p-mr-2" onClick={() => handleAddDiscount()} />
+                <Button label="Sửa" icon="pi pi-pencil" className="p-button-help p-mr-2" onClick={() => handleEditDiscount()} />
             </React.Fragment>
         )
     }
@@ -455,7 +455,7 @@ const Discount = () => {
         showLoader()
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         let result = await foodService.getAllFoodHadDiscount();
-        console.log(`fetchFoodHadDiscountAPI`, result)
+        // console.log(`fetchFoodHadDiscountAPI`, result)
         if (result?.status === 1000) {
             setUpdateFoodForDiscount(result?.list)
         }
@@ -466,7 +466,7 @@ const Discount = () => {
         showLoader()
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         let result = await discountService.getAllForFood();
-        // console.log(`result`, result)
+        // console.log(`fetchAllDiscountAPI`, result)
         if (result?.status === 1000) {
             setDiscountDropdown(result?.list)
         }
@@ -476,7 +476,7 @@ const Discount = () => {
     const addDiscountIdToFoodsAPI = async (dataBody) => {
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         let result = await foodService.updateDiscountIdToFoods(dataBody);
-        console.log(`addDiscountIdToFoods`, result)
+        // console.log(`addDiscountIdToFoods`, result)
         if (result?.status === 1000) {
             showSuccess('Thành công!')
 
@@ -538,10 +538,9 @@ const Discount = () => {
         setUnSelected(null)
         setFoodSelected(null)
 
-
-
-
     }
+
+
     const saveDiscount = async () => {
 
         // console.log(`objDiscount`, objDiscount)
@@ -561,6 +560,7 @@ const Discount = () => {
                     }
                 )
                 fetchDiscount();
+                fetchAllDiscountAPI()
             } else {
                 showError(result?.message)
             }
@@ -652,7 +652,7 @@ const Discount = () => {
             discountId: selectedUpdateDiscountForFood?.code,
             foodIds: arrayFoodIs
         }
-        console.log(`dataBody`, dataBody)
+        // console.log(`dataBody`, dataBody)
 
         addDiscountIdToFoodsAPI(dataBody);
     }
@@ -868,33 +868,26 @@ const Discount = () => {
                     paginator rows={10}
                     rowsPerPageOptions={[5, 10, 25]}
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Tổng {totalRecords} bản ghi"
+                    currentPageReportTemplate="Tổng {totalRecords} bản ghi"
                     currentPageReportTemplate="Tổng {totalRecords} bản ghi"
                     globalFilter={globalFilter}
                     header={headerDiscount}
                 >
 
                     {/* <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column> */}
-                    <Column field="id" header="Id" ></Column>
-                    <Column field="name" header="Tên" ></Column>
-                    <Column field="percent" header="%" ></Column>
-                    <Column
-                        field="startDate"
-                        body={bodyStartDate}
-                        header="Ngày bắt đầu"
-                    ></Column>
-                    <Column
-                        field="endDate"
-                        body={bodyEndDate}
-                        header="Ngày kết thúc"
-                    ></Column>
-                    <Column headerStyle={{ width: '4rem' }} body={actionBodyTemplate}></Column>
+                    <Column field="id" header="Id" style={{ textAlign: 'center' }} ></Column>
+                    <Column field="name" header="Tên" style={{ textAlign: 'center' }} ></Column>
+                    <Column field="percent" header="%" style={{ textAlign: 'center' }}></Column>
+                    <Column field="startDate" body={bodyStartDate} header="Ngày bắt đầu" style={{ textAlign: 'center' }} ></Column>
+                    <Column field="endDate" body={bodyEndDate} header="Ngày kết thúc" style={{ textAlign: 'center' }}></Column>
+                    <Column headerStyle={{ width: '4rem' }} body={actionBodyTemplate} style={{ textAlign: 'center' }}></Column>
                 </DataTable>
 
                 {/* Thêm món ăn */}
                 <Dialog visible={productDialog} style={{ width: '1000px' }}
                     header="Thêm nhóm món ăn" modal className="p-fluid"
-                    footer={productDialogFooter} onHide={hideDialog}>
+                    footer={productDialogFooter} onHide={hideDialog}
+                >
                     <div className="p-field">
                         <label htmlFor="name">Tên <span className="item-required">*</span> </label>
                         <InputText
@@ -1049,7 +1042,7 @@ const Discount = () => {
                             rows={5}
                             rowsPerPageOptions={[5, 10, 20]}
                             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                                currentPageReportTemplate="Tổng {totalRecords} bản ghi"
+                            currentPageReportTemplate="Tổng {totalRecords} bản ghi"
                             globalFilter={globalFilterForFoodUpdateSelected}
                             header={headerUpdateDiscount}>
                             <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
@@ -1069,7 +1062,7 @@ const Discount = () => {
                             rows={5}
                             rowsPerPageOptions={[5, 10, 20]}
                             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                                currentPageReportTemplate="Tổng {totalRecords} bản ghi"
+                            currentPageReportTemplate="Tổng {totalRecords} bản ghi"
                             globalFilter={globalFilterForFoodUnUpdateSelected}
                             header={headerTableUpdateSelectDiscount}>
                             <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>

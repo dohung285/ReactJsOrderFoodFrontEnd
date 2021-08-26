@@ -2,6 +2,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import Axios from 'axios';
 import { includes } from "lodash";
 import { Badge } from 'primereact/badge';
+import { Button } from "primereact/button";
 import { Menubar } from "primereact/menubar";
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
@@ -34,7 +35,11 @@ export const MenuBar = () => {
 
   const { card, setCard } = useContext(CardContext)
 
-  const {menu, setMenu} = useContext(MenuContext)
+
+
+
+
+
 
 
   function handleLogout() {
@@ -169,7 +174,10 @@ export const MenuBar = () => {
 
 
 
+  useEffect(() => {
+    // console.log(`object`, menu,items)
 
+  }, [])
 
 
   // console.log(`keycloak`, keycloak?.realmAccess?.roles.toString());
@@ -259,7 +267,6 @@ export const MenuBar = () => {
               arrayTmp.push(obj)
             }
           });
-
           setItems(arrayTmp);
         }
       }).catch(err => {
@@ -376,11 +383,15 @@ export const MenuBar = () => {
       {!keycloak?.authenticated &&
         <div className="p-d-flex">
           <li className="p-mr-2" >
-            <span onClick={() => handleLogin()}>Đăng nhập</span>
+            <Button label="Đăng nhập" className=" p-button-text p-button-plain" onClick={() => handleLogin()} />
+
+            {/* <span className="p-button-text p-button-plain" onClick={() => handleLogin()}>Đăng nhập</span> */}
           </li>
 
           <li >
-            <span onClick={() => keycloak.register()} >Đăng ký</span>
+            <Button label="Đăng ký" className=" p-button-text p-button-plain" onClick={() => keycloak.register()} />
+
+            {/* <span className="p-button-text" onClick={() => keycloak.register()} >Đăng ký</span> */}
           </li>
 
         </div>

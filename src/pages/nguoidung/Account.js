@@ -10,6 +10,7 @@ import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from "primereact/inputtext";
+import { Tag } from "primereact/tag";
 import { Toast } from 'primereact/toast';
 import React, { useEffect, useRef, useState } from "react";
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
@@ -147,10 +148,15 @@ const Account = () => {
     }
 
     const actionBodyTemplate = (rowData) => {
+        // console.log(`rowData`, rowData)
+        if (rowData.username === 'hungdx') {
+            return <Button label="Supper Admin" className="p-button-rounded p-button-success" />
+
+        }
         return (
             <React.Fragment>
                 {/* <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2" onClick={() => editProduct(rowData)} /> */}
-                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => confirmDeleteProduct(rowData)} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => confirmDeleteProduct(rowData)} />
             </React.Fragment>
         );
     }
@@ -292,16 +298,16 @@ const Account = () => {
 
     const deleteDiscount = async () => {
 
-        // console.log(`id`, productDeleteSelected.id)
-        let result = await accountService.deleteAccount(productDeleteSelected.id);
+        const { id, username } = productDeleteSelected;
+
+        console.log(`id , username`, id, username)
+
+
+        let result = await accountService.deleteAccount(id, username);
         // console.log(`result`, result)
         if (result?.status === 1000) {
             fetchAllAccount();
         }
-
-        // if (result?.status === 1000) {
-        //     fetchAllAccount();
-        // }
         setProductDialog(false);
     }
 
@@ -332,13 +338,12 @@ const Account = () => {
             <div className="card-body">
                 <Toast ref={toast} />
 
-                {/* <Toolbar className="p-mb-4" left={leftToolbarTemplate} ></Toolbar> */}
 
                 <DataTable ref={dt} value={data}
                     selection={selectedProducts}
                     onSelectionChange={(e) => handleOnSelectedChange(e)}
                     dataKey="id"
-                    header = {header}
+                    header={header}
                     paginator rows={10}
                     rowsPerPageOptions={[10, 25]}
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -349,12 +354,12 @@ const Account = () => {
                 >
 
                     {/* <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column> */}
-                    <Column field="id" header="Id" ></Column>
-                    <Column field="username" header="Tên đăng nhập" ></Column>
-                    <Column field="email" header="Email" ></Column>
-                    <Column field="username" header="Khách hàng" ></Column>
-                    <Column field="rating" header="Họ và Tên" body={renderFullName}></Column>
-                    <Column headerStyle={{ width: '4rem' }} body={actionBodyTemplate}></Column>
+                    <Column field="id" header="Id" style={{ textAlign: 'center' }}></Column>
+                    <Column field="username" header="Tên đăng nhập" style={{ textAlign: 'center' }} ></Column>
+                    <Column field="email" header="Email" style={{ textAlign: 'center' }}></Column>
+                    <Column field="username" header="Khách hàng" style={{ textAlign: 'center' }} ></Column>
+                    <Column field="rating" header="Họ và Tên" body={renderFullName} style={{ textAlign: 'center' }}></Column>
+                    <Column headerStyle={{ width: '6rem' }} body={actionBodyTemplate} style={{ textAlign: 'center' }}></Column>
                 </DataTable>
 
 

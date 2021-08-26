@@ -58,7 +58,7 @@ const Content = () => {
           <Route component={Home} path="/home" exact />
 
           <Route component={Bread} path="/bread" exact />
-          <Route component={Catalog} path="/catalog/:id"  />
+          <Route component={Catalog} path="/catalog/:id"   />
 
           <Route component={FoodDetail} path="/food/:id"  />
            {/* <Route component={Card} path="/card/:username" exact /> */}
@@ -66,7 +66,7 @@ const Content = () => {
 
            <Route component={ChangePassword} path="/change-password" exact />
            <Route component={ListOrder} path="/list-order" exact />
-           <Route component={TimeLineOrder} path="/time-line" exact />
+           <Route component={TimeLineOrder} path="/time-line/:id" exact />
 
            <Route component={UserInfor} path="/user-infor" exact />
 

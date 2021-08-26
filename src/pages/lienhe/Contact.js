@@ -152,6 +152,7 @@ const Contact = () => {
 
                 <div className="p-grid">
                     <div className="p-col-6">
+
                         <div className="p-fluid">
                             <div className="p-field">
                                 <label htmlFor="firstname1">Tên</label>
@@ -169,35 +170,15 @@ const Contact = () => {
                                 <Button label="Gửi" className="p-button-rounded p-button-danger" />
                             </div>
                         </div>
+
                     </div>
 
                     <div className="p-col-6">
-                        {/* <Toast ref={toast}></Toast>
-                        {
-                            googleMapsReady && (
-                                <div className="card">
-                                    <GMap overlays={overlays} options={options} style={{ width: '100%', minHeight: '320px' }} onMapReady={onMapReady}
-                                        onMapClick={onMapClick} onOverlayClick={onOverlayClick} onOverlayDragEnd={handleDragEnd} />
-                                </div>
-                            )
-                        }
-                        <Dialog header="New Location" visible={dialogVisible} width="300px" modal footer={footer} onHide={onHide}>
-                            <div className="p-grid p-fluid">
-                                <div className="p-col-2" style={{ paddingTop: '.75em' }}><label htmlFor="title">Label</label></div>
-                                <div className="p-col-10"><InputText type="text" id="title" value={markerTitle} onChange={(e) => setMarkerTitle(e.target.value)} /></div>
-
-                                <div className="p-col-2" style={{ paddingTop: '.75em' }}>Lat</div>
-                                <div className="p-col-10"><InputText readOnly value={selectedPosition ? selectedPosition.lat() : ''} /></div>
-
-                                <div className="p-col-2" style={{ paddingTop: '.75em' }}>Lng</div>
-                                <div className="p-col-10"><InputText readOnly value={selectedPosition ? selectedPosition.lng() : ''} /></div>
-
-                                <div className="p-col-2" style={{ paddingTop: '.75em' }}><label htmlFor="drg">Drag</label></div>
-                                <div className="p-col-10"><Checkbox checked={draggableMarker} onChange={(event) => setDraggableMarker(event.checked)} /></div>
-                            </div>
-                        </Dialog> */}
-
+                        <img src={`http://localhost:8083/downloadFile/about1.png`} alt="news image" className="img-fluid" />
                     </div>
+
+
+
                 </div>
 
             </div>

@@ -51,7 +51,7 @@ const Report = () => {
     const fetchCountBuyAPI = async () => {
         showLoader();
         let result = await reportService.getAll();
-        // console.log(`fetchCountBuyAPI`, result)
+        console.log(`fetchCountBuyAPI`, result)
         if (result?.status === 1000) {
             setChartData(result?.object);
         }
@@ -221,12 +221,32 @@ const Report = () => {
     }
 
     const exportPdf = () => {
+
+        let strBase64fontVnTime = ''
         import('jspdf').then(jsPDF => {
             import('jspdf-autotable').then(() => {
-                const doc = new jsPDF.default(0, 0);
-                doc.setFont('Calibri')
-                doc.autoTable(exportColumns, products);
-                doc.save('orderfood.pdf');
+                const pdf = new jsPDF.default(0, 0);
+                // define custom font
+                pdf.addFileToVFS("font-times-new-roman.ttf",
+                    // ttf font file converted to base64 
+                    // following is Consolas with only hex digit glyphs defined (0-9, A-F)
+              strBase64fontVnTime
+                )
+
+                // add custom font to file
+                pdf.addFont("font-times-new-roman.ttf", "font-times-new-roman", "Bold");
+                pdf.setFont("font-times-new-roman", "Bold");
+                pdf.setFontSize(12);
+
+                //console.log(pdf.getFontList());
+
+              
+
+
+
+
+                pdf.autoTable(exportColumns, products);
+                pdf.save('orderfood.pdf');
             })
         })
     }
@@ -308,7 +328,7 @@ const Report = () => {
         <div className="p-d-flex p-ai-center export-buttons">
             <Button type="button" icon="pi pi-file-o" onClick={() => exportCSV(false)} className="p-mr-2" data-pr-tooltip="CSV" />
             <Button type="button" icon="pi pi-file-excel" onClick={exportExcel} className="p-button-success p-mr-2" data-pr-tooltip="XLS" />
-            <Button type="button" icon="pi pi-file-pdf" onClick={exportPdf} className="p-button-warning p-mr-2" data-pr-tooltip="PDF" />
+            {/* <Button type="button" icon="pi pi-file-pdf" onClick={exportPdf} className="p-button-warning p-mr-2" data-pr-tooltip="PDF" /> */}
             {/* <Button type="button" icon="pi pi-filter" onClick={() => exportCSV(true)} className="p-button-info p-ml-auto" data-pr-tooltip="Selection Only" /> */}
             <Dropdown value={selectedMonth} options={months} onChange={(e) => setSelectedMonth(e.value)} optionLabel="name" placeholder="Tháng" className="p-mr-2" />
             <Dropdown value={selectedYear} options={yearOption} onChange={(e) => setSelectedYear(e.value)} optionLabel="name" placeholder="Năm" className="p-mr-2" />
@@ -360,7 +380,7 @@ const Report = () => {
 
                         >
                             {
-                                cols.map((col, index) => <Column key={index} field={col.field} header={col.header} />)
+                                cols.map((col, index) => <Column key={index} field={col.field} header={col.header} style={{ textAlign: 'center' }} />)
                             }
                         </DataTable>
 

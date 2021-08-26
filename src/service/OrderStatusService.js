@@ -17,6 +17,11 @@ class OrderStatusService extends FetchAPI {
         return await this.request(url, null, TypeMethodConstantEnum.GET);
     }
 
+    async getAllByOrderId(orderId) {
+        let url = `${PREFIX_URL_ORDERFOOD}/orderStatus/orderId?orderId=${orderId}`;
+        return await this.request(url, null, TypeMethodConstantEnum.GET);
+    }
+
     async update(id,dataBody) {
         let url = `${PREFIX_URL_ORDERFOOD}/orderStatus/${id}`;
         return await this.request(url, dataBody, TypeMethodConstantEnum.PUT);

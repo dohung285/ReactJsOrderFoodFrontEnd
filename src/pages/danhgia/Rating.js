@@ -141,7 +141,7 @@ const Rating = () => {
         return (
             <React.Fragment>
                 {/* <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2" onClick={() => editProduct(rowData)} /> */}
-                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => handleDeleteComment(rowData)} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => handleDeleteComment(rowData)} />
             </React.Fragment>
         );
     }
@@ -329,12 +329,12 @@ const Rating = () => {
                 >
 
                     {/* <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column> */}
-                    <Column field="id" header="Id" ></Column>
-                    <Column field="foodName" header="Tên" ></Column>
-                    <Column field="content" header="Nội dung" ></Column>
-                    <Column field="username" header="Khách hàng" ></Column>
-                    <Column field="rating" header="Đánh giá" ></Column>
-                    <Column headerStyle={{ width: '4rem' }} body={actionBodyTemplate}></Column>
+                    <Column field="id" header="Id" style={{ textAlign: 'center' }} ></Column>
+                    <Column field="foodName" header="Tên" style={{ textAlign: 'center' }} ></Column>
+                    <Column field="content" header="Nội dung" style={{ textAlign: 'center' }}></Column>
+                    <Column field="username" header="Khách hàng" style={{ textAlign: 'center' }} ></Column>
+                    <Column field="rating" header="Đánh giá" style={{ textAlign: 'center' }}></Column>
+                    <Column headerStyle={{ width: '4rem' }} body={actionBodyTemplate} style={{ textAlign: 'center' }}></Column>
                 </DataTable>
 
 

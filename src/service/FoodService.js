@@ -8,6 +8,11 @@ import FetchAPI from "./FetchAPI";
 class FoodService extends FetchAPI {
 
 
+    async getAll(daa) {
+        let url = `${PREFIX_URL_ORDERFOOD}/food`;
+        return await this.request(url, null, TypeMethodConstantEnum.GET);
+    }
+
     async getFoodDetailByFoodId(foodId) {
         let url = `${PREFIX_URL_ORDERFOOD}/food/foodDetail?foodId=${foodId}`;
         return await this.request(url, null, TypeMethodConstantEnum.GET);
@@ -33,6 +38,10 @@ class FoodService extends FetchAPI {
         return await this.request(url, null, TypeMethodConstantEnum.GET);
     }
 
+    async deleteFood(id) {
+        let url = `${PREFIX_URL_ORDERFOOD}/food/${id}`;
+        return await this.request(url, null, TypeMethodConstantEnum.DELETE);
+    }
  
 
 

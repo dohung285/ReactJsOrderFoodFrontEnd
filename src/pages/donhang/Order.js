@@ -17,7 +17,7 @@ import { RadioButton } from 'primereact/radiobutton';
 import { useHistory } from "react-router-dom";
 import PermissionService from "../../service/PermissionService";
 import { useKeycloak } from "@react-keycloak/web";
-import { ACTION_DELETE, ACTION_EDIT, EXPRITIME_HIDER_LOADER, NOT_PERMISSION } from "../../constants/ConstantString";
+import { ACTION_DELETE, ACTION_EDIT, DELIVERED, EXPRITIME_HIDER_LOADER, NOT_PERMISSION, ORDER, PROCESSED } from "../../constants/ConstantString";
 import useFullPageLoader from "../../hooks/useFullPageLoader";
 
 const Order = () => {
@@ -145,14 +145,13 @@ const Order = () => {
         }
 
 
-        
+
     }
 
     const actionBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
-                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2" onClick={() => editProduct(rowData)} />
-                {/* <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => confirmDeleteProduct(rowData)} /> */}
+                <Button icon="pi pi-pencil" className="p-button-rounded p-button-warning p-mr-2" onClick={() => editProduct(rowData)} />
             </React.Fragment>
         );
     }
@@ -235,7 +234,7 @@ const Order = () => {
         showLoader()
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         let result = await orderStatusService.getAll();
-        // console.log(`result`, result)
+        console.log(`fetchOrder`, result)
         if (result?.status === 1000) {
             setProducts(result?.list)
         }
@@ -277,10 +276,10 @@ const Order = () => {
         console.log(`orderObject?.id`, orderObject?.id)
         console.log(`dataBody`, dataBody)
 
-        let result = await orderStatusService.update(orderObject?.id,dataBody);
+        let result = await orderStatusService.update(orderObject?.id, dataBody);
         console.log(`resultupdateSatus`, result)
         if (result?.status === 1000) {
-         
+
             setOrderObject(null)
             fetchDiscount();
         }
@@ -319,15 +318,15 @@ const Order = () => {
     const renderRowStatus = (rowData) => {
         let status = null;
         if (rowData.status === 0) {
-            status = 'Tiếp nhận đơn'
+            status = ORDER
             return <Tag severity="info" value={status} />;
         }
         if (rowData.status === 1) {
-            status = 'Đang giao hàng '
+            status = PROCESSED
             return <Tag severity="warning" value={status} />;
         }
         if (rowData.status === 2) {
-            status = 'Giao hàng thành công '
+            status = DELIVERED
             return <Tag severity="success" value={status} />;
         }
 
@@ -400,14 +399,14 @@ const Order = () => {
                 >
 
                     {/* <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column> */}
-                    <Column field="id" header="Id" ></Column>
-                    <Column field="address" header="Địa chỉ" ></Column>
-                    <Column field="phone" header="Số điện thoại" ></Column>
-                    <Column field="username" header="Khách hàng" ></Column>
-                    <Column field="dateOrder" body={renderDateOrder} header="Thời gian đặt" ></Column>
-                    <Column field="note" header="Ghi chú" ></Column>
-                    <Column field="status" body={renderRowStatus} header="Trạng thái" ></Column>
-                    <Column headerStyle={{ width: '4rem' }} body={actionBodyTemplate}></Column>
+                    <Column field="id" header="Id" style={{ textAlign: 'center' }} ></Column>
+                    <Column field="address" header="Địa chỉ" style={{ textAlign: 'center' }}></Column>
+                    <Column field="phone" header="Số điện thoại" style={{ textAlign: 'center' }} ></Column>
+                    <Column field="username" header="Khách hàng" style={{ textAlign: 'center' }}></Column>
+                    <Column field="dateOrder" body={renderDateOrder} header="Thời gian đặt" style={{ textAlign: 'center' }} ></Column>
+                    <Column field="note" header="Ghi chú" style={{ textAlign: 'center' }}></Column>
+                    <Column field="status" body={renderRowStatus} header="Trạng thái" style={{ textAlign: 'center' }}></Column>
+                    <Column headerStyle={{ width: '4rem' }} body={actionBodyTemplate} style={{ textAlign: 'center' }}></Column>
                 </DataTable>
 
 

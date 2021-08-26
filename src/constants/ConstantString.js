@@ -32,3 +32,9 @@ export const NOT_PERMISSION = "Bạn không có quyền!"
 
 
 
+export const ORDER = "Tiếp nhận đơn"
+export const PROCESSED = "Đang giao hàng"
+export const DELIVERED = "Đã giao hàng"
+
+
+

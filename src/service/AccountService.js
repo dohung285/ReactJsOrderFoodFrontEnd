@@ -38,8 +38,8 @@ class AccountService extends FetchAPI {
     //     return await this.request(url, null, TypeMethodConstantEnum.GET);
     // }
 
-    async deleteAccount(id) {   //delete-account/4e88a385-6ae5-448a-a85c-b3edc3fc601a
-        let url = `${PREFIX_URL_ORDERFOOD}/delete-account/${id}`;
+    async deleteAccount(id,username) {   //delete-account/4e88a385-6ae5-448a-a85c-b3edc3fc601a
+        let url = `${PREFIX_URL_ORDERFOOD}/delete-account/${id}?username=${username}`;
         return await this.request(url, null, TypeMethodConstantEnum.DELETE);
     }
 

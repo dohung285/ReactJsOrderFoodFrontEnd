@@ -30,7 +30,7 @@ export const Footer = () => {
 
                             <div className="textFour">
                                 <h3>Twitter feed</h3>
-                                <p>Lorem ipsum dolor sit anmet,elit Minima,enim</p>
+                                <p>Các sản phẩm rất ngon và rẻ</p>
                                 <span>0398552599</span>
                             </div>
                         </div>

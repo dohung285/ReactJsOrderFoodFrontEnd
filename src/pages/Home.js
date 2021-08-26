@@ -80,16 +80,16 @@ export const Home = () => {
     ]
 
     const carouselItems = [
-        { "id": "1000", "code": "f230fh0g3", "name": "Bánh mì kẹp thịt nướng", "description": "Product Description", "image": "banh-mi-kep-thit-nuong-thom-phuc.jpg", "price": 65, "category": "Accessories", "quantity": 24, "inventoryStatus": "INSTOCK", "rating": 5 },
-        { "id": "1001", "code": "nvklal433", "name": "Bún chả Hà Nội", "description": "Product Description", "image": "bun-cha-ha-noi.jpg", "price": 72, "category": "Accessories", "quantity": 61, "inventoryStatus": "INSTOCK", "rating": 4 },
-        { "id": "1002", "code": "zz21cz3c1", "name": "Cơm rang dưa bò", "description": "Product Description", "image": "com-rang-dua-bo.jpg", "price": 79, "category": "Fitness", "quantity": 2, "inventoryStatus": "LOWSTOCK", "rating": 3 },
-        { "id": "1003", "code": "244wgerg2", "name": "Cơm thố", "description": "Product Description", "image": "com-tho.jpg", "price": 29, "category": "Clothing", "quantity": 25, "inventoryStatus": "INSTOCK", "rating": 5 },
-        { "id": "1004", "code": "h456wer53", "name": "Phở bát đàn", "description": "Product Description", "image": "pho-bat-dan.jpg", "price": 15, "category": "Accessories", "quantity": 73, "inventoryStatus": "INSTOCK", "rating": 4 },
-        { "id": "1005", "code": "av2231fwg", "name": "Xôi xéo", "description": "Product Description", "image": "xoi-xeo.jpg", "price": 120, "category": "Accessories", "quantity": 0, "inventoryStatus": "OUTOFSTOCK", "rating": 4 },
-        { "id": "1006", "code": "bib36pfvm", "name": "Bún bò huế", "description": "Product Description", "image": "bun-bo-hue.jpg", "price": 32, "category": "Accessories", "quantity": 5, "inventoryStatus": "LOWSTOCK", "rating": 3 },
-        { "id": "1007", "code": "mbvjkgip5", "name": "Humberger bò", "description": "Product Description", "image": "5.jpg", "price": 34, "category": "Accessories", "quantity": 23, "inventoryStatus": "INSTOCK", "rating": 5 },
-        { "id": "1008", "code": "vbb124btr", "name": "Humberger gà", "description": "Product Description", "image": "6.jpg", "price": 99, "category": "Electronics", "quantity": 2, "inventoryStatus": "LOWSTOCK", "rating": 4 },
-        { "id": "1009", "code": "cm230f032", "name": "Humberger thập cẩm", "description": "Product Description", "image": "7.jpg", "price": 299, "category": "Electronics", "quantity": 63, "inventoryStatus": "INSTOCK", "rating": 3 }
+        { "id": "1000", "code": "f230fh0g3", "name": "Bánh mì kẹp thịt nướng", "description": "Product Description", "image": "http://localhost:8083/downloadFile/banh-mi-thit-nuong.jpg", "price": 65, "category": "Accessories", "quantity": 24, "inventoryStatus": "INSTOCK", "rating": 5 },
+        { "id": "1001", "code": "nvklal433", "name": "Bún chả Hà Nội", "description": "Product Description", "image": "http://localhost:8083/downloadFile/bun-cha-ha-noi.jpg", "price": 72, "category": "Accessories", "quantity": 61, "inventoryStatus": "INSTOCK", "rating": 4 },
+        { "id": "1002", "code": "zz21cz3c1", "name": "Cơm rang dưa bò", "description": "Product Description", "image": "http://localhost:8083/downloadFile/com-rang-dua-bo.jpg", "price": 79, "category": "Fitness", "quantity": 2, "inventoryStatus": "LOWSTOCK", "rating": 3 },
+        { "id": "1003", "code": "244wgerg2", "name": "Cơm thố", "description": "Product Description", "image": "http://localhost:8083/downloadFile/com-tho.jpg", "price": 29, "category": "Clothing", "quantity": 25, "inventoryStatus": "INSTOCK", "rating": 5 },
+        { "id": "1004", "code": "h456wer53", "name": "Phở bát đàn", "description": "Product Description", "image": "http://localhost:8083/downloadFile/pho-bat-dan.jpg", "price": 15, "category": "Accessories", "quantity": 73, "inventoryStatus": "INSTOCK", "rating": 4 },
+        { "id": "1005", "code": "av2231fwg", "name": "Xôi xéo", "description": "Product Description", "image": "http://localhost:8083/downloadFile/xoi-xeo.jpg", "price": 120, "category": "Accessories", "quantity": 0, "inventoryStatus": "OUTOFSTOCK", "rating": 4 },
+        { "id": "1006", "code": "bib36pfvm", "name": "Bún bò huế", "description": "Product Description", "image": "http://localhost:8083/downloadFile/bun-bo-hue.jpg", "price": 32, "category": "Accessories", "quantity": 5, "inventoryStatus": "LOWSTOCK", "rating": 3 },
+        { "id": "1007", "code": "mbvjkgip5", "name": "Humberger bò", "description": "Product Description", "image": "http://localhost:8083/downloadFile/5.jpg", "price": 34, "category": "Accessories", "quantity": 23, "inventoryStatus": "INSTOCK", "rating": 5 },
+        { "id": "1008", "code": "vbb124btr", "name": "Humberger gà", "description": "Product Description", "image": "http://localhost:8083/downloadFile/6.jpg", "price": 99, "category": "Electronics", "quantity": 2, "inventoryStatus": "LOWSTOCK", "rating": 4 },
+        { "id": "1009", "code": "cm230f032", "name": "Humberger thập cẩm", "description": "Product Description", "image": "http://localhost:8083/downloadFile/7.jpg", "price": 299, "category": "Electronics", "quantity": 63, "inventoryStatus": "INSTOCK", "rating": 3 }
     ]
 
 
@@ -99,7 +99,7 @@ export const Home = () => {
                 <div className="product-item-content">
                     <div className="p-mb-3" style={{ height: '60%' }}>
                         <div>
-                            <img src={`./img/${product.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={product.name} className="product-image" />
+                            <img src={`${product.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={product.name} className="product-image" />
                         </div>
                     </div>
                     <div>

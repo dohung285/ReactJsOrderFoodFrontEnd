@@ -43,10 +43,10 @@ export const ListOrder = () => {
 
     const fetchAllOrderByUsername = async () => {
 
-        console.log(`keycloak && keycloak.authenticated`, keycloak?.idTokenParsed?.preferred_username)
+        // console.log(`keycloak && keycloak.authenticated`, keycloak?.idTokenParsed?.preferred_username)
 
         let result = await orderService.getAllOrderByUsername(keycloak?.idTokenParsed?.preferred_username);
-        console.log(`result`, result)
+        // console.log(`result`, result)
         if (result?.status === 1000) {
 
             setProducts(result?.list)
@@ -109,9 +109,10 @@ export const ListOrder = () => {
         return <span className={`order-badge order-${rowData.status.toLowerCase()}`}>{rowData.status}</span>;
     }
 
-    const searchBodyTemplate = () => {
+    const searchBodyTemplate = (rowData) => {
+        // console.log(`rowData`, rowData.orderId)
         return (
-            <Link to="/time-line" style={{textDecoration: 'none'}} >
+            <Link to={`/time-line/${rowData.orderId}`} style={{textDecoration: 'none'}} >
                 <Button icon="pi pi-eye" className="p-button-rounded p-button-success" style={{textDecoration: 'none'}}>
                     {/* <span  >Xem</span> */}
                 </Button>

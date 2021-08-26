@@ -378,6 +378,7 @@ export const FoodDetail = ({ match }) => {
             setCurrentImage(products?.listImage[0]);
         }
     }, [products])
+
     useEffect(() => {
         fetchFoodDetailByFoodId();
         countStarAPI();
@@ -387,6 +388,16 @@ export const FoodDetail = ({ match }) => {
         // myRef.current.children[index].className = "active";
 
     }, [])
+
+    useEffect(() => {
+        fetchFoodDetailByFoodId();
+        countStarAPI();
+        getAllCommentByFoodIdAPI()
+
+
+        // myRef.current.children[index].className = "active";
+
+    }, [keycloak.authenticated])
 
 
     const [displayBasic, setDisplayBasic] = useState(false);
@@ -823,11 +834,11 @@ export const FoodDetail = ({ match }) => {
                         <DetailsThumb images={products?.listImage} tab={handleTab} myRef={myRef} />
 
                         <div className="p-field p-col-12 p-md-3">
-                            <InputNumber inputId="minmax-buttons" value={valueAmount} onValueChange={e => onChangeAmount(e)} mode="decimal" showButtons min={0} max={20} />
+                            <InputNumber inputId="minmax-buttons"  size={3} value={valueAmount} onValueChange={e => onChangeAmount(e)} mode="decimal" showButtons min={0} max={20} />
                         </div>
 
-                        <Button icon="pi pi-shopping-cart" label="Giỏ hàng" style={{ marginRight: '30px' }} onClick={() => saveCard(products)}></Button>
-                        <Button icon="pi pi-shopping-cart" label="Mua ngay" onClick={() => onByProduct()} ></Button>
+                        <Button icon="pi pi-shopping-cart" className="p-mr-2" onClick={() => saveCard(products)}></Button>
+                        <Button icon="pi pi-credit-card" className="p-button-help"  onClick={() => onByProduct()} ></Button>
                     </div>
                 </div>
 
@@ -933,7 +944,8 @@ export const FoodDetail = ({ match }) => {
                             rows={5}
                             sortOrder={sortOrder}
                             sortField={sortField}
-                            emptyMessage= "Không có dữ liệu"
+                            emptyMessage= ""
+                            alwaysShowPaginator={false}
                         />
                     </div>
                 </div>

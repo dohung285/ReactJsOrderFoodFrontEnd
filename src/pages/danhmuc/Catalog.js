@@ -4,9 +4,10 @@ import axios from 'axios';
 import { Button } from 'primereact/button';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Dropdown } from 'primereact/dropdown';
+import { InputText } from 'primereact/inputtext';
 import { Rating } from 'primereact/rating';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { EXPRITIME_HIDER_LOADER } from '../../constants/ConstantString';
 import useFullPageLoader from '../../hooks/useFullPageLoader';
 import CatalogService from '../../service/CatalogService';
@@ -18,6 +19,7 @@ export const Catalog = ({ match }) => {
     // console.log(`match`, match.params.id)
     let idCatalog = match.params.id;
 
+    const { id } = useParams()
 
     const [loader, showLoader, hideLoader] = useFullPageLoader();
 
@@ -34,6 +36,8 @@ export const Catalog = ({ match }) => {
         { label: 'Thấp đến cao', value: 'price' },
     ];
 
+    const [txtSearch, setTxtSearch] = useState(null);
+
 
     const fetchFoodByFoodGroup = async () => {
         showLoader();
@@ -49,10 +53,25 @@ export const Catalog = ({ match }) => {
                 console.log("Error fetchFoodByFoodGroup()", { ...err });
             })
 
-            setTimeout(hideLoader, EXPRITIME_HIDER_LOADER);
+        setTimeout(hideLoader, EXPRITIME_HIDER_LOADER);
 
+    };
 
+    const fetchFoodLikeNameAndFoodGroup = async (foodGroup,txtName) => {
+        showLoader();
 
+        axios.get(`http://localhost:8082/services/orderfood/api/food/search?foodGroupId=${foodGroup}&foodName=${txtName}`)
+            .then(res => {
+                  console.log(`res`, res?.data?.list)
+                let result = res?.data?.list
+                if (result) {
+                    setData(result)
+                }
+            }).catch(err => {
+                console.log("Error fetchFoodLikeNameAndFoodGroup()", { ...err });
+            })
+
+        setTimeout(hideLoader, EXPRITIME_HIDER_LOADER);
 
     };
 
@@ -70,6 +89,7 @@ export const Catalog = ({ match }) => {
 
 
     useEffect(() => {
+        // console.log('id', idCatalog, id);
         fetchFoodByFoodGroup()
     }, [idCatalog]);
 
@@ -132,14 +152,17 @@ export const Catalog = ({ match }) => {
                             <div className="product-grid-item-content">
                                 <img src={data.path} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
                                 <div className="product-name">{data.name}</div>
-                                <Rating value={data.rating} readOnly cancel={false}></Rating>
+                                {/* <Rating value={data.rating} readOnly cancel={false}></Rating> */}
+                                {data.percent !== null && <span className="product-has-discount">- {data.percent} %</span>}
+                                {/* {data.percent === null && <span className="product-no-discount">- 0 %</span>} */}
                             </div>
                         </Link>
-                        <div className="product-grid-item-bottom">
-                            <span className="product-price">{data.price} VND</span>
-                            {data.percent && <span className="product-has-discount">- {data.percent} %</span>}
-                            {data.percent === null && <span className="product-no-discount">- 0 %</span>}
-                            {/* <Button icon="pi pi-shopping-cart" onClick={() => addToCard(data)} ></Button> */}
+                        {/* <div className="product-grid-item-bottom ">
+                            <span className="product-price p-d-flex p-jc-center " style={{textAlign: 'center'}}>{data.price} VND</span>
+                        </div> */}
+
+                        <div className="p-d-flex p-jc-center ">
+                            <span className="product-price" style={{textAlign: 'center'}}>{data.price} VND</span>
                         </div>
 
 
@@ -171,12 +194,36 @@ export const Catalog = ({ match }) => {
             </>
         );
     }
+    const handleSearch = () => {
+      
+        console.log(`txtSearch`, txtSearch)
+        console.log(`idCatalog`, idCatalog)
+        fetchFoodLikeNameAndFoodGroup(idCatalog,txtSearch)
+    }
+
+    const handleRefersh = () => {
+        fetchFoodByFoodGroup()
+    }
+
+    const handleOnchange = (e) => {
+        // console.log(`e.target.value`, e.target.value)
+        setTxtSearch(e.target.value)
+    }
+
+   
+
+
     const renderHeader = () => {
         return (
             <div className="p-grid p-nogutter">
-                <div className="p-col-6" style={{ textAlign: 'left' }}>
-                    <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Sắp xếp theo giá" onChange={onSortChange} />
+                <div className="p-col-12 p-d-flex" style={{ textAlign: 'left' }}>
+                    <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Sắp xếp theo giá" onChange={onSortChange} className="p-mr-2" />
+                    <InputText defaultValue={txtSearch === null ? '' : txtSearch} placeholder="Tìm kiếm" className="p-mr-2" onChange={(e) => handleOnchange(e)} />
+                    <Button type="button" icon="pi pi-search" onClick={() => handleSearch()} className="p-mr-2" />
+                    <Button type="button" icon="pi pi-refresh" onClick={() => handleRefersh()} className="p-mr-2 p-button-help" />
                 </div>
+
+
                 {/* <div className="p-col-6" style={{ textAlign: 'right' }}>
                     <DataViewLayoutOptions layout={layout} onChange={(e) => setLayout(e.value)} />
                 </div> */}
@@ -211,6 +258,7 @@ export const Catalog = ({ match }) => {
                         sortOrder={sortOrder}
                         sortField={sortField}
                         emptyMessage="Không có dữ liệu"
+                        alwaysShowPaginator={false}
                     />
                 </div>
             </div>

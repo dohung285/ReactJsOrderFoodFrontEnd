@@ -9,6 +9,7 @@ import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { EXPRITIME_HIDER_LOADER, MESSAGE_REQUIRE } from '../../constants/ConstantString';
 import useFullPageLoader from '../../hooks/useFullPageLoader';
 import FoodGroupService from '../../service/FoodGroupService';
@@ -19,6 +20,8 @@ import FoodGroupService from '../../service/FoodGroupService';
 export const FoodGroup = () => {
 
     const [loader, showLoader, hideLoader] = useFullPageLoader();
+
+    const history = useHistory()
 
     const toast = useRef(null);
     const dt = useRef(null);
@@ -87,7 +90,7 @@ export const FoodGroup = () => {
         return (
             <React.Fragment>
                 {/* <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2" onClick={() => editProduct(rowData)} /> */}
-                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => confirmDeleteProduct(rowData)} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => confirmDeleteProduct(rowData)} />
             </React.Fragment>
         );
     }
@@ -100,6 +103,8 @@ export const FoodGroup = () => {
         // setProduct(emptyProduct);
         // toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Xóa sản phẩm khỏi giỏ hàng thành công', life: 3000 });
         showSuccess('Xóa thành công!')
+        window.location.reload();
+        // history.push('/food-group')
     }
 
     const hideDeleteProductDialog = () => {
@@ -113,13 +118,13 @@ export const FoodGroup = () => {
         </React.Fragment>
     );
 
-    const leftToolbarTemplate = () => {
-        return (
-            <React.Fragment>
-                <Button label="Thêm" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={onClickHandleOrderButton} />
-            </React.Fragment>
-        )
-    }
+    // const leftToolbarTemplate = () => {
+    //     return (
+    //         <React.Fragment>
+    //             <Button icon="pi pi-plus-circle" className="p-button-success p-mr-2" onClick={onClickHandleOrderButton} />
+    //         </React.Fragment>
+    //     )
+    // }
 
     const onClick = (name, position) => {
         dialogFuncMap[`${name}`](true);
@@ -159,6 +164,7 @@ export const FoodGroup = () => {
 
     const deleteFoodGroup = async () => {
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
+        console.log(`productDeleteSelected`, productDeleteSelected)
         let result = await foodGroupService.deleteFoodGroupById(productDeleteSelected?.id);
         // console.log(`result`, result)
         if (result?.status === 1000) {
@@ -198,6 +204,7 @@ export const FoodGroup = () => {
             }
 
             setProductDialog(false);
+            window.location.reload();
 
         }
 
@@ -237,6 +244,7 @@ export const FoodGroup = () => {
 
     const header = (
         <div className="table-header">
+            <Button icon="pi pi-plus-circle" className="p-button-success p-mr-2" onClick={onClickHandleOrderButton} />
             <span className="p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Tìm kiếm..." />
@@ -251,7 +259,7 @@ export const FoodGroup = () => {
 
                 <Toast ref={toast} />
 
-                <Toolbar className="p-mb-4" left={leftToolbarTemplate} ></Toolbar>
+                {/* <Toolbar className="p-mb-4" left={leftToolbarTemplate} ></Toolbar> */}
 
                 <DataTable ref={dt} value={products}
                     selection={selectedProducts}
@@ -268,9 +276,9 @@ export const FoodGroup = () => {
                 >
 
                     {/* <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column> */}
-                    <Column field="id" header="Id" ></Column>
-                    <Column field="name" header="Tên" ></Column>
-                    <Column headerStyle={{ width: '4rem' }} body={actionBodyTemplate}></Column>
+                    <Column field="id" header="Id" style={{ textAlign: 'center' }} ></Column>
+                    <Column field="name" header="Tên" style={{ textAlign: 'center' }} ></Column>
+                    <Column headerStyle={{ width: '4rem' }} style={{ textAlign: 'center' }} body={actionBodyTemplate}></Column>
                 </DataTable>
 
 
@@ -294,7 +302,7 @@ export const FoodGroup = () => {
                 </Dialog>
 
 
-                <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
+                <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Xác nhận" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
                     <div className="confirmation-content">
                         <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
                         {/* {product && <span>Bạn có chắc chắn muốn xóa <b>{product.name}</b>?</span>} */}

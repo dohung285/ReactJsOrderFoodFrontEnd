@@ -208,6 +208,8 @@ const RoleNew = () => {
                 actionIds: Object.keys(selectedKeys),
                 currentPermission: selectedKeys
             }
+
+            // console.log(`selectedKeys`, selectedKeys)
             saveAPI(dataBodySave);
 
             // console.log(`history`, history.location.pathname)
@@ -351,6 +353,7 @@ const RoleNew = () => {
         if (result?.status === 1000) {
 
             let isRoot = await permissionService.checkAccountIsRoot(keycloak?.idTokenParsed?.preferred_username);
+            // console.log(`isRoot`, isRoot)
             if (isRoot?.status === 1000) {
                 setNodes(result?.list)
             } else {
@@ -358,6 +361,7 @@ const RoleNew = () => {
                 let indexOfObject = result?.list.findIndex(e => {
                     return e.label == 'Vai trò';
                 })
+                // console.log(`indexOfObject`, indexOfObject)
                 let resultArray = result?.list.splice(indexOfObject, 1);
                 setNodes(result?.list)
             }
@@ -430,7 +434,7 @@ const RoleNew = () => {
     }
 
     const addRoleMappingAPI = async (id, dataBody) => {
-        
+
 
         let result = await roleService.addRoleMappingToUser(id, dataBody);
         // console.log(`result`, result)
@@ -533,11 +537,11 @@ const RoleNew = () => {
                 >
 
                     {/* <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column> */}
-                    <Column field="id" header="Id" ></Column>
-                    <Column field="email" header="Email" ></Column>
-                    <Column field="username" header="Tài khoản" ></Column>
-                    <Column field="hasRoleAdmin" header="Vai trò" body={renderRoleBodyTemplate} ></Column>
-                    <Column headerStyle={{ width: '10rem' }} body={actionBodyTemplate}></Column>
+                    <Column field="id" header="Id" style={{ textAlign: 'center' }}></Column>
+                    <Column field="email" header="Email" style={{ textAlign: 'center' }}></Column>
+                    <Column field="username" header="Tài khoản" style={{ textAlign: 'center' }}></Column>
+                    <Column field="hasRoleAdmin" header="Vai trò" body={renderRoleBodyTemplate} style={{ textAlign: 'center' }}></Column>
+                    <Column headerStyle={{ width: '10rem' }} body={actionBodyTemplate} style={{ textAlign: 'center' }}></Column>
                 </DataTable>
 
 
@@ -603,8 +607,8 @@ const RoleNew = () => {
                     <div className="confirmation-content">
 
                         <div className="p-mb-4">
-                            <Button type="button" icon="pi pi-plus" label="Expand All" onClick={expandAll} className="p-mr-2" />
-                            <Button type="button" icon="pi pi-minus" label="Collapse All" onClick={collapseAll} />
+                            <Button type="button" icon="pi pi-plus" label="Mở hết" onClick={expandAll} className="p-mr-2 p-button-warning" />
+                            <Button type="button" icon="pi pi-minus" label="Đóng hết" onClick={collapseAll} className="p-button-danger" />
                         </div>
                         <Tree value={nodes} expandedKeys={expandedKeys}
                             onToggle={e => setExpandedKeys(e.value)}
@@ -619,8 +623,8 @@ const RoleNew = () => {
                     <div className="confirmation-content">
 
                         <div className="p-mb-4">
-                            <Button type="button" icon="pi pi-plus" label="Expand All" onClick={expandAll} className="p-mr-2" />
-                            <Button type="button" icon="pi pi-minus" label="Collapse All" onClick={collapseAll} />
+                            <Button type="button" icon="pi pi-plus" label="Mở hết" onClick={expandAll} className="p-mr-2 p-button-warning" />
+                            <Button type="button" icon="pi pi-minus" label="Đóng hết" onClick={collapseAll} className="p-button-danger" />
                         </div>
                         <Tree value={nodes} expandedKeys={expandedKeys}
                             onToggle={e => setExpandedKeys(e.value)}
