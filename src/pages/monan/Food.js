@@ -18,7 +18,7 @@ import { Toolbar } from 'primereact/toolbar';
 import { Tooltip } from 'primereact/tooltip';
 import React, { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { ACTION_ADD, EXPRITIME_HIDER_LOADER, MESSAGE_REQUIRE, NOT_NUMBER } from '../../constants/ConstantString';
+import { ACTION_ADD, EXPRITIME_HIDER_LOADER, MESSAGE_PERCENT_REQUIRE, MESSAGE_PRICE_REQUIRE, MESSAGE_REQUIRE, NOT_NUMBER } from '../../constants/ConstantString';
 import { isNumber } from '../../constants/FunctionConstant';
 import useFullPageLoader from '../../hooks/useFullPageLoader';
 import FoodGroupService from '../../service/FoodGroupService';
@@ -51,6 +51,19 @@ export const Food = () => {
     const [productDeleteSelected, setProductDeleteSelected] = useState(null);
     const [deleteProductDialog, setDeleteProductDialog] = useState(false);
     const [showAddProductDialog, setShowAddProductDialog] = useState(false)
+    const [editProductDialog, setEditProductDialog] = useState(false)
+    const [productEditSelected, setProductEditSelected] = useState(false)
+
+    const [deleteAllProduct, setDeleteAllProduct] = useState(false)
+
+    const [objectEdit, setObjectEdit] = useState(
+        {
+            name: '',
+            price: 0
+        }
+    )
+
+
     const [data, setData] = useState([])
 
     const showSuccess = (message) => {
@@ -62,8 +75,35 @@ export const Food = () => {
     }
 
     const hideDialog = () => {
+
+        setSelectedProducts(false)
+
+
         setShowAddProductDialog(false)
         setDeleteProductDialog(false)
+        setDeleteAllProduct(false)
+        setEditProductDialog(false)
+
+
+        setObjecErrors(
+            {
+                name: {},
+                price: {},
+                description: {},
+                file: {},
+                foodGroup: {},
+                nameEdit: {},
+                priceEdit: {}
+            }
+        )
+
+
+        setObjectEdit(
+            {
+                name: '',
+                price: 0
+            }
+        )
     }
 
     const deleteFoodAPI = async () => {
@@ -73,18 +113,99 @@ export const Food = () => {
         let result = await foodService.deleteFood(productDeleteSelected.id);
         // console.log(`getAllFoodAPI`, result)
         if (result?.status === 1000) {
-           getAllFoodAPI()
+            getAllFoodAPI()
         }
         setTimeout(hideLoader, EXPRITIME_HIDER_LOADER);
     }
 
-    const deleteProduct = async ()=>{
+    const deleteAllFoodAPI = async (ids) => {
+        showLoader()
+        // console.log(`id`, productDeleteSelected.id)
+        // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
+        let result = await foodService.deleteAllFood(ids);
+        // console.log(`getAllFoodAPI`, result)
+        if (result?.status === 1000) {
+            getAllFoodAPI()
+        }
+        setTimeout(hideLoader, EXPRITIME_HIDER_LOADER);
+    }
+
+    const editProduct = async () => {
+
+        if (formValidationEdit()) {
+            showLoader()
+            // console.log(`id`, productDeleteSelected.id)
+            // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
+            try {
+                console.log(`objectEdit`, objectEdit)
+                let result = await foodService.updateNameAndPrice(objectEdit, productEditSelected.id);
+                // console.log(`getAllFoodAPI`, result)
+                if (result?.status === 1000) {
+                    getAllFoodAPI()
+                }
+                showSuccess('Thành công')
+
+            } catch (error) {
+                // console.log(`error`)
+                showError(error?.response?.data?.message)
+                setSelectedProducts(null)
+            }
+            setTimeout(hideLoader, EXPRITIME_HIDER_LOADER);
+            setEditProductDialog(false)
+            //clear
+            setObjectEdit(
+                {
+                    name: '',
+                    price: 0
+                }
+            )
+        }
+
+
+
+
+
+    }
+
+
+    const deleteProduct = async () => {
         deleteFoodAPI();
 
         setDeleteProductDialog(false);
-       
+
         showSuccess('Xóa thành công!')
     }
+
+    const confirmEditProduct = (product) => {
+        // setEditProductDialog(true)
+
+        setProductEditSelected(product)
+
+        setEditProductDialog(true)
+
+    }
+
+    const confirmDeleteAllProductAPI = async () => {
+
+        // console.log(`selectedProducts`, selectedProducts)
+        // console.log(`values`, Object.values(selectedProducts))
+
+        let arrayOrderIds = Object.values(selectedProducts).map(x => x.id);
+        // console.log(`arrayOrderIds`, arrayOrderIds)
+
+        deleteAllFoodAPI(arrayOrderIds)
+
+        setDeleteAllProduct(false);
+
+        showSuccess('Xóa thành công!')
+    }
+
+    const editProductDialogFooter = (
+        <React.Fragment>
+            <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+            <Button label="Đồng ý" icon="pi pi-check" className="p-button-text" onClick={editProduct} />
+        </React.Fragment>
+    );
 
     const deleteProductDialogFooter = (
         <React.Fragment>
@@ -93,12 +214,24 @@ export const Food = () => {
         </React.Fragment>
     );
 
+    const deleteAllProductDialogFooter = (
+        <React.Fragment>
+            <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+            <Button label="Đồng ý" icon="pi pi-check" className="p-button-text" onClick={confirmDeleteAllProductAPI} />
+        </React.Fragment>
+    );
+
     const confirmAddProduct = () => {
         setShowAddProductDialog(true)
     }
 
+    const confirmDeleteSelectedAllProducts = () => {
+        setDeleteAllProduct(true)
+    }
+
     const header = (
         <div className="table-header">
+            <Button icon="pi pi-trash" className="p-button-danger p-mr-2" disabled={!selectedProducts || !selectedProducts.length} onClick={confirmDeleteSelectedAllProducts} />
             <Button icon="pi pi-plus-circle" className=" p-button-success p-mr-2" onClick={() => confirmAddProduct()} />
             <span className="p-input-icon-left">
                 <i className="pi pi-search" />
@@ -115,10 +248,12 @@ export const Food = () => {
         setDeleteProductDialog(true);
     }
 
+
+
     const actionBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
-                {/* <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2" onClick={() => editProduct(rowData)} /> */}
+                <Button icon="pi pi-pencil" className="p-button-rounded p-button-warning p-mr-2" onClick={() => confirmEditProduct(rowData)} />
                 <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => confirmDeleteProduct(rowData)} />
             </React.Fragment>
         );
@@ -128,8 +263,18 @@ export const Food = () => {
         return <img src={`${rowData.path}`} style={{ width: '80px', height: '80px' }} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={rowData.image} className="product-image" />
     }
 
-    const handleOnSelectedChange = (e) => {
+    const formatCurrency = (value) => {
+        // console.log(`value`, value)
+        return value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' });
 
+    }
+
+    const priceBodyTemplate = (rowData) => {
+        return formatCurrency(rowData.price);
+    }
+
+    const handleOnSelectedChange = (e) => {
+        setSelectedProducts(e.value)
     }
 
 
@@ -140,11 +285,13 @@ export const Food = () => {
 
 
 
-    const [objectSave, setObjectSave] = useState({
-        name: '',
-        price: '',
-        description: ''
-    })
+    const [objectSave, setObjectSave] = useState(
+        {
+            name: '',
+            price: '',
+            description: ''
+        }
+    )
 
 
     //errors
@@ -153,7 +300,9 @@ export const Food = () => {
         price: {},
         description: {},
         file: {},
-        foodGroup: {}
+        foodGroup: {},
+        nameEdit: {},
+        priceEdit: {}
     })
 
 
@@ -162,6 +311,37 @@ export const Food = () => {
     //     { "id": "1001", "code": "nvklal433", "name": "Black Watch", "description": "Product Description", "image": "black-watch.jpg", "price": 72, "category": "Accessories", "quantity": 61, "inventoryStatus": "INSTOCK", "rating": 4 },
     //     { "id": "1002", "code": "zz21cz3c1", "name": "Blue Band", "description": "Product Description", "image": "blue-band.jpg", "price": 79, "category": "Fitness", "quantity": 2, "inventoryStatus": "LOWSTOCK", "rating": 3 }
     // ]
+
+    const formValidationEdit = () => {
+
+        const nameEditErrors = {}
+        const priceEditErrors = {}
+
+        let isValid = true;
+        // name
+        if (objectEdit.name === '') {
+            nameEditErrors.required = MESSAGE_REQUIRE;
+            isValid = false;
+        }
+
+        // price
+        if (objectEdit.price === 0) {
+            priceEditErrors.required = MESSAGE_PRICE_REQUIRE;
+            isValid = false;
+        }
+
+        setObjecErrors(
+            {
+                ...objecErrors,
+                nameEdit: nameEditErrors,
+                priceEdit: priceEditErrors
+            }
+        )
+
+        return isValid;
+
+
+    }
 
 
     const formValidation = () => {
@@ -221,10 +401,6 @@ export const Food = () => {
                 description: descriptionErrors
             }
         )
-
-
-        // setAddressErrors(addressErrors);
-        // setPhoneErrors(phoneErrors);
 
         return isValid;
     }
@@ -323,7 +499,9 @@ export const Food = () => {
 
     const headerTemplate = (options) => {
         console.log(`options`, options)
-        const { className, chooseButton, uploadButton, cancelButton } = options;
+        const { className, chooseButton,
+            //  uploadButton,
+             cancelButton } = options;
         // const { className, chooseButton, cancelButton } = options;
         const value = totalSize / 10000;
         const formatedValue = fileUploadRef && fileUploadRef.current ? fileUploadRef.current.formatSize(totalSize) : '0 B';
@@ -331,7 +509,7 @@ export const Food = () => {
         return (
             <div className={className} style={{ backgroundColor: 'transparent', display: 'flex', alignItems: 'center' }}>
                 {chooseButton}
-                {uploadButton}
+                {/* {uploadButton} */}
                 {cancelButton}
                 <ProgressBar value={value} displayValueTemplate={() => `${formatedValue} / 1 MB`} style={{ width: '300px', height: '20px', marginLeft: 'auto' }}></ProgressBar>
             </div>
@@ -339,7 +517,7 @@ export const Food = () => {
     }
 
     const itemTemplate = (file, props) => {
-        console.log(`file.objectURL`, file.objectURL)
+        // console.log(`file.objectURL`, file.objectURL)
         return (
             <div className="p-d-flex p-ai-center p-flex-wrap">
                 <div className="p-d-flex p-ai-center" style={{ width: '40%' }}>
@@ -400,34 +578,42 @@ export const Food = () => {
     }
 
 
-    const leftContents = (
-        <React.Fragment>
-            <Button label="Thêm" icon="pi pi-plus" className="p-mr-2" onClick={handleOnAddFood} />
-        </React.Fragment>
-    );
+    // const leftContents = (
+    //     <React.Fragment>
+    //         <Button label="Thêm" icon="pi pi-plus" className="p-mr-2" onClick={handleOnAddFood} />
+    //     </React.Fragment>
+    // );
 
-    const rightContents = (
-        <React.Fragment>
-            {/* <Button icon="pi pi-search" className="p-mr-2" />
-            <Button icon="pi pi-calendar" className="p-button-success p-mr-2" />
-            <Button icon="pi pi-times" className="p-button-danger" /> */}
-        </React.Fragment>
-    );
+    // const rightContents = (
+    //     <React.Fragment>
+    //         {/* <Button icon="pi pi-search" className="p-mr-2" />
+    //         <Button icon="pi pi-calendar" className="p-button-success p-mr-2" />
+    //         <Button icon="pi pi-times" className="p-button-danger" /> */}
+    //     </React.Fragment>
+    // );
 
-   
+
 
 
 
     const saveFoodAPI = async (body) => {
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
-        let result = await foodService.saveFood(body);
-        console.log(`saveFoodAPI`, result);
-        if (result === undefined) {
-            showError('Đã có lỗi xảy ra, xin vui lòng liên hệ quản trị viên')
+        try {
+            let result = await foodService.saveFood(body);
+            // console.log(`saveFoodAPI`, result);
+            if (result === undefined) {
+                showError('Đã có lỗi xảy ra, xin vui lòng liên hệ quản trị viên')
+            }
+            if (result?.status === 1000) {
+                showSuccess('Thành công!')
+                getAllFoodAPI()
+                getAllFoodGroupAPI();
+            }
+        } catch (e) {
+            console.log(`e.response`, e?.response?.data?.message)
+            showError(e?.response?.data?.message)
         }
-        if (result?.status === 1000) {
-            showSuccess('Thành công!')
-        }
+
     }
 
 
@@ -452,16 +638,19 @@ export const Food = () => {
                     formData.append("groupId", selectedFoodGroup?.id);
                     formData.append("desciption", objectSave.description);
 
-
-                    // formData.append("name", 'a');
-                    // formData.append("price", 100);
-                    // formData.append("groupId", 11);
-                    // formData.append("desciption", 'aaaaaaaaaaaaaaa');
-
                     saveFoodAPI(formData);
+                    setSelectedFoodGroup(null)
+                    setObjectSave(
+                        {
+                            name: '',
+                            price: '',
+                            description: ''
+                        }
+                    )
                 } catch (e) {
                     console.log(`e`, e)
                 }
+                setShowAddProductDialog(false)
             }
         } else {
             showError("Bạn không có quyền")
@@ -471,6 +660,7 @@ export const Food = () => {
     }
 
     const handleOnChange = (e) => {
+        // console.log(`e`, e)
         // console.log(`e`, e.target.value)
         let name = e.target.name
         const value = e.target.value
@@ -584,6 +774,58 @@ export const Food = () => {
             setArrayImage(arrayDataImage)
 
         }
+
+        if (name === 'nameEdit') {
+            if (value.length > 0) {
+                setObjecErrors(
+                    {
+                        ...objecErrors,
+                        nameEdit: ''
+                    }
+                )
+            } else {
+                setObjecErrors(
+                    {
+                        ...objecErrors,
+                        nameEdit: MESSAGE_REQUIRE
+                    }
+                )
+            }
+
+            setObjectEdit(
+                {
+                    ...objectEdit,
+                    name: e.target.value
+                }
+            )
+        }
+
+        if (name === 'priceEdit') {
+            if (e.value > 0) {
+                setObjecErrors(
+                    {
+                        ...objecErrors,
+                        priceEdit: ''
+                    }
+                )
+            } else {
+                setObjecErrors(
+                    {
+                        ...objecErrors,
+                        priceEdit: MESSAGE_PRICE_REQUIRE
+                    }
+                )
+            }
+
+            setObjectEdit(
+                {
+                    ...objectEdit,
+                    price: e.value
+                }
+            )
+        }
+
+
     }
 
 
@@ -618,12 +860,13 @@ export const Food = () => {
 
 
 
-   
+
+
 
     const productDialogFooter = (
         <React.Fragment>
-            <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
-            <Button label="Đồng ý" icon="pi pi-check" className="p-button-text" onClick={saveDiscount} />
+            {/* <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+            <Button label="Đồng ý" icon="pi pi-check" className="p-button-text" onClick={saveDiscount} /> */}
         </React.Fragment>
     );
 
@@ -653,11 +896,12 @@ export const Food = () => {
                         globalFilter={globalFilter}
                     >
 
-                        {/* <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column> */}
+                        <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
                         <Column field="id" header="Id" style={{ textAlign: 'center' }}></Column>
                         <Column field="name" header="Tên" style={{ textAlign: 'center' }} ></Column>
                         <Column header="Ảnh" style={{ textAlign: 'center' }} body={imageBodyTemplate}></Column>
-                        <Column headerStyle={{ width: '6rem' }} body={actionBodyTemplate} style={{ textAlign: 'center' }}></Column>
+                        <Column header="Giá" style={{ textAlign: 'center' }} body={priceBodyTemplate}></Column>
+                        <Column headerStyle={{ width: '8rem' }} body={actionBodyTemplate} style={{ textAlign: 'center' }}></Column>
                     </DataTable>
                 </div>
             </div>
@@ -752,7 +996,7 @@ export const Food = () => {
                                     onSelect={onTemplateSelect}
                                     onError={onTemplateClear}
                                     onClear={onTemplateClear}
-                                    // headerTemplate={headerTemplate}
+                                    headerTemplate={headerTemplate}
                                     itemTemplate={itemTemplate}
                                     emptyTemplate={emptyTemplate}
                                     chooseOptions={chooseOptions}
@@ -766,13 +1010,50 @@ export const Food = () => {
                             </div>
 
 
-
                             <Button label="Thêm" onClick={handleSaveFood} className="p-mr-6 p-ml-6 p-d-inline" />
 
                         </div>
+                        {/* <hr/>
+                        <div>
+                       
+                        </div> */}
                     </div>
                 </div>
 
+            </Dialog>
+
+            <Dialog visible={editProductDialog} style={{ width: '450px' }} header="Sửa món ăn" modal footer={editProductDialogFooter} onHide={hideDialog}>
+                <div className="confirmation-content">
+                    <div className="p-fluid">
+                        <div className="p-field">
+                            <label htmlFor="name">Tên <span className="item-required">*</span></label>
+                            <InputText
+                                name="nameEdit"
+                                className={Object.keys(objecErrors.nameEdit).length > 0 ? "error" : null}
+                                id="name"
+                                type="text"
+                                value={objectEdit.name}
+                                onChange={handleOnChange}
+                            />
+                            {Object.keys(objecErrors.nameEdit).map((keyIndex, key) => {
+                                return <span className="errorMessage" key={key} >{objecErrors.nameEdit[keyIndex]} </span>
+                            })}
+                        </div>
+                        <div className="p-field">
+                            <label htmlFor="priceEdit">Giá <span className="item-required">*</span></label>
+                            <InputNumber
+                                name="priceEdit"
+                                className={Object.keys(objecErrors.priceEdit).length > 0 ? "error" : null}
+                                inputId="priceEdit"
+                                value={objectEdit.price}
+                                onValueChange={handleOnChange}
+                            />
+                            {Object.keys(objecErrors.priceEdit).map((keyIndex, key) => {
+                                return <span className="errorMessage" key={key} >{objecErrors.priceEdit[keyIndex]} </span>
+                            })}
+                        </div>
+                    </div>
+                </div>
             </Dialog>
 
             <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Xác nhận" modal footer={deleteProductDialogFooter} onHide={hideDialog}>
@@ -781,6 +1062,13 @@ export const Food = () => {
                     {/* {product && <span>Bạn có chắc chắn muốn xóa <b>{product.name}</b>?</span>} */}
                     {/* <span>Bạn có chắc chắn muốn xóa <b>{productDeleteSelected.name }</b>?</span> */}
                     {productDeleteSelected && <span>Bạn có chắc chắn muốn xóa <b>{productDeleteSelected.name}</b>?</span>}
+                </div>
+            </Dialog>
+
+            <Dialog visible={deleteAllProduct} style={{ width: '450px' }} header="Xác nhận" modal footer={deleteAllProductDialogFooter} onHide={hideDialog}>
+                <div className="confirmation-content">
+                    <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
+                    {selectedProducts && <span>Bạn có chắc chắn xóa hết các sản phẩm đang chọn?</span>}
                 </div>
             </Dialog>
 

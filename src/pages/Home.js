@@ -18,10 +18,11 @@ import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 // import ProductService from '../service/ProductService';
 import { Rating } from 'primereact/rating';
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { Carousel } from 'primereact/carousel';
 
 import './Home.css'
+import './Home-more.css'
 import './CarouselDemo.css'
 
 export const Home = () => {
@@ -80,7 +81,7 @@ export const Home = () => {
     ]
 
     const carouselItems = [
-        { "id": "1000", "code": "f230fh0g3", "name": "Bánh mì kẹp thịt nướng", "description": "Product Description", "image": "http://localhost:8083/downloadFile/banh-mi-thit-nuong.jpg", "price": 65, "category": "Accessories", "quantity": 24, "inventoryStatus": "INSTOCK", "rating": 5 },
+        { "id": "1000", "code": "f230fh0g3", "name": "", "description": "Product Description", "image": "http://localhost:8083/downloadFile/banh-mi-thit-nuong.jpg", "price": 65, "category": "Accessories", "quantity": 24, "inventoryStatus": "INSTOCK", "rating": 5 },
         { "id": "1001", "code": "nvklal433", "name": "Bún chả Hà Nội", "description": "Product Description", "image": "http://localhost:8083/downloadFile/bun-cha-ha-noi.jpg", "price": 72, "category": "Accessories", "quantity": 61, "inventoryStatus": "INSTOCK", "rating": 4 },
         { "id": "1002", "code": "zz21cz3c1", "name": "Cơm rang dưa bò", "description": "Product Description", "image": "http://localhost:8083/downloadFile/com-rang-dua-bo.jpg", "price": 79, "category": "Fitness", "quantity": 2, "inventoryStatus": "LOWSTOCK", "rating": 3 },
         { "id": "1003", "code": "244wgerg2", "name": "Cơm thố", "description": "Product Description", "image": "http://localhost:8083/downloadFile/com-tho.jpg", "price": 29, "category": "Clothing", "quantity": 25, "inventoryStatus": "INSTOCK", "rating": 5 },
@@ -103,9 +104,6 @@ export const Home = () => {
                         </div>
                     </div>
                     <div>
-                        <h4 className="p-mb-1">{product.name}</h4>
-                        {/* <h6 className="p-mt-0 p-mb-3">${product.price}</h6> */}
-                        {/* <span className={`product-badge status-${product.inventoryStatus.toLowerCase()}`}>{product.inventoryStatus}</span> */}
                         <div className="car-buttons p-mt-5">
                             <Button icon="pi pi-search" className="p-button p-button-rounded p-mr-2" />
                             <Button icon="pi pi-star" className="p-button-success p-button-rounded p-mr-2" />
@@ -189,7 +187,7 @@ export const Home = () => {
                     <div className="product-grid-item-content">
 
                         <img src={`http://localhost:8083/downloadFile/che-com-dau-xanh.jpg`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
-{/* 
+                        {/* 
                         <img src={`../../img/ab1.jpg`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} /> */}
                         <div className="product-name">{data.name}</div>
                         <div className="product-description">{data.description}</div>
@@ -234,8 +232,6 @@ export const Home = () => {
         <div>
 
             <div className="carousel-demo">
-                {/* <div className="card">
-                </div> */}
                 <Carousel
                     value={carousel}
                     numVisible={3}
@@ -249,11 +245,224 @@ export const Home = () => {
             </div>
 
 
-            <div className="dataview-demo">
-                {/* <div className="card">
-                  
-                </div> */}
-                <DataView
+
+            <div className="add-products">
+                <div className="container">
+                    <div className="add-products-row">
+                        <div className="w3ls-add-grids">
+                            <Link to={''}>
+                                <h4>
+                                    Nhận{" "}
+                                    <span>
+                                        20%
+                                        <br />
+                                        Hoàn lại
+                                    </span>
+                                </h4>
+                                <h5>Đặt hàng qua ứng dụng</h5>
+                                <h6>
+                                    Đặt ngay{" "}
+                                    <i className="fa fa-arrow-circle-right" aria-hidden="true" />
+                                </h6>
+                            </Link>
+                        </div>
+                        <div className="w3ls-add-grids w3ls-add-grids-right">
+                            <Link to={''}>
+                                <h4>
+                                    Giảm
+                                    <span>
+                                        <br />
+                                        40% Đặt hàng
+                                    </span>
+                                </h4>
+                                <h5>Ngày cuối tuần và ngày lễ</h5>
+                                <h6>
+                                    Đặt ngay{" "}
+                                    <i className="fa fa-arrow-circle-right" aria-hidden="true" />
+                                </h6>
+                            </Link>
+                        </div>
+                        <div className="clearfix"> </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="wthree-order">
+                {/* <img src="images/i2.jpg" className="w3order-img" alt="" /> */}
+                <img src={`../../i2.png`} className="w3order-img" alt="" />
+                <div className="container">
+                    <h3 className="w3ls-title">Cách Mua Hàng Trực Tuyến</h3>
+                    <p className="w3lsorder-text">
+                        Chỉ với 4 bước.
+                    </p>
+                    <div className="order-agileinfo">
+                        <div className="col-md-3 col-sm-3 col-xs-6 order-w3lsgrids">
+                            <div className="order-w3text">
+                                <i className="fa fa-map" aria-hidden="true"></i>
+                                <h5>Tìm kiếm</h5>
+                                <span>1</span>
+                            </div>
+                        </div>
+                        <div className="col-md-3 col-sm-3 col-xs-6 order-w3lsgrids">
+                            <div className="order-w3text">
+                                <i className="fa fa-cutlery" aria-hidden="true"></i>
+                                <h5>Chọn món</h5>
+                                <span>2</span>
+                            </div>
+                        </div>
+                        <div className="col-md-3 col-sm-3 col-xs-6 order-w3lsgrids">
+                            <div className="order-w3text">
+                                <i className="fa fa-credit-card" aria-hidden="true"></i>
+                                <h5>Thanh toán</h5>
+                                <span>3</span>
+                            </div>
+                        </div>
+                        <div className="col-md-3 col-sm-3 col-xs-6 order-w3lsgrids">
+                            <div className="order-w3text">
+                                <i className="fa fa-truck" aria-hidden="true"></i>
+                                <h5>Nhận hàng</h5>
+                                <span>4</span>
+                            </div>
+                        </div>
+                        <div className="clearfix"> </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="w3agile-deals">
+                <div className="container">
+                    <h3 className="w3ls-title">Dịch vụ</h3>
+                    <div className="dealsrow">
+                        <div className="col-md-6 col-sm-6 deals-grids">
+                            <div className="deals-left">
+                                <i className="fa fa-truck" aria-hidden="true" />
+                            </div>
+                            <div className="deals-right">
+                                <h4>Miễn phí giao hàng</h4>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+                                    tempus justo ac{" "}
+                                </p>
+                            </div>
+                            <div className="clearfix"> </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 deals-grids">
+                            <div className="deals-left">
+                                <i className="fa fa-birthday-cake" aria-hidden="true" />
+                            </div>
+                            <div className="deals-right">
+                                <h4>Đặt tiệc sinh nhật</h4>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+                                    tempus justo ac{" "}
+                                </p>
+                            </div>
+                            <div className="clearfix"> </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 deals-grids">
+                            <div className="deals-left">
+                                <i className="fa fa-users" aria-hidden="true" />
+                            </div>
+                            <div className="deals-right">
+                                <h4>Tiệc nhóm</h4>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+                                    tempus justo ac{" "}
+                                </p>
+                            </div>
+                            <div className="clearfix"> </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 deals-grids">
+                            <div className="deals-left">
+                                <i className="fa fa-building" aria-hidden="true" />
+                            </div>
+                            <div className="deals-right">
+                                <h4>Tiệc công ty</h4>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+                                    tempus justo ac{" "}
+                                </p>
+                            </div>
+                            <div className="clearfix"> </div>
+                        </div>
+                        <div className="clearfix"> </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div className="subscribe agileits-w3layouts">
+                <div className="container">
+                    <div className="col-md-6 social-icons w3-agile-icons">
+                        <h4>Liên hệ</h4>
+                        <ul>
+                            <li>
+                                <a href="#" className="fa fa-facebook icon facebook">
+                                    {" "}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="fa fa-twitter icon twitter">
+                                    {" "}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="fa fa-google-plus icon googleplus">
+                                    {" "}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="fa fa-dribbble icon dribbble">
+                                    {" "}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="fa fa-rss icon rss">
+                                    {" "}
+                                </a>
+                            </li>
+                        </ul>
+                        <ul className="apps">
+                            <li>
+                                <h4>Tải ứng dụng: </h4>{" "}
+                            </li>
+                            <li>
+                                <a href="#" className="fa fa-apple" />
+                            </li>
+                            <li>
+                                <a href="#" className="fa fa-windows" />
+                            </li>
+                            <li>
+                                <a href="#" className="fa fa-android" />
+                            </li>
+                        </ul>
+                    </div>
+                    <div className="col-md-6 subscribe-right">
+                        <h3 className="w3ls-title">
+                            Đăng ký để nhận <br />
+                            <span>Thông báo</span>
+                        </h3>
+                        <form action="#" method="post">
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Nhập Email..."
+                                required
+                            />
+                            <input type="submit" defaultValue="Subscribe" />
+                            <div className="clearfix"> </div>
+                        </form>
+                        <img
+                            src={`../../i1.jpg`}
+                            className="sub-w3lsimg"
+                            alt=""
+                        />
+                    </div>
+                    <div className="clearfix"> </div>
+                </div>
+            </div>
+            {/* <DataView
                     value={products}
                     layout={layout}
                     //    header={header}
@@ -262,8 +471,8 @@ export const Home = () => {
                     rows={6}
                     sortOrder={sortOrder}
                     sortField={sortField}
-                />
-            </div>
+                /> */}
+
 
         </div>
     );

@@ -23,8 +23,12 @@ class OrderStatusService extends FetchAPI {
     }
 
     async update(id,dataBody) {
-        let url = `${PREFIX_URL_ORDERFOOD}/orderStatus/${id}`;
-        return await this.request(url, dataBody, TypeMethodConstantEnum.PUT);
+        try {
+            let url = `${PREFIX_URL_ORDERFOOD}/orderStatus/${id}`;
+            return await this.request(url, dataBody, TypeMethodConstantEnum.PUT);
+        } catch (error) {
+            throw error;
+        }
     }
 
     // async delete(commentId) {

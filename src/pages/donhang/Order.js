@@ -28,6 +28,7 @@ const Order = () => {
     const toast = useRef(null);
     const dt = useRef(null);
     const [products, setProducts] = useState(null);
+    const [expandedRows, setExpandedRows] = useState(null);
     const [selectedProducts, setSelectedProducts] = useState(null);
     const [globalFilter, setGlobalFilter] = useState(null);
     const [deleteProductDialog, setDeleteProductDialog] = useState(false);
@@ -273,17 +274,24 @@ const Order = () => {
             status: orderObject.status
 
         }
-        console.log(`orderObject?.id`, orderObject?.id)
-        console.log(`dataBody`, dataBody)
+        // console.log(`orderObject?.id`, orderObject?.id)
+        // console.log(`dataBody`, dataBody)
 
-        let result = await orderStatusService.update(orderObject?.id, dataBody);
-        console.log(`resultupdateSatus`, result)
-        if (result?.status === 1000) {
-
-            setOrderObject(null)
-            fetchDiscount();
+        // console.log(`có chạy vào đây`)
+        try {
+            let result = await orderStatusService.update(orderObject?.id, dataBody)
+            console.log(`resultupdateSatus`, result)
+            if (result?.status === 1000) {
+                setOrderObject(null)
+                fetchDiscount();
+            }
+        } catch (error) {
+            // console.log("errrrr")
+            console.log(error?.response)
+            showError(error?.response?.data?.message)
         }
         setProductDialog(false);
+
     }
 
     const deleteDiscount = async (id) => {
@@ -333,7 +341,7 @@ const Order = () => {
     };
 
     const onCategoryChange = (e) => {
-        console.log(`e`, e)
+        // console.log(`e`, e)
         setCategoryStatus(e.value)
         if (e.value === 'tndh') {
             setOrderObject(
@@ -373,6 +381,35 @@ const Order = () => {
         </div>
     );
 
+    const formatCurrency = (value) => {
+        // console.log(`value`, value)
+        return value.toLocaleString('it-IT', { style: 'currency', currency: 'VND' });
+
+    }
+    const priceBodyTemplate = (rowData) => {
+        return formatCurrency(rowData.price);
+    }
+
+
+    const rowExpansionTemplate = (data) => {
+        return (
+            <div className="orders-subtable">
+                {/* <h5>Orders for {data.name}</h5> */}
+                <DataTable value={data.listChild} className="p-datatable-thead-child">
+                    <Column field="foodId" header="Mã món ăn" style={{ textAlign: 'center' }} ></Column>
+                    <Column field="foodName" header="Tên" style={{ textAlign: 'center' }}></Column>
+                    <Column field="amount" header="Số lượng"  style={{ textAlign: 'center' }}></Column>
+                    <Column field="price" header="Giá" style={{ textAlign: 'center' }} body={priceBodyTemplate} ></Column>
+                    {/* <Column field="Ảnh" header="Tên" body={imageBodyTemplate} ></Column>
+                  
+                    <Column field="money" header="Tiền" body={moneyBodyTemplate} ></Column> */}
+
+                    {/* <Column headerStyle={{ width: '4rem' }} body={searchBodyTemplate}></Column> */}
+                </DataTable>
+            </div>
+        );
+    }
+
 
 
 
@@ -387,6 +424,9 @@ const Order = () => {
                 <DataTable ref={dt} value={products}
                     selection={selectedProducts}
                     onSelectionChange={(e) => handleOnSelectedChange(e)}
+                    expandedRows={expandedRows}
+                    onRowToggle={(e) => setExpandedRows(e.data)}
+                    rowExpansionTemplate={rowExpansionTemplate}
                     dataKey="id"
                     header={header}
                     paginator rows={10}
@@ -399,6 +439,7 @@ const Order = () => {
                 >
 
                     {/* <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column> */}
+                    <Column expander style={{ width: '3em' }} />
                     <Column field="id" header="Id" style={{ textAlign: 'center' }} ></Column>
                     <Column field="address" header="Địa chỉ" style={{ textAlign: 'center' }}></Column>
                     <Column field="phone" header="Số điện thoại" style={{ textAlign: 'center' }} ></Column>

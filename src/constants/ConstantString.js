@@ -9,6 +9,11 @@ export const EMAIL_REGEX = RegExp(
 );
 
 
+
+export const MESSAGE_PERCENT_REQUIRE = "Phần trăm giảm giá phải lớn hơn 0";
+export const MESSAGE_PERCENT_ERROR_GREATER_THAN = "Phần trăm giảm giá không thể lớn hơn 100";
+export const MESSAGE_PRICE_REQUIRE = "Giá phải lớn hơn 0";
+
 export const MESSAGE_REQUIRE = "Không được bỏ trống";
 export const NOT_NUMBER = "Không phải số";
 export const RETYPE_PASSWORD_UNLIKE = "Mật khẩu không giống nhau";

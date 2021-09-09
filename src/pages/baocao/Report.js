@@ -5,6 +5,7 @@ import { Chart } from 'primereact/chart';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dropdown } from 'primereact/dropdown';
+import { Tag } from 'primereact/tag';
 import { Toast } from 'primereact/toast';
 import { Tooltip } from 'primereact/tooltip';
 import React, { useEffect, useRef, useState } from 'react';
@@ -85,7 +86,7 @@ const Report = () => {
 
         showLoader();
         let result = await reportService.getTotal(month, year);
-        // console.log(`fetchTotalAPI`, result)
+        console.log(`fetchTotalAPI`, result)
         if (result?.status === 1000) {
             setProducts(result?.list);
 
@@ -230,7 +231,7 @@ const Report = () => {
                 pdf.addFileToVFS("font-times-new-roman.ttf",
                     // ttf font file converted to base64 
                     // following is Consolas with only hex digit glyphs defined (0-9, A-F)
-              strBase64fontVnTime
+                    strBase64fontVnTime
                 )
 
                 // add custom font to file
@@ -240,7 +241,7 @@ const Report = () => {
 
                 //console.log(pdf.getFontList());
 
-              
+
 
 
 
@@ -340,6 +341,18 @@ const Report = () => {
         setSelectedProducts(e.value);
     }
 
+    const renderStatusBodyTemplate = (rowData) => {
+        let status = null;
+        if (rowData.isDeleted === 1) {
+            status = 'Ngừng kinh doanh'
+            return <Tag severity="danger" value={status} />;
+        }
+        else {
+            status = 'Hoạt động'
+            return <Tag severity="success" value={status} />;
+        }
+    }
+
 
 
 
@@ -379,9 +392,25 @@ const Report = () => {
                             currentPageReportTemplate="Tổng {totalRecords} bản ghi"
 
                         >
-                            {
+                            {/* {
                                 cols.map((col, index) => <Column key={index} field={col.field} header={col.header} style={{ textAlign: 'center' }} />)
-                            }
+                            } */}
+
+                            {/* { field: 'id', header: 'Id' },
+        { field: 'name', header: 'Tên' },
+        { field: 'month', header: 'Tháng' },
+        { field: 'total', header: 'Tổng' } */}
+
+
+                            <Column field="id" header="Id" style={{ textAlign: 'center' }} ></Column>
+                            <Column field="name" header="Tên" style={{ textAlign: 'center' }}></Column>
+                            <Column field="month" header="Tháng" style={{ textAlign: 'center' }} ></Column>
+                            <Column field="total" header="Tổng" style={{ textAlign: 'center' }}></Column>
+                            <Column field="isDeleted" header="Tình trạng" style={{ textAlign: 'center' }} body={renderStatusBodyTemplate}></Column>
+
+
+
+
                         </DataTable>
 
                     </div>

@@ -36,7 +36,7 @@ export const Footer = () => {
                         </div>
                         <div className="bottom p-mb-6">
                             <span>@2021 Orderfood.</span>
-                            <div className="icon">
+                            <div className="icon-footer">
                                 <span><i className="pi pi-facebook p-mr-2" style={{ 'fontSize': '2em'  }}></i></span>
                                 <span><i className="pi pi-google p-mr-2" style={{ 'fontSize': '2em' }}></i></span>
                                 <span><i className="pi pi-twitter p-mr-2" style={{ 'fontSize': '2em' }}></i></span>

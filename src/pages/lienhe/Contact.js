@@ -1,17 +1,11 @@
 
-import React, { useEffect, useRef, useState } from 'react'
-import { Panel } from 'primereact/panel';
-import './Contact.css'
+import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
+import React, { useEffect, useRef, useState } from 'react';
+import './Contact.css';
 
-import { GMap } from 'primereact/gmap';
-import { Dialog } from 'primereact/dialog';
-import { Button } from 'primereact/button';
-import { Checkbox } from 'primereact/checkbox';
-import { Toast } from 'primereact/toast';
-import { loadGoogleMaps, removeGoogleMaps } from './GoogleMaps';
 
 const Contact = () => {
 
@@ -26,13 +20,13 @@ const Contact = () => {
     const toast = useRef(null);
 
     useEffect(() => {
-        loadGoogleMaps(() => {
-            setGoogleMapsReady(true);
-        });
+        // loadGoogleMaps(() => {
+        //     setGoogleMapsReady(true);
+        // });
 
-        return () => {
-            removeGoogleMaps();
-        }
+        // return () => {
+        //     removeGoogleMaps();
+        // }
     }, [])
 
 

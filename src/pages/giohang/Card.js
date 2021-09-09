@@ -128,7 +128,7 @@ export const Card = ({ match }) => {
         // console.log(`product.cardId`, product.cardId)
 
         let result = await orderService.saveOrder(objParam);
-        console.log(`result`, result)
+        // console.log(`result`, result)
         if (result?.status === 1000) {
 
 
@@ -402,7 +402,8 @@ export const Card = ({ match }) => {
     }
 
     const imageBodyTemplate = (rowData) => {
-        return <img src={`../../img/${rowData.imagePath}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={rowData.imagePath} className="product-image" />
+        // console.log(`rowData`, rowData)
+        return <img src={`${rowData.imagePath}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={rowData.imagePath} className="product-image" />
     }
 
     const discountBodyTemplate = (rowData) => {
@@ -558,7 +559,7 @@ export const Card = ({ match }) => {
                 ...objOrder,
                 orderDetails: newData
             }
-            console.log(`objParam`, objParam)
+            // console.log(`objParam`, objParam)
 
             // console.log(`keycloak`, keycloak?.idTokenParsed);
 
@@ -682,12 +683,12 @@ export const Card = ({ match }) => {
     const [phoneErrors, setPhoneErrors] = useState({});
 
     const formValidation = () => {
-        console.log(`formValidation`)
+        // console.log(`formValidation`)
         // debugger
         const addressErrors = {}
         const phoneErrors = {}
 
-        console.log(`String(objOrder.phone).length`, String(objOrder.phone).length)
+        // console.log(`String(objOrder.phone).length`, String(objOrder.phone).length)
 
         let isValid = true;
 
@@ -768,7 +769,7 @@ export const Card = ({ match }) => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteProductsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
+                    <Dialog visible={deleteProductsDialog} style={{ width: '450px' }} header="Xác nhận" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
                         <div className="confirmation-content">
                             <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
                             {product && <span>Bạn có chắc chắn xóa hết các sản phẩm đang chọn?</span>}

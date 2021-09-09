@@ -1,3 +1,5 @@
+
+
 body {
   margin: 0;
   padding: 0 !important;
@@ -95,6 +97,13 @@ footer {
     color: white !important;
   }
 
+  .p-datatable-thead-child tr th {
+    background-color: #a1430c !important;
+    border: solid 1px #e4dede !important;
+    padding: 0.5rem !important;
+    color: white !important;
+  }
+
   .p-datatable-tbody tr td {
     border: solid 1px #e4dede !important;
     padding: 0.5rem !important;
@@ -183,6 +192,12 @@ footer {
               display: flex;
               justify-content: space-between;
           }
+          .icon-footer{
+            width: fit-content;
+          }
+          .icon-footer > span{
+            margin-left: 12px;
+          }
       }
       .right {
           float: left;
@@ -190,3 +205,6 @@ footer {
       }
   }
 }
+
+
+

@@ -80,7 +80,7 @@ export const ListOrder = () => {
     const expandAll = () => {
         let _expandedRows = {};
         products.forEach(p => {
-            console.log(`p`, p)
+            // console.log(`p`, p)
             _expandedRows[`${p.orderId}`] = true
         });
 
@@ -121,7 +121,7 @@ export const ListOrder = () => {
     }
 
     const imageBodyTemplate = (rowData) => {
-        return <img src={`../../img/${rowData.pathImage}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={rowData.image} className="product-image" />;
+        return <img src={`${rowData.pathImage}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={rowData.image} className="product-image" />;
     }
 
     const priceBodyTemplate = (rowData) => {
@@ -162,12 +162,12 @@ export const ListOrder = () => {
         return (
             <div className="orders-subtable">
                 {/* <h5>Orders for {data.name}</h5> */}
-                <DataTable value={data.listObjectOrderDetailOfUserResponseDto}>
-                    <Column field="foodId" header="Id" ></Column>
-                    <Column field="foodName" header="Tên" ></Column>
-                    <Column field="Ảnh" header="Tên" body={imageBodyTemplate} ></Column>
-                    <Column field="amount" header="Số lượng"  ></Column>
-                    <Column field="money" header="Tiền" body={moneyBodyTemplate} ></Column>
+                <DataTable value={data.listObjectOrderDetailOfUserResponseDto} className="p-datatable-thead-child">
+                    <Column field="foodId" header="Id" style={{ textAlign: 'center' }}></Column>
+                    <Column field="foodName" header="Tên" style={{ textAlign: 'center' }}></Column>
+                    <Column field="Ảnh"  body={imageBodyTemplate} style={{ textAlign: 'center' }}></Column>
+                    <Column field="amount" header="Số lượng" style={{ textAlign: 'center' }}></Column>
+                    <Column field="money" header="Tiền" body={moneyBodyTemplate} style={{ textAlign: 'center' }} ></Column>
 
                     {/* <Column headerStyle={{ width: '4rem' }} body={searchBodyTemplate}></Column> */}
                 </DataTable>

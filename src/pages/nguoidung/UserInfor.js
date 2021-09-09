@@ -80,11 +80,11 @@ const UserInfor = () => {
     const fetchAllPermissionOfUser = async (username) => {
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         let result = await permissionService.getAllPermissionOfUser(username);
-        console.log(`resultFetchAllPermissionOfUser`, result)
+        // console.log(`resultFetchAllPermissionOfUser`, result)
 
         if (result?.status === 1000) {
             // setSelectedKeys(result?.list)
-            console.log(`JSON.pase()`, JSON.parse(result?.message))
+            // console.log(`JSON.pase()`, JSON.parse(result?.message))
             setSelectedKeys(JSON.parse(result?.message))
 
         } 
@@ -149,8 +149,8 @@ const UserInfor = () => {
 
                 <h5>Danh sách quyền</h5>
                 <div className="p-mb-4">
-                    <Button type="button" icon="pi pi-plus" label="Expand All" onClick={expandAll} className="p-mr-2" />
-                    <Button type="button" icon="pi pi-minus" label="Collapse All" onClick={collapseAll} />
+                    <Button type="button" icon="pi pi-plus " label="Mở hết" onClick={expandAll} className="p-mr-2 p-button-warning" />
+                    <Button type="button" icon="pi pi-minus " label="Đóng hết" onClick={collapseAll} className="p-button-help" />
                 </div>
                 <Tree value={nodes} expandedKeys={expandedKeys}
                     onToggle={e => setExpandedKeys(e.value)}

@@ -18,11 +18,12 @@ import { Toast } from 'primereact/toast';
 import FoodService from '../../service/FoodService';
 
 import './Discount.css'
-import { ACTION_ADD, ACTION_CREATE, ACTION_DELETE, ACTION_EDIT, EXPRITIME_HIDER_LOADER, MESSAGE_REQUIRE, MESSAGE_REQUIRE_PERCENT_LONHON_0, NOT_PERMISSION } from '../../constants/ConstantString';
+import { ACTION_ADD, ACTION_CREATE, ACTION_DELETE, ACTION_EDIT, EXPRITIME_HIDER_LOADER, MESSAGE_PERCENT_ERROR_GREATER_THAN, MESSAGE_PERCENT_REQUIRE, MESSAGE_REQUIRE, MESSAGE_REQUIRE_PERCENT_LONHON_0, NOT_PERMISSION } from '../../constants/ConstantString';
 import PermissionService from '../../service/PermissionService';
 import { useKeycloak } from '@react-keycloak/web';
 import { useHistory } from 'react-router-dom';
 import useFullPageLoader from '../../hooks/useFullPageLoader';
+import { Tag } from 'primereact/tag';
 
 const Discount = () => {
 
@@ -83,11 +84,15 @@ const Discount = () => {
     const [selectedDiscountForFood, setSelectedDiscountForFood] = useState(null)
     const [selectedUpdateDiscountForFood, setSelectedUpdateDiscountForFood] = useState(null)
 
+    const [editDiscountDialog, setEditDiscountDialog] = useState(false);
+    const [discountEditSelected, setDiscountEditSelected] = useState(false)
+
 
     const foodGroupService = new FoodGroupService();
     const discountService = new DiscountService();
     const foodService = new FoodService();
 
+    //object save
     const [objDiscount, setObjDiscount] = useState(
         {
             name: '',
@@ -97,13 +102,57 @@ const Discount = () => {
         }
     )
 
+    //object edit
+    const [objectEdit, setObjectEdit] = useState(
+        {
+            name: '',
+            percent: 0
+        }
+    )
+
     //errors
     const [objecErrors, setObjecErrors] = useState({
         name: {},
         percent: {},
         startDate: {},
-        endDate: {}
+        endDate: {},
+        nameEdit: {},
+        percentEdit: {}
     })
+
+    const formValidationEdit = () => {
+
+        const nameEditErrors = {}
+        const percentEditErrors = {}
+
+        let isValid = true;
+        // name
+        if (objectEdit.name === '') {
+            nameEditErrors.required = MESSAGE_REQUIRE;
+            isValid = false;
+        }
+
+        // percent
+        if (objectEdit.percent === 0) {
+            percentEditErrors.required = MESSAGE_PERCENT_REQUIRE;
+            isValid = false;
+        } else if (objectEdit.percent >= 100) {
+            percentEditErrors.error_greater = MESSAGE_PERCENT_ERROR_GREATER_THAN;
+            isValid = false;
+        }
+
+        setObjecErrors(
+            {
+                ...objecErrors,
+                nameEdit: nameEditErrors,
+                percentEdit: percentEditErrors
+            }
+        )
+
+        return isValid;
+    }
+
+
 
     const formValidation = () => {
 
@@ -277,6 +326,61 @@ const Discount = () => {
             )
 
         }
+
+        if (name === 'nameEdit') {
+            if (value.length > 0) {
+                setObjecErrors(
+                    {
+                        ...objecErrors,
+                        nameEdit: ''
+                    }
+                )
+            } else {
+                setObjecErrors(
+                    {
+                        ...objecErrors,
+                        nameEdit: MESSAGE_REQUIRE
+                    }
+                )
+            }
+            setObjectEdit(
+                {
+                    ...objectEdit,
+                    name: e.target.value
+                }
+            )
+        }
+
+        if (name === 'percentEdit') {
+            if (e.value > 0) {
+                setObjecErrors(
+                    {
+                        ...objecErrors,
+                        percentEdit: ''
+                    }
+                )
+            } else {
+                setObjecErrors(
+                    {
+                        ...objecErrors,
+                        percentEdit: MESSAGE_PERCENT_REQUIRE
+                    }
+                )
+            }
+            setObjectEdit(
+                {
+                    ...objectEdit,
+                    percent: e.value
+                }
+            )
+        }
+
+
+
+
+
+
+
     }
 
 
@@ -299,6 +403,11 @@ const Discount = () => {
         // setDataOrder(array)
     }
 
+    const handleEditDiscountButton = (discount) => {
+        setEditDiscountDialog(true)
+        setDiscountEditSelected(discount)
+    }
+
     const handleDeleteDiscount = async (rowData) => {
         let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_DELETE);
         if (result?.status === 1000) {
@@ -311,7 +420,7 @@ const Discount = () => {
     const actionBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
-                {/* <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2" onClick={() => editProduct(rowData)} /> */}
+                <Button icon="pi pi-pencil" className="p-button-rounded p-button-warning p-mr-2" onClick={() => handleEditDiscountButton(rowData)} />
                 <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => handleDeleteDiscount(rowData)} />
             </React.Fragment>
         );
@@ -342,6 +451,21 @@ const Discount = () => {
             </React.Fragment>
         );
     }
+
+    const renderStatusBodyTemplate = (rowData) => {
+        let status = null;
+        if (rowData.isDeleted === 1) {
+            status = 'Hết hạn'
+            return <Tag severity="danger" value={status} />;
+        }
+        else {
+            status = 'Hoạt động'
+            return <Tag severity="success" value={status} />;
+        }
+    }
+
+
+
 
     const deleteProduct = () => {
         // let _products = products.filter(val => val.id !== product.id);
@@ -526,6 +650,9 @@ const Discount = () => {
         seTdiscountDialog(false)
         seTupdadteDiscountDialog(false)
 
+        setEditDiscountDialog(false)
+
+
 
         setUpdateSelectedDiscount(null)
         setSelectedUpdateDiscountForFood(null)
@@ -538,6 +665,29 @@ const Discount = () => {
         setUnSelected(null)
         setFoodSelected(null)
 
+
+        setObjecErrors(
+            {
+                name: {},
+                percent: {},
+                startDate: {},
+                endDate: {},
+                nameEdit: {},
+                percentEdit: {}
+            }
+        )
+
+
+        setObjectEdit(
+            {
+                name: '',
+                percent: 0
+            }
+        )
+
+
+
+
     }
 
 
@@ -547,23 +697,28 @@ const Discount = () => {
         // console.log(`object`, objecErrors)
 
         if (formValidation()) {
-            let result = await discountService.save(objDiscount);
-            // console.log(`result`, result)
-            if (result?.status === 1000) {
-                showSuccess('Thành công!')
-                setObjDiscount(
-                    {
-                        name: '',
-                        percent: 0,
-                        startDate: moment().format("DD/MM/yy"),
-                        endDate: moment().format("DD/MM/yy")
-                    }
-                )
-                fetchDiscount();
-                fetchAllDiscountAPI()
-            } else {
-                showError(result?.message)
+            try {
+                let result = await discountService.save(objDiscount);
+                // console.log(`result`, result)
+                if (result?.status === 1000) {
+                    showSuccess('Thành công!')
+                    setObjDiscount(
+                        {
+                            name: '',
+                            percent: 0,
+                            startDate: moment().format("DD/MM/yy"),
+                            endDate: moment().format("DD/MM/yy")
+                        }
+                    )
+                    fetchDiscount();
+                    fetchAllDiscountAPI()
+                } else {
+                    showError(result?.message)
+                }
+            } catch (error) {
+                showError(error?.response?.data?.message)
             }
+
             setProductDialog(false);
         }
 
@@ -572,13 +727,49 @@ const Discount = () => {
 
     const deleteDiscount = async (id) => {
 
-        let result = await discountService.delete(id);
+        let result = await discountService.update(id);
         // console.log(`result`, result)
         if (result?.status === 1000) {
             fetchDiscount();
+            fetchAllDiscountAPI();
         }
         setProductDialog(false);
     }
+
+    const editDiscount = async () => {
+
+        console.log(`có chạy vào đây`)
+
+        if (formValidationEdit()) {
+            showLoader()
+
+            try {
+                console.log(`objectEdit`, objectEdit)
+                let result = await discountService.updateNameAndPercent(objectEdit, discountEditSelected.id);
+                // console.log(`getAllFoodAPI`, result)
+                if (result?.status === 1000) {
+                    fetchDiscount();
+                }
+                showSuccess('Thành công')
+
+            } catch (error) {
+                // console.log(`error`)
+                showError(error?.response?.data?.message)
+                setSelectedProducts(null)
+            }
+            setTimeout(hideLoader, EXPRITIME_HIDER_LOADER);
+            setEditDiscountDialog(false)
+            //clear
+            setObjectEdit(
+                {
+                    name: '',
+                    percent: 0
+                }
+            )
+        }
+
+    }
+
 
 
     const deleteDiscountSelected = (rowData) => {
@@ -612,6 +803,14 @@ const Discount = () => {
             />
         </React.Fragment>
     );
+
+    const editDiscountDialogFooter = (
+        <React.Fragment>
+            <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+            <Button label="Đồng ý" icon="pi pi-check" className="p-button-text" onClick={editDiscount} />
+        </React.Fragment>
+    );
+
 
     const handleYesCreateDiscount = () => {
         if (selectedDiscountForFood === null) {
@@ -871,6 +1070,7 @@ const Discount = () => {
                     currentPageReportTemplate="Tổng {totalRecords} bản ghi"
                     currentPageReportTemplate="Tổng {totalRecords} bản ghi"
                     globalFilter={globalFilter}
+                    emptyMessage="Không có dữ liệu"
                     header={headerDiscount}
                 >
 
@@ -880,7 +1080,8 @@ const Discount = () => {
                     <Column field="percent" header="%" style={{ textAlign: 'center' }}></Column>
                     <Column field="startDate" body={bodyStartDate} header="Ngày bắt đầu" style={{ textAlign: 'center' }} ></Column>
                     <Column field="endDate" body={bodyEndDate} header="Ngày kết thúc" style={{ textAlign: 'center' }}></Column>
-                    <Column headerStyle={{ width: '4rem' }} body={actionBodyTemplate} style={{ textAlign: 'center' }}></Column>
+                    <Column body={renderStatusBodyTemplate} header="Trạng thái" style={{ textAlign: 'center' }}></Column>
+                    <Column headerStyle={{ width: '8rem' }} body={actionBodyTemplate} style={{ textAlign: 'center' }}></Column>
                 </DataTable>
 
                 {/* Thêm món ăn */}
@@ -956,8 +1157,42 @@ const Discount = () => {
                             return <span className="errorMessage" key={key} >{objecErrors.endDate[keyIndex]} </span>
                         })}
                     </div>
-
                 </Dialog>
+
+                <Dialog visible={editDiscountDialog} style={{ width: '450px' }} header="Sửa giảm giá" modal footer={editDiscountDialogFooter} onHide={hideDialog}>
+                    <div className="confirmation-content">
+                        <div className="p-fluid">
+                            <div className="p-field">
+                                <label htmlFor="name">Tên <span className="item-required">*</span></label>
+                                <InputText
+                                    name="nameEdit"
+                                    className={Object.keys(objecErrors.nameEdit).length > 0 ? "error" : null}
+                                    id="name"
+                                    type="text"
+                                    value={objectEdit.name || ''}
+                                    onChange={handleOnChange}
+                                />
+                                {Object.keys(objecErrors.nameEdit).map((keyIndex, key) => {
+                                    return <span className="errorMessage" key={key} >{objecErrors.nameEdit[keyIndex]} </span>
+                                })}
+                            </div>
+                            <div className="p-field">
+                                <label htmlFor="percentEdit">Giá <span className="item-required">*</span></label>
+                                <InputNumber
+                                    name="percentEdit"
+                                    className={Object.keys(objecErrors.percentEdit).length > 0 ? "error" : null}
+                                    inputId="percentEdit"
+                                    value={objectEdit.price || ''}
+                                    onValueChange={handleOnChange}
+                                />
+                                {Object.keys(objecErrors.percentEdit).map((keyIndex, key) => {
+                                    return <span className="errorMessage" key={key} >{objecErrors.percentEdit[keyIndex]} </span>
+                                })}
+                            </div>
+                        </div>
+                    </div>
+                </Dialog>
+
 
 
 
@@ -985,7 +1220,7 @@ const Discount = () => {
                             rowsPerPageOptions={[5, 10, 20]}
                             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                             currentPageReportTemplate="Tổng {totalRecords} bản ghi"
-
+                            emptyMessage="Không có dữ liệu"
                             globalFilter={globalFilter}
                             header={header}>
 
@@ -1010,6 +1245,7 @@ const Discount = () => {
                             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                             currentPageReportTemplate="Tổng {totalRecords} bản ghi"
                             globalFilter={globalFilterForFoodSelected}
+                            emptyMessage="Không có dữ liệu"
                             header={headerTableSelectDiscount}>
 
                             <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
@@ -1044,6 +1280,7 @@ const Discount = () => {
                             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                             currentPageReportTemplate="Tổng {totalRecords} bản ghi"
                             globalFilter={globalFilterForFoodUpdateSelected}
+                            emptyMessage="Không có dữ liệu"
                             header={headerUpdateDiscount}>
                             <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
                             <Column field="id" header="Id" ></Column>
@@ -1064,6 +1301,7 @@ const Discount = () => {
                             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                             currentPageReportTemplate="Tổng {totalRecords} bản ghi"
                             globalFilter={globalFilterForFoodUnUpdateSelected}
+                            emptyMessage="Không có dữ liệu"
                             header={headerTableUpdateSelectDiscount}>
                             <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
                             <Column field="id" header="Id" ></Column>

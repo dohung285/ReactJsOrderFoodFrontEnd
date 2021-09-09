@@ -301,25 +301,25 @@ export const FoodDetail = ({ match }) => {
         }
 
         // Lấy ra được mảng hiện tại trong session
-        let dataCard = (sessionStorage.getItem(DATA_CARD)?.length < 0  || sessionStorage.getItem(DATA_CARD) === null || sessionStorage.getItem(DATA_CARD) === undefined )? [] : JSON.parse(sessionStorage.getItem(DATA_CARD))
+        let dataCard = (sessionStorage.getItem(DATA_CARD)?.length < 0 || sessionStorage.getItem(DATA_CARD) === null || sessionStorage.getItem(DATA_CARD) === undefined) ? [] : JSON.parse(sessionStorage.getItem(DATA_CARD))
         console.log(`dataCard`, dataCard)
 
         // Kiểm tra xem nó đã tồn tại hay chưa nếu rồi thì update nó
         let x = dataCard?.filter(e => e.cardId === obj.cardId);
-        if (x?.length > 0){
+        if (x?.length > 0) {
             let objIndex = dataCard.findIndex((item => item.cardId == obj.cardId));
             console.log(`objIndex`, objIndex)
             //update
             dataCard[objIndex] = obj
             console.log(`after dataCard`, dataCard)
-        }else{
+        } else {
             dataCard.push(obj)
             setCard(1 + card)
         }
 
         sessionStorage.setItem(DATA_CARD, JSON.stringify(dataCard))
 
-       
+
 
         // if (!keycloak.authenticated) {
         //     keycloak.login();
@@ -387,7 +387,7 @@ export const FoodDetail = ({ match }) => {
 
         // myRef.current.children[index].className = "active";
 
-    }, [])
+    }, [keycloak.authenticated])
 
     useEffect(() => {
         fetchFoodDetailByFoodId();
@@ -395,6 +395,21 @@ export const FoodDetail = ({ match }) => {
         getAllCommentByFoodIdAPI()
 
 
+        setOrderObj(
+          {
+            ...orderObj,
+            username: keycloak?.idTokenParsed?.preferred_username,
+            dateOrder: moment().format("DD/MM/yy HH:mm:ss"),
+          }
+        )
+
+        // {
+        //     address: '',
+        //     phone: '',
+        //     username: keycloak?.idTokenParsed?.preferred_username,
+        //     dateOrder: moment().format("DD/MM/yy HH:mm:ss"),
+        //     note: '',
+        // }
         // myRef.current.children[index].className = "active";
 
     }, [keycloak.authenticated])
@@ -826,7 +841,8 @@ export const FoodDetail = ({ match }) => {
                             <span style={{ fontSize: '1.5rem', fontWeight: '600' }}>{products.price} VNĐ</span>
                         </div>
 
-                        <span style={{ fontWeight: '600', fontSize: '1rem' }}>Giảm giá: {products.percent === null ? 0 : products.percent} %</span>
+                        {products.percent !== null &&
+                            <span style={{ fontWeight: '600', fontSize: '1rem' }}>Giảm giá: {products.percent === null ? 0 : products.percent} %</span>}
 
 
                         <p style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '1rem' }}>{products.description}</p>
@@ -834,11 +850,11 @@ export const FoodDetail = ({ match }) => {
                         <DetailsThumb images={products?.listImage} tab={handleTab} myRef={myRef} />
 
                         <div className="p-field p-col-12 p-md-3">
-                            <InputNumber inputId="minmax-buttons"  size={3} value={valueAmount} onValueChange={e => onChangeAmount(e)} mode="decimal" showButtons min={0} max={20} />
+                            <InputNumber inputId="minmax-buttons" size={3} value={valueAmount} onValueChange={e => onChangeAmount(e)} mode="decimal" showButtons min={0} max={20} />
                         </div>
 
                         <Button icon="pi pi-shopping-cart" className="p-mr-2" onClick={() => saveCard(products)}></Button>
-                        <Button icon="pi pi-credit-card" className="p-button-help"  onClick={() => onByProduct()} ></Button>
+                        <Button icon="pi pi-credit-card" className="p-button-help" onClick={() => onByProduct()} ></Button>
                     </div>
                 </div>
 
@@ -944,7 +960,7 @@ export const FoodDetail = ({ match }) => {
                             rows={5}
                             sortOrder={sortOrder}
                             sortField={sortField}
-                            emptyMessage= ""
+                            emptyMessage=""
                             alwaysShowPaginator={false}
                         />
                     </div>
