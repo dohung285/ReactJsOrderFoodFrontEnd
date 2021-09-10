@@ -540,16 +540,18 @@ export const Card = ({ match }) => {
 
     const handleOnYesDialog = (name) => {
 
+        console.log(`name`, name)
         // console.log(`objOrder`, objOrder)
         // console.log(`dataOder`, dataOrder)
 
         if (formValidation()) {
 
             let newData = dataOrder.map(obj => {
-                // console.log(`obj`, obj.foodId)
+                console.log(`obj`, obj)
                 return {
-                    foodId: obj.foodId,
+                    foodId: obj.cardId,
                     amount: obj.amount,
+                    price:obj.price,
                     money: obj.money
                 }
             })
@@ -559,7 +561,7 @@ export const Card = ({ match }) => {
                 ...objOrder,
                 orderDetails: newData
             }
-            // console.log(`objParam`, objParam)
+            console.log(`objParam`, objParam)
 
             // console.log(`keycloak`, keycloak?.idTokenParsed);
 

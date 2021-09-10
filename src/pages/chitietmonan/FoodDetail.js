@@ -78,6 +78,7 @@ export const FoodDetail = ({ match }) => {
     const [orderDetailObj, setOrderDetailObj] = useState({
         foodId: foodId,
         amount: 1,
+        price: null,
         money: null
     })
 
@@ -148,6 +149,7 @@ export const FoodDetail = ({ match }) => {
                     setOrderDetailObj(
                         {
                             ...orderDetailObj,
+                            price: price,
                             money: money
                         }
                     )

@@ -498,7 +498,7 @@ export const Food = () => {
     }
 
     const headerTemplate = (options) => {
-        console.log(`options`, options)
+        // console.log(`options`, options)
         const { className, chooseButton,
             //  uploadButton,
              cancelButton } = options;

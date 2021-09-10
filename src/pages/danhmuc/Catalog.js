@@ -44,7 +44,7 @@ export const Catalog = ({ match }) => {
 
         axios.get(`http://localhost:8082/services/orderfood/api/food/byFoodGroup?foodGroupId=${idCatalog}`)
             .then(res => {
-                // console.log(`res`, res?.data?.response?.listReturn)
+                console.log(`res`, res?.data?.response?.listReturn)
                 let result = res?.data?.response?.listReturn
                 if (result) {
                     setData(result)
@@ -110,6 +110,7 @@ export const Catalog = ({ match }) => {
         }
     }
     const itemTemplate = (product, layout) => {
+        // console.log(`product`, product)
         if (!product) {
             return;
         }
@@ -121,7 +122,7 @@ export const Catalog = ({ match }) => {
 
 
     const renderGridItem = (data) => {
-        console.log(`data`, data)
+        // console.log(`data`, data.percent)
         if (data.isDeleted !== 1) {
             return (
                 <>
