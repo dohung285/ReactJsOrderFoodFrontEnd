@@ -22,6 +22,11 @@ class ReportService extends FetchAPI {
         return await this.request(url, null, TypeMethodConstantEnum.GET);
     }
 
+    async getReport(orderId) {
+        let url = `${PREFIX_URL_ORDERFOOD}/report/${orderId}`;
+        return await this.request(url, null, TypeMethodConstantEnum.GET);
+    }
+
 
 
 }

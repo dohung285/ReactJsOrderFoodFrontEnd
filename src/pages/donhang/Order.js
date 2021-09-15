@@ -19,7 +19,7 @@ import PermissionService from "../../service/PermissionService";
 import { useKeycloak } from "@react-keycloak/web";
 import { ACTION_DELETE, ACTION_EDIT, DELIVERED, EXPRITIME_HIDER_LOADER, NOT_PERMISSION, ORDER, PROCESSED } from "../../constants/ConstantString";
 import useFullPageLoader from "../../hooks/useFullPageLoader";
-
+import { ProgressSpinner } from 'primereact/progressspinner';
 const Order = () => {
 
     const [loader, showLoader, hideLoader] = useFullPageLoader();
@@ -44,6 +44,7 @@ const Order = () => {
         null
     )
 
+    const [loadingButton, setLoadingButton] = useState(false);
 
     const history = useHistory();
     const permissionService = new PermissionService();
@@ -268,6 +269,7 @@ const Order = () => {
         setProductDialog(false);
     }
     const updateSatus = async () => {
+        setLoadingButton(true)
 
         const dataBody = {
             orderId: orderObject.id,
@@ -290,6 +292,7 @@ const Order = () => {
             console.log(error?.response)
             showError(error?.response?.data?.message)
         }
+        setLoadingButton(false)
         setProductDialog(false);
 
     }
@@ -309,7 +312,7 @@ const Order = () => {
     const productDialogFooter = (
         <React.Fragment>
             <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
-            <Button label="Đồng ý" icon="pi pi-check" className="p-button-text"
+            <Button label="Đồng ý" icon="pi pi-check" className="p-button-text" loading={loadingButton}
                 onClick={updateSatus}
             />
         </React.Fragment>
@@ -398,7 +401,7 @@ const Order = () => {
                 <DataTable value={data.listChild} className="p-datatable-thead-child">
                     <Column field="foodId" header="Mã món ăn" style={{ textAlign: 'center' }} ></Column>
                     <Column field="foodName" header="Tên" style={{ textAlign: 'center' }}></Column>
-                    <Column field="amount" header="Số lượng"  style={{ textAlign: 'center' }}></Column>
+                    <Column field="amount" header="Số lượng" style={{ textAlign: 'center' }}></Column>
                     <Column field="price" header="Giá" style={{ textAlign: 'center' }} body={priceBodyTemplate} ></Column>
                     {/* <Column field="Ảnh" header="Tên" body={imageBodyTemplate} ></Column>
                   
@@ -478,6 +481,14 @@ const Order = () => {
                             </div>
                         </div>
                     </div>
+
+                    {loadingButton == true && <div className="p-field p-d-flex p-jc-center">
+                        <ProgressSpinner style={{ width: '50px', height: '50px' }} strokeWidth="8" fill="#EEEEEE" animationDuration=".5s" />
+                    </div>
+                    }
+
+
+
 
 
                 </Dialog>
