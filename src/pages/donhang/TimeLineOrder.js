@@ -1,4 +1,5 @@
 
+import axios from 'axios';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { Timeline } from 'primereact/timeline';
@@ -67,11 +68,107 @@ const TimeLineOrder = ({ match }) => {
         );
     };
 
+    const downloadReport = () => {
+
+        axios({
+            url: `http://localhost:8086/downloadFile/hungdx_09092021232743.pdf`, //your url
+            method: 'GET',
+            responseType: 'blob', // important
+        }).then((response) => {
+            console.log(`response`, response)
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'file.pdf'); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+        }).catch((err) => {
+            console.log("Error", { ...err });
+        })
+            ;
+
+        // return axios.get(
+        //     `http://localhost:8086/downloadFile/hungdx_09092021232743.pdf`,
+        //     {
+        //         headers: {
+        //             'Content-Type': 'application/pdf',
+        //             'Access-Control-Allow-Origin': '*',
+        //         },
+        //     }
+        // )
+        //     .then((response) => response.blob())
+        //     .then((blob) => {
+        //         // Create blob link to download
+        //         const url = window.URL.createObjectURL(
+        //             new Blob([blob]),
+        //         );
+        //         const link = document.createElement('a');
+        //         link.href = url;
+        //         link.setAttribute(
+        //             'download',
+        //             `FileName.pdf`,
+        //         );
+
+        //         // Append to html link element page
+        //         document.body.appendChild(link);
+
+        //         // Start download
+        //         link.click();
+
+        //         // Clean up and remove the link
+        //         link.parentNode.removeChild(link);
+        //     })
+        //     .catch((err) => {
+        //         console.log("Error");
+        //     });
+
+
+
+        // fetch(
+        //     'http://localhost:8086/downloadFile/hungdx_09092021232743.pdf',
+        //     {
+        //         method: 'GET',
+        //         headers: {
+        //             'Content-Type': 'application/pdf',
+        //         },
+        //     })
+        //     .then((response) => response.blob())
+        //     .then((blob) => {
+        //         // Create blob link to download
+        //         const url = window.URL.createObjectURL(
+        //             new Blob([blob]),
+        //         );
+        //         const link = document.createElement('a');
+        //         link.href = url;
+        //         link.setAttribute(
+        //             'download',
+        //             `FileName.pdf`,
+        //         );
+
+        //         // Append to html link element page
+        //         document.body.appendChild(link);
+
+        //         // Start download
+        //         link.click();
+
+        //         // Clean up and remove the link
+        //         link.parentNode.removeChild(link);
+        //     });
+    }
+
+
+
+
     const customizedContent = (item) => {
         // console.log(`item`, item)
         return (
             <div>
-                {item.color === '#9C27B0' && <Button label="Xuất hóa đơn" className="p-button-text" onClick={()=> alert('ok')}></Button> }
+                {item.color === '#9C27B0' &&
+
+                    // <Button label="Xuất hóa đơn" className="p-button-text"  ></Button>
+                    <a href={report?.path}>Xuất hóa đơn</a>
+                }
+
                 <Card title={item.status} subTitle={item.date}>
                     {item.image && <img src={`${item.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={item.name} width={200} className="p-shadow-2" />}
                 </Card>
