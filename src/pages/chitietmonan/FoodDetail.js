@@ -13,12 +13,14 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { Rating } from 'primereact/rating';
 import { Toast } from 'primereact/toast';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { DATA_CARD, MESSAGE_PHONE_FORMAT_ERROR, MESSAGE_REQUIRE, NOT_NUMBER } from '../../constants/ConstantString';
+import { DATA_CARD, MESSAGE_PHONE_FORMAT_ERROR, MESSAGE_REQUIRE, NOT_NUMBER, TOKEN_FIREBASE } from '../../constants/ConstantString';
 import { isNumber } from '../../constants/FunctionConstant';
 import { CardContext } from '../../context/CardContext';
+import { getToken } from '../../firebase';
 import CardService from '../../service/CardService';
 import CommentService from '../../service/CommentService';
 import FoodService from '../../service/FoodService';
+import NotificationService from '../../service/NotificationService';
 import OrderService from '../../service/OrderService';
 import DetailsThumb from './DetailsThumb';
 import './FoodDetail.css';
@@ -33,6 +35,10 @@ export const FoodDetail = ({ match }) => {
     const cardService = new CardService();
     const orderService = new OrderService();
     const commentService = new CommentService();
+    const notificationService = new NotificationService();
+
+
+    const [isTokenFound, setTokenFound] = useState(false);
 
     const [currentImage, setCurrentImage] = useState('')
 
@@ -95,6 +101,27 @@ export const FoodDetail = ({ match }) => {
         rating: 0,
         content: ''
     })
+
+    const getAccessTokenFromFirebase = async () => {
+        // console.log(`==============`);
+        const tokenFirebase = localStorage.getItem(TOKEN_FIREBASE);
+        if (tokenFirebase === undefined || tokenFirebase === null) {
+            console.log(`null || undefined`)
+            getToken();
+        }
+
+        let objectParam = {
+            title: "orderfood",
+            message: "you have an order",
+            token: "cT-UrDYHH97lXas8wG2i06:APA91bFpRw5LRgRAkg_so2kFuNW3q2cAXZ078nU9_cO6pqc3gARrN0kG8sVS4hTM2ZKXcxJumWKNbWMqGlQOBsjdB76CpTrOaQK00jv_sCkQSg9cCrdPDBUI-Mc0Pw89ljxwDbn2FWYz"
+        }
+
+        axios.post('http://localhost:8087/notification/data', objectParam)
+            .then(response => console.log(`response`, response))
+            .catch(error => console.log(`error`, { ...error }))
+            ;
+        // console.log(` localStorage.getItem(TOKEN_FIREBASE)`, localStorage.getItem(TOKEN_FIREBASE))
+    }
 
     // const fetchFoodDetailByFoodId = async () => {
     //     // console.log(`keycloak`, keycloak?.idTokenParsed?.preferred_username)
@@ -398,11 +425,11 @@ export const FoodDetail = ({ match }) => {
 
 
         setOrderObj(
-          {
-            ...orderObj,
-            username: keycloak?.idTokenParsed?.preferred_username,
-            dateOrder: moment().format("DD/MM/yy HH:mm:ss"),
-          }
+            {
+                ...orderObj,
+                username: keycloak?.idTokenParsed?.preferred_username,
+                dateOrder: moment().format("DD/MM/yy HH:mm:ss"),
+            }
         )
 
         // {
@@ -856,7 +883,8 @@ export const FoodDetail = ({ match }) => {
                         </div>
 
                         <Button icon="pi pi-shopping-cart" className="p-mr-2" onClick={() => saveCard(products)}></Button>
-                        <Button icon="pi pi-credit-card" className="p-button-help" onClick={() => onByProduct()} ></Button>
+                        <Button icon="pi pi-credit-card" className="p-button-help p-mr-2" onClick={() => onByProduct()} ></Button>
+                        <Button className="p-button-success" onClick={() => getAccessTokenFromFirebase()} >getToken</Button>
                     </div>
                 </div>
 

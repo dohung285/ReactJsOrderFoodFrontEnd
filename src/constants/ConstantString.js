@@ -2,6 +2,8 @@ export const EXPRITIME_HIDER_LOADER = 100;
 
 export const TOKEN = "TOKEN";
 
+export const TOKEN_FIREBASE = "TOKEN_FIREBASE";
+
 export const TIME_OUT_CLOSE_NOTIFY = 3000;
 
 export const EMAIL_REGEX = RegExp(
