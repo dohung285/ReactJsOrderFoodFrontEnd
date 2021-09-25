@@ -7,8 +7,8 @@ import FetchAPI from "./FetchAPI";
 class PermissionService extends FetchAPI {
 
 
-   //lấy ra tất cả các tên chức năng của hệ thống
-   async getAllNameOfSystemByUsername(usename) {
+  //lấy ra tất cả các tên chức năng của hệ thống
+  async getAllNameOfSystemByUsername(usename) {
     let url = `${PREFIX_URL_ORDERFOOD}/permission/function/${usename}`;
     return await this.request(url, null, TypeMethodConstantEnum.GET);
   }
@@ -32,14 +32,14 @@ class PermissionService extends FetchAPI {
     return await this.request(url, dataBody, TypeMethodConstantEnum.POST);
   }
 
-   //checkPermission các hành động khác
-   async checkPermission(username, pathName, action) {
+  //checkPermission các hành động khác
+  async checkPermission(username, pathName, action) {
     let url = `${PREFIX_URL_ORDERFOOD}/permission/check?username=${username}&pathName=${pathName}&action=${action}`;
     return await this.request(url, null, TypeMethodConstantEnum.GET);
   }
 
-   //checkPermission có quyền add hay không đối với chức năng quản trị vai trò
-   async checkPermissionAdd(username) {
+  //checkPermission có quyền add hay không đối với chức năng quản trị vai trò
+  async checkPermissionAdd(username) {
     let url = `${PREFIX_URL_ORDERFOOD}/permission/add-check?username=${username}`;
     return await this.request(url, null, TypeMethodConstantEnum.GET);
   }
@@ -49,6 +49,13 @@ class PermissionService extends FetchAPI {
     let url = `${PREFIX_URL_ORDERFOOD}/permission/check-root?username=${username}`;
     return await this.request(url, null, TypeMethodConstantEnum.GET);
   }
+
+  //checkPermission có quyền nhận thông báo khi có đơn hàng mới không?
+  async checkHasPermissionGetNotification(username) {
+    let url = `${PREFIX_URL_ORDERFOOD}/permission/get-notification?username=${username}`;
+    return await this.request(url, null, TypeMethodConstantEnum.GET);
+  }
+
 
 
 }

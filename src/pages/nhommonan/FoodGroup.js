@@ -97,6 +97,8 @@ export const FoodGroup = () => {
 
     const deleteProduct = () => {
 
+        console.log("co vao")
+
         deleteFoodGroup();
 
         setDeleteProductDialog(false);
@@ -163,6 +165,7 @@ export const FoodGroup = () => {
     }
 
     const deleteFoodGroup = async () => {
+        
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         console.log(`productDeleteSelected`, productDeleteSelected)
         let result = await foodGroupService.deleteFoodGroupById(productDeleteSelected?.id);

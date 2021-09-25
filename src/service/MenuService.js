@@ -29,6 +29,11 @@ class MenuService extends FetchAPI {
         return await this.request(url, null, TypeMethodConstantEnum.GET);
     }
 
+    async getAllMenuItemInSystemOfUser(username) {
+        let url = `${PREFIX_URL_ORDERFOOD}/menu/permit-function/${username}`;
+        return await this.request(url, null, TypeMethodConstantEnum.GET);
+    }
+
 
     // async saveRole(dataBody) {
     //   let url = `${PREFIX_URL_NHOMQUYEN}/nhomquyen/save`;

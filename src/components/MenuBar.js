@@ -1,4 +1,5 @@
 import { useKeycloak } from "@react-keycloak/web";
+import axios from "axios";
 import Axios from 'axios';
 import { includes } from "lodash";
 import { Badge } from 'primereact/badge';
@@ -11,9 +12,11 @@ import { AUTHENTICATED, EXPRITIME_HIDER_LOADER } from "../constants/ConstantStri
 import { PERMISSION_CTS, PERMISSION_ND, PERMISSION_NTK_DKHS, PERMISSION_NTK_DKNHS, PERMISSION_NTK_TCHS, PERMISSION_NTK_TKHS, PERMISSION_QLDK, PERMISSION_TTDN, PERMISSION_VT } from "../constants/PermissionString";
 import { CardContext } from "../context/CardContext";
 import { MenuContext } from "../context/MenuContext";
+import { NotificationContext } from "../context/NotificationContext";
 import useFullPageLoader from "../hooks/useFullPageLoader";
 import CardService from "../service/CardService";
 import MenuService from "../service/MenuService";
+import NotificationService from "../service/NotificationService";
 import PermissionService from "../service/PermissionService";
 
 
@@ -32,8 +35,17 @@ export const MenuBar = () => {
   const service = new MenuService();
   const cardService = new CardService();
   const permissionService = new PermissionService();
+  const notificationService = new NotificationService();
 
   const { card, setCard } = useContext(CardContext)
+  const { notification, setNotification } = useContext(NotificationContext)
+  const { menu, setMenu } = useContext(MenuContext)
+
+  const [permissionNotification, setPermissionNotification] = useState(false)
+
+  const [userIsNew, setUserIsNew] = useState(false)
+
+  const [itemMonAn, setItemMonAn] = useState(null)
 
 
 
@@ -174,10 +186,7 @@ export const MenuBar = () => {
 
 
 
-  useEffect(() => {
-    // console.log(`object`, menu,items)
 
-  }, [])
 
 
   // console.log(`keycloak`, keycloak?.realmAccess?.roles.toString());
@@ -186,6 +195,7 @@ export const MenuBar = () => {
 
 
   const fetchAllNameOfSystemByUsernameAPI = async (username) => {
+    console.log(`username`, username)
     let result = await permissionService.getAllNameOfSystemByUsername(username);
     console.log(`fetchAllNameOfSystemByUsernameAPI`, result)
     if (result?.status === 1000) {
@@ -196,129 +206,258 @@ export const MenuBar = () => {
     return null
   }
 
-  const fetchMenuBar = async () => {
+  const checkUserIsNew = (username) => {
+    return Axios.get(`http://localhost:8082/services/orderfood/api/permission/checknew/${username}`).then(response => {
+      // console.log(`response`, response?.data?.status)
+      if (response?.data?.status === 1001) {
+        setUserIsNew(true)
+      } else if (response?.data?.status === 1000) {
+        setUserIsNew(false)
+      }
+    }
+    ).catch(error => console.log(`error`, error))
+  }
+
+  const addMenuHeThong = async (username) => {
     showLoader()
-    Axios.get(`http://localhost:8082/services/orderfood/api/menu/byWithRole`)
-      .then(res => {
-        // console.log(`res`, res.data)
-        let result = res.data
+    let result = await service.getAllMenuItemInSystemOfUser(username);
+    // console.log(`addMenuHeThong`, result)
+    if (result?.status === 1000) {
+      // console.log(`addMenuHeThong`, result?.response)
 
-        let arrayRemain = result;
-        if (!keycloak?.authenticated) {
-          arrayRemain = result.filter(item => item.label !== "Hệ thống");
+      let arrayItems = [];
+      const y = result?.response?.items.forEach(item => {
+        // console.log(`items`, item)
+        const objItems = {
+          icon: item.icon,
+          label: item.label,
+          command: () => history.push(`${item.command}`)
         }
-        if (arrayRemain) {
-
-          let arrayTmp = [];
-          let x = arrayRemain.forEach(element => {
-            // console.log(`element`, element)
-            let arrayItems = []
-            if (element.label !== 'Trang chủ' && element.label !== 'Giới thiệu' && element.label !== 'Liên hệ') {
-
-              if (element.label === 'Hệ thống' && keycloak?.authenticated && keycloak?.idTokenParsed?.preferred_username !== 'hungdx') {
-
-                fetchAllNameOfSystemByUsernameAPI(keycloak?.idTokenParsed?.preferred_username).then(data => {
-                  console.log(`data`, data)
-
-                  const filteredArray = element?.items.filter(value => data.includes(value.label));
-                  console.log(`filteredArray`, filteredArray)
-
-
-                  const y = filteredArray.forEach(item => {
-                    // console.log(`items`, item)
-                    const objItems = {
-                      icon: item.icon,
-                      label: item.label,
-                      command: () => history.push(`${item.command}`)
-                    }
-                    // console.log(`objItems`, objItems)
-                    arrayItems.push(objItems)
-                  })
-                })
-
-              } else {
-                const y = element?.items.forEach(item => {
-                  // console.log(`items`, item)
-                  const objItems = {
-                    icon: item.icon,
-                    label: item.label,
-                    command: () => history.push(`${item.command}`)
-                  }
-                  // console.log(`objItems`, objItems)
-                  arrayItems.push(objItems)
-                })
-              }
-
-              const objHasItems = {
-                icon: element.icon,
-                label: element.label,
-                items: arrayItems
-              }
-              arrayTmp.push(objHasItems)
-            }
-            else {
-
-              const obj = {
-                icon: element.icon,
-                label: element.label,
-                command: () => history.push(`${element.command}`)
-              }
-              // console.log(`obj`, obj)
-              arrayTmp.push(obj)
-            }
-          });
-          setItems(arrayTmp);
-        }
-      }).catch(err => {
-        console.log("Error getDistinctDmcqt()", err);
+        // console.log(`objItems`, objItems)
+        arrayItems.push(objItems)
       })
 
-    setTimeout(hideLoader, EXPRITIME_HIDER_LOADER)
-  };
+      const obj = {
+        icon: null,
+        label: "Hệ thống",
+        items: arrayItems
+      }
+
+      // console.log(`obj`, obj)
+
+      let arrayTMP = items;
+
+      arrayTMP.push(obj)
+
+      // let arrayTestItems = [];
+      // const objTestItems = {
+      //   icon: null,
+      //   label: 'test',
+      //   command: () => history.push(`/catalog/2`)
+      // }
+      // arrayTestItems.push(objTestItems)
+      // const objTest = {
+      //   icon: null,
+      //   label: "Hệ thống Test",
+      //   items: arrayTestItems
+      // }
+
+      // arrayTMP.push(objTest)
 
 
+      // console.log(`arrayTMP`, arrayTMP)
+
+      // menu.push(obj);
+      setItems(arrayTMP)
+
+
+    }
+    hideLoader()
+
+  }
 
   // const fetchMenuBar = async () => {
-  //   let result = await service.getAllMenuNotRoleName();
-  //   // console.log(`fetchMenuBar`, result)
-  //   if (result) {
+  //   showLoader()
+  //   Axios.get(`http://localhost:8082/services/orderfood/api/menu/byWithRole`)
+  //     .then(res => {
+  //       // console.log(`res`, res.data)
+  //       let result = res.data
 
-  //     let arrayTmp = [];
-  //     let x = result.forEach(element => {
-  //       // console.log(`element`, element)
-  //       let arrayItems = []
-  //       if (element.label !== 'Trang chủ' && element.label !== 'Giới thiệu' && element.label !== 'Liên hệ') {
-  //         const y = element?.items.forEach(item => {
-  //           // console.log(`items`, item)
-  //           const objItems = {
-  //             icon: item.icon,
-  //             label: item.label,
-  //             command: () => history.push(`${item.command}`)
+  //       let arrayRemain = result;
+  //       if (!keycloak?.authenticated) {
+  //         arrayRemain = result.filter(item => item.label !== "Hệ thống");
+  //       } else if (userIsNew && keycloak?.authenticated) {
+  //         arrayRemain = result.filter(item => item.label !== "Hệ thống");
+  //       }
+
+  //       if (arrayRemain) {
+
+  //         let arrayTmp = [];
+  //         let x = arrayRemain.forEach(element => {
+  //           // console.log(`element`, element)
+  //           let arrayItems = []
+  //           if (element.label !== 'Trang chủ' && element.label !== 'Giới thiệu' && element.label !== 'Liên hệ') {
+
+  //             if (element.label === 'Hệ thống' && keycloak?.authenticated && keycloak?.idTokenParsed?.preferred_username !== 'hungdx') { //
+
+  //               // console.log(`objecelementt`, element)
+
+  //               // console.log(`keycloak?.authenticated`, keycloak?.authenticated)
+
+  //               // fetchAllNameOfSystemByUsernameAPI(keycloak?.idTokenParsed?.preferred_username).then(data => {
+  //               //   console.log(`data`, data)
+
+  //               //   const filteredArray = element?.items.filter(value => data.includes(value.label));
+  //               //   console.log(`filteredArray`, filteredArray)
+
+
+  //               //   const y = filteredArray.forEach(item => {
+  //               //     // console.log(`items`, item)
+  //               //     const objItems = {
+  //               //       icon: item.icon,
+  //               //       label: item.label,
+  //               //       command: () => history.push(`${item.command}`)
+  //               //     }
+  //               //     // console.log(`objItems`, objItems)
+  //               //     arrayItems.push(objItems)
+  //               //   })
+  //               // }).catch(error => {
+  //               //   console.log(`error`, { ...error })
+  //               //   arrayRemain = result.filter(item => item.label !== "Hệ thống");
+  //               //   console.log(`arrayRemain`, arrayRemain)
+  //               //   checkPermissionInside = false;
+  //               // })
+
+
+
+
+  //             } else { // đây là menuItemMonAn
+
+  //               const y = element?.items.forEach(item => {
+  //                 // console.log(`items`, item)
+  //                 const objItems = {
+  //                   icon: item.icon,
+  //                   label: item.label,
+  //                   command: () => history.push(`${item.command}`)
+  //                 }
+  //                 // console.log(`objItems`, objItems)
+  //                 arrayItems.push(objItems)
+  //               })
+  //             }
+  //             // console.log(`objHasItems `, element)
+  //             const objHasItems = {
+  //               icon: element.icon,
+  //               label: element.label,
+  //               items: arrayItems
+  //             }
+  //             arrayTmp.push(objHasItems)
   //           }
-  //           // console.log(`objItems`, objItems)
-  //           arrayItems.push(objItems)
-  //         })
+  //           else {
+  //             const obj = {
+  //               icon: element.icon,
+  //               label: element.label,
+  //               command: () => history.push(`${element.command}`)
+  //             }
+  //             // console.log(`obj`, obj)
+  //             arrayTmp.push(obj)
+  //           }
+  //         });
+  //         // console.log(`arrayTmp`, arrayTmp)
+  //         setItems(arrayTmp);
+  //         // setMenu(arrayTmp)
+  //       }
+  //     }).catch(err => {
+  //       console.log("Error fetchMenuBar()", { ...err });
+  //     })
 
-  //         const objHasItems = {
-  //           icon: element.icon,
-  //           label: element.label,
-  //           items: arrayItems
-  //         }
-  //         arrayTmp.push(objHasItems)
-  //       }
-  //       else {
-  //         const obj = {
-  //           icon: element.icon,
-  //           label: element.label,
-  //           command: () => history.push(`${element.command}`)
-  //         }
-  //         // console.log(`obj`, obj)
-  //         arrayTmp.push(obj)
-  //       }
-  //     });
-  //     setItems(arrayTmp);
-  //   }
+  //   setTimeout(hideLoader, EXPRITIME_HIDER_LOADER)
   // };
+
+
+  const fetchMenuBarAPI = () => {
+    return axios.get(`http://localhost:8082/services/orderfood/api/menu/byWithRole`)
+      .then(res => {
+        // console.log(`res`, res?.data)
+        let result = res?.data
+
+        // console.log(`checkArray`, Array.isArray(result))
+
+        let arrayTmp = [];
+        result.forEach(element => {
+          // console.log(`element`, element)
+          if (element?.label === 'Món ăn') { // nếu là item món ăn thì duyệt các phần tử con tạo link
+            const arrayItems = element?.items;
+            let arrayTmpItems = []
+            // tao array item con
+            arrayItems.forEach(item => {
+              // console.log(`item`, item)
+              const objItems = {
+                icon: item.icon,
+                label: item.label,
+                command: () => history.push(`${item.command}`)
+              }
+              arrayTmpItems.push(objItems)
+            })
+
+            const objHasItems = {
+              icon: element.icon,
+              label: element.label,
+              items: arrayTmpItems
+            }
+            arrayTmp.push(objHasItems)
+          } else { // nếu ko phải là item món ăn thì tạo item link
+            const obj = {
+              icon: element.icon,
+              label: element.label,
+              command: () => history.push(`${element.command}`)
+            }
+            arrayTmp.push(obj)
+          }
+        })
+        setItems(arrayTmp)
+      }).catch(err => {
+        console.log("Error fetchMenuBar()", { ...err });
+      })
+  };
+
+  const addMenuItemMonAnAPI = async () => {
+    console.log('co')
+    axios.get(`http://localhost:8082/services/orderfood/api/menu/item-monan`)
+      .then(res => {
+        // console.log(`res`, res?.data?.response?.items)
+        // setItemMonAn(res?.data?.response);
+        let arrayItems = [];
+        const y = res?.data?.response?.items.forEach(item => {
+          // console.log(`items`, item)
+          const objItems = {
+            icon: item.icon,
+            label: item.label,
+            command: () => history.push(`${item.command}`)
+          }
+          // console.log(`objItems`, objItems)
+          arrayItems.push(objItems)
+        })
+        // console.log(`arrayItems`, arrayItems)
+
+        const obj = {
+          icon: res?.data?.response?.icon,
+          label: res?.data?.response?.label,
+          items: arrayItems
+        }
+
+        // console.log(`obj`, arrayItems)
+        console.log(`menu`, menu)
+
+        let arrayTMP = menu
+        arrayTMP.push(obj)
+        console.log(`arrayTMP`, arrayTMP)
+        setMenu(arrayTMP)
+
+        // console.log(`menu`, menu)
+      })
+      .catch(error => console.log(`error`, error))
+  }
+
 
   const fetchNumberCard = async () => {
     // console.log(`username`, keycloak?.idTokenParsed?.preferred_username)
@@ -330,11 +469,66 @@ export const MenuBar = () => {
 
   }
 
+  const getPermissionForUsername = () => {
+    const username = keycloak?.idTokenParsed?.preferred_username;
+    // console.log(`username`, username)
+    return axios.get(`http://localhost:8082/services/orderfood/api/permission/get-notification?username=${username}`)
+      .then(response => {
+        // console.log(`response`, response?.data)
+        setPermissionNotification(true)
+      })
+      .catch(error => console.log(`error`, error))
+      ;
+  }
+
+  const fetchNumberNotification = async () => {
+    // console.log(`username`, keycloak?.idTokenParsed?.preferred_username)
+    let result = await notificationService.getCurrentNumberNotification();
+    // console.log(`number`, result)
+    if (result?.status === 1000) {
+      setNotification(result?.object)
+    }
+
+  }
+
 
   useEffect(() => {
+
+    // console.log(`menu`, menu)
+    fetchMenuBarAPI();
+
+    // addMenuItemMonAnAPI();
+  }, [])
+
+  useEffect(() => {
+
+    // addMenuItemMonAnAPI();
+
+    // console.log(`menu`, menu)
+
+    // console.log(`itemMonAn`, itemMonAn)
+
+    // console.log(`menu`, menu)
     //gọi hàm fetchMenu khi đã đăng nhập
-    fetchMenuBar()
+    // fetchMenuBar()
+
+    if (keycloak && keycloak.authenticated) {
+      // console.log(`menu`, menu)
+
+      fetchMenuBarAPI();
+
+      getPermissionForUsername();
+      fetchNumberNotification();
+      checkUserIsNew(keycloak?.idTokenParsed?.preferred_username);
+
+
+      // console.log(`menu`, menu)
+
+      // fetchAllNameOfSystemByUsernameAPI(keycloak?.idTokenParsed?.preferred_username)
+      addMenuHeThong(keycloak?.idTokenParsed?.preferred_username)
+    }
   }, [keycloak.authenticated]);
+
 
 
 
@@ -358,6 +552,13 @@ export const MenuBar = () => {
     localStorage.setItem(AUTHENTICATED, true);
   }
 
+  const clearNumberNotification = async () => {
+    let result = await notificationService.clearNumberNotification();
+    // console.log(`clearNumberNotification`, result)
+    if (result?.status === 1000) {
+      setNotification(0)
+    }
+  }
 
 
   const start = <img alt="logo" src={logo} height="40" className="p-mr-2" onClick={onClickLogo} />;
@@ -378,6 +579,15 @@ export const MenuBar = () => {
           <i className="pi pi-shopping-cart p-mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '1.5rem' }}><Badge value={`${card}`} severity="danger" ></Badge></i>
         </Link>
       </li>
+
+      {permissionNotification === true &&
+
+        <li >
+          <Link to={`/notification`} onClick={() => clearNumberNotification()}>
+            <i className="pi pi-bell p-mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '1.5rem' }}><Badge value={`${notification}`} severity="danger" ></Badge></i>
+          </Link>
+        </li>
+      }
 
 
       {!keycloak?.authenticated &&
@@ -485,7 +695,16 @@ export const MenuBar = () => {
   return (
     <div>
       <div>
+        {/* {keycloak && keycloak.authenticated &&
+          <Menubar model={items} start={start} end={end} />}
+
+        {!keycloak && !keycloak.authenticated &&
+         } */}
+
         <Menubar model={items} start={start} end={end} />
+        {/* <Menubar model={menu} start={start} end={end} /> */}
+
+
       </div>
       {loader}
     </div>

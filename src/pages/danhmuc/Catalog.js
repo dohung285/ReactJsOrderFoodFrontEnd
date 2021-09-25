@@ -44,7 +44,7 @@ export const Catalog = ({ match }) => {
 
         axios.get(`http://localhost:8082/services/orderfood/api/food/byFoodGroup?foodGroupId=${idCatalog}`)
             .then(res => {
-                console.log(`res`, res?.data?.response?.listReturn)
+                // console.log(`res`, res?.data?.response?.listReturn)
                 let result = res?.data?.response?.listReturn
                 if (result) {
                     setData(result)

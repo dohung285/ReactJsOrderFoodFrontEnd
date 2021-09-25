@@ -24,6 +24,7 @@ import UserInfor from "../pages/nguoidung/UserInfor";
 import FoodGroup from "../pages/nhommonan/FoodGroup";
 import NotFound from "../pages/NotFound";
 import ChangePassword from "../pages/thaydoimatkhau/ChangePassword";
+import { Notification } from "../pages/thongbao/Notification";
 import Role from "../pages/vaitro/Role";
 import RoleNew from "../pages/vaitro/RoleNew";
 import { PrivateRoute } from "../utils/PrivateRoute";
@@ -63,6 +64,8 @@ const Content = () => {
           <Route component={FoodDetail} path="/food/:id"  />
            {/* <Route component={Card} path="/card/:username" exact /> */}
            <Route component={Card} path="/card" exact />
+
+           <Route component={Notification} path="/notification" exact />
 
            <Route component={ChangePassword} path="/change-password" exact />
            <Route component={ListOrder} path="/list-order" exact />

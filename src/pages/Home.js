@@ -231,7 +231,7 @@ export const Home = () => {
     return (
         <div>
 
-            <div className="carousel-demo">
+            {/* <div className="carousel-demo">
                 <Carousel
                     value={carousel}
                     numVisible={3}
@@ -242,7 +242,7 @@ export const Home = () => {
                     autoplayInterval={3000}
                     itemTemplate={productTemplate}
                 />
-            </div>
+            </div> */}
 
 
 

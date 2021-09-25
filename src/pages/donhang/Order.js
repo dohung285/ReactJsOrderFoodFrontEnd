@@ -236,7 +236,7 @@ const Order = () => {
         showLoader()
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         let result = await orderStatusService.getAll();
-        console.log(`fetchOrder`, result)
+        // console.log(`fetchOrder`, result)
         if (result?.status === 1000) {
             setProducts(result?.list)
         }
