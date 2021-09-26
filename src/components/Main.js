@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router, useHistory } from "react-router-dom";
 import { fetchMenus } from "../actions/actionCreator";
-import { DATA_CARD } from "../constants/ConstantString";
+import { DATA_CARD, MENU } from "../constants/ConstantString";
 import { CardContext } from "../context/CardContext";
 import { MenuContext } from "../context/MenuContext";
 import { NotificationContext } from "../context/NotificationContext";
@@ -64,6 +64,52 @@ const Main = () => {
     return null
   }
 
+  // const fetchMenuBarAPI = () => {
+  //   return axios.get(`http://localhost:8082/services/orderfood/api/menu/byWithRole`)
+  //     .then(res => {
+  //       // console.log(`res`, res?.data)
+  //       let result = res?.data
+
+  //       // console.log(`checkArray`, Array.isArray(result))
+
+  //       let arrayTmp = [];
+  //       result.forEach(element => {
+  //         // console.log(`element`, element)
+  //         if (element?.label === 'Món ăn') { // nếu là item món ăn thì duyệt các phần tử con tạo link
+  //           const arrayItems = element?.items;
+  //           let arrayTmpItems = []
+  //           // tao array item con
+  //           arrayItems.forEach(item => {
+  //             // console.log(`item`, item)
+  //             const objItems = {
+  //               icon: item.icon,
+  //               label: item.label,
+  //               command: () => history.push(`${item.command}`)
+  //             }
+  //             arrayTmpItems.push(objItems)
+  //           })
+
+  //           const objHasItems = {
+  //             icon: element.icon,
+  //             label: element.label,
+  //             items: arrayTmpItems
+  //           }
+  //           arrayTmp.push(objHasItems)
+  //         } else { // nếu ko phải là item món ăn thì tạo item link
+  //           const obj = {
+  //             icon: element.icon,
+  //             label: element.label,
+  //             command: () => history.push(`${element.command}`)
+  //           }
+  //           arrayTmp.push(obj)
+  //         }
+  //       })
+  //       setMenu(arrayTmp)
+  //     }).catch(err => {
+  //       console.log("Error fetchMenuBar()", { ...err });
+  //     })
+  // };
+
   const fetchMenuBarAPI = () => {
     return axios.get(`http://localhost:8082/services/orderfood/api/menu/byWithRole`)
       .then(res => {
@@ -104,7 +150,7 @@ const Main = () => {
             arrayTmp.push(obj)
           }
         })
-        setMenu(arrayTmp)
+        localStorage.setItem(MENU,JSON.stringify(arrayTmp))
       }).catch(err => {
         console.log("Error fetchMenuBar()", { ...err });
       })

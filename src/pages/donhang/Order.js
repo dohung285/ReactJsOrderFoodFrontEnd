@@ -312,9 +312,12 @@ const Order = () => {
     const productDialogFooter = (
         <React.Fragment>
             <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
-            <Button label="Đồng ý" icon="pi pi-check" className="p-button-text" loading={loadingButton}
-                onClick={updateSatus}
-            />
+          <Button
+            label="Đồng ý"
+            icon="pi pi-check"
+            className="p-button-text"
+            // loading={loadingButton}
+            onClick={updateSatus} />
         </React.Fragment>
     );
 

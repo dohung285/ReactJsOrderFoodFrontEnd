@@ -282,7 +282,7 @@ export const FoodDetail = ({ match }) => {
 
 
     const onChangeAmount = (e) => {
-        // console.log(`e`, e);
+        // console.log(`onChangeAmount`, e);
         setValueAmount(e.value)
         setOrderDetailObj(
             {
@@ -297,13 +297,16 @@ export const FoodDetail = ({ match }) => {
         let money = null;
 
         if (percent === null) {
+            // console.log(`price`, price)
+            // console.log(`valueAmount`, valueAmount)
 
             //th giảm giá bằng 0
-            money = valueAmount * price
+            money = amount * price
             // console.log(`case nay percent`, money)
         } else {
             // có giảm giá
-            money = (valueAmount * price) - (valueAmount * price * percent) / 100
+            money = (amount * price) - (amount * price * percent) / 100
+            // console.log(`money`, money)
         }
 
 
@@ -882,9 +885,9 @@ export const FoodDetail = ({ match }) => {
                             <InputNumber inputId="minmax-buttons" size={3} value={valueAmount} onValueChange={e => onChangeAmount(e)} mode="decimal" showButtons min={0} max={20} />
                         </div>
 
-                        <Button icon="pi pi-shopping-cart" className="p-mr-2" onClick={() => saveCard(products)}></Button>
-                        <Button icon="pi pi-credit-card" className="p-button-help p-mr-2" onClick={() => onByProduct()} ></Button>
-                        <Button className="p-button-success" onClick={() => getAccessTokenFromFirebase()} >getToken</Button>
+                        <Button icon="pi pi-shopping-cart" className="p-mr-2" onClick={() => saveCard(products)} label="Giỏ hàng" ></Button>
+                        <Button icon="pi pi-credit-card" className="p-button-help p-mr-2" onClick={() => onByProduct()} label="Mua ngay" ></Button>
+                        {/* <Button className="p-button-success" onClick={() => getAccessTokenFromFirebase()} >getToken</Button> */}
                     </div>
                 </div>
 
@@ -1124,7 +1127,7 @@ export const FoodDetail = ({ match }) => {
                     <div className="p-field p-grid">
                         <label htmlFor="amount" className="p-col-12 p-md-3">Số lượng <span className="item-required"> *</span></label>
                         <div className="p-col-12 p-md-9">
-                            <InputText id="amount" type="text" value={valueAmount} readOnly={true} />
+                            <InputText id="amount" type="text" value={valueAmount || ''} readOnly={true} />
                         </div>
                     </div>
 

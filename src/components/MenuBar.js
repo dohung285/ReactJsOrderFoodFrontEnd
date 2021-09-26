@@ -8,7 +8,7 @@ import { Menubar } from "primereact/menubar";
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import logo from "../asset/images/lg-order-food.png";
-import { AUTHENTICATED, EXPRITIME_HIDER_LOADER } from "../constants/ConstantString";
+import { AUTHENTICATED, EXPRITIME_HIDER_LOADER, MENU } from "../constants/ConstantString";
 import { PERMISSION_CTS, PERMISSION_ND, PERMISSION_NTK_DKHS, PERMISSION_NTK_DKNHS, PERMISSION_NTK_TCHS, PERMISSION_NTK_TKHS, PERMISSION_QLDK, PERMISSION_TTDN, PERMISSION_VT } from "../constants/PermissionString";
 import { CardContext } from "../context/CardContext";
 import { MenuContext } from "../context/MenuContext";
@@ -40,6 +40,8 @@ export const MenuBar = () => {
   const { card, setCard } = useContext(CardContext)
   const { notification, setNotification } = useContext(NotificationContext)
   const { menu, setMenu } = useContext(MenuContext)
+
+  const [menuLocalStorage , setmenuLocalStorage  ] = useState(null)
 
   const [permissionNotification, setPermissionNotification] = useState(false)
 
@@ -494,7 +496,8 @@ export const MenuBar = () => {
 
   useEffect(() => {
 
-    // console.log(`menu`, menu)
+    // console.log(`MENU`, localStorage.getItem(MENU) )// console.log(`menu`, menu)
+    setmenuLocalStorage(localStorage.getItem(MENU))
     fetchMenuBarAPI();
 
     // addMenuItemMonAnAPI();
@@ -703,6 +706,8 @@ export const MenuBar = () => {
 
         <Menubar model={items} start={start} end={end} />
         {/* <Menubar model={menu} start={start} end={end} /> */}
+
+        {/* <Menubar model={menuLocalStorage} start={start} end={end} /> */}
 
 
       </div>

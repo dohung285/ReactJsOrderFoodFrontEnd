@@ -221,7 +221,7 @@ const Discount = () => {
     }
 
     const handleOnChange = (e) => {
-        // console.log(`e`, e.target)
+        console.log(`handleOnChange`, e)
         let { name, value } = e.target;
         if (name === 'name') {
 
@@ -249,6 +249,8 @@ const Discount = () => {
             )
         }
         if (name === 'percent') {
+
+            console.log(`value`, value)
 
             if (value > 0) {
                 setObjecErrors(
@@ -409,6 +411,7 @@ const Discount = () => {
     }
 
     const handleDeleteDiscount = async (rowData) => {
+        console.log(`handleDeleteDiscount`)
         let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_DELETE);
         if (result?.status === 1000) {
             confirmDeleteProduct(rowData)
@@ -418,10 +421,11 @@ const Discount = () => {
     }
 
     const actionBodyTemplate = (rowData) => {
+        // console.log(`rowData`, rowData)
         return (
             <React.Fragment>
-                <Button icon="pi pi-pencil" className="p-button-rounded p-button-warning p-mr-2" onClick={() => handleEditDiscountButton(rowData)} />
-                <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => handleDeleteDiscount(rowData)} />
+                <Button icon="pi pi-pencil" className="p-button-rounded p-button-warning p-mr-2" onClick={() => handleEditDiscountButton(rowData)} disabled={rowData?.isDeleted === 1} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => handleDeleteDiscount(rowData)} disabled={rowData?.isDeleted === 1} />
             </React.Fragment>
         );
     }
@@ -468,11 +472,7 @@ const Discount = () => {
 
 
     const deleteProduct = () => {
-        // let _products = products.filter(val => val.id !== product.id);
-        // setProduct(_products);
-        // console.log(`productDelete`, product)
-
-        // deleteFoodIntoCard();
+       
         deleteDiscount(productDeleteSelected.id)
 
         setDeleteProductDialog(false);
@@ -738,7 +738,7 @@ const Discount = () => {
 
     const editDiscount = async () => {
 
-        console.log(`có chạy vào đây`)
+        // console.log(`có chạy vào đây`)
 
         if (formValidationEdit()) {
             showLoader()
