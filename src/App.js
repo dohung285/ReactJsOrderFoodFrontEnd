@@ -1,49 +1,32 @@
-// import React from "react";
-// import "./index.css";
-// import keycloak  from "./keycloak";
-// import {AppRouter} from "./routes";
-// import {ReactKeycloakProvider} from "@react-keycloak/web";
-// import {MenuBar} from "./components/MenuBar";
-// import {Footer} from "./components/Footer";
-// import { Route, Switch } from 'react-router-dom';
-// import LoginPage from './pages/Login';
-// const App: React.FC = () => {
-//     const LoginContainer = () => (
-//         <Route path="/login" component={(props : any) => <LoginPage {...props} />} />
-//     );
-//     const DefaultContainer = () => (
-//         <div className="layout-content">
-//             <MenuBar/>
-//                 <section>
-//                     <div className={"main-container"}>
-//                         <AppRouter />
-//                     </div>
-//                 </section>
-//             <Footer/>
-//         </div>
-//     );
-//     return (
-//         <React.Fragment>
-//             <Switch>
-//                 <ReactKeycloakProvider
-//                     authClient={keycloak}
-//                 >
-//                     <Route exact path="/login" component={LoginContainer} />
-//                     <Route component={DefaultContainer} />
-//                 </ReactKeycloakProvider>
-//             </Switch>
-//         </React.Fragment>
-//     );
-// };
-// export default App;
 
+import { getToken, onMessageListener } from './firebase';
 import { KeycloakProvider } from "@react-keycloak/web";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import keycloak from "./keycloak";
 import AppRouter from "./routes/AppRouter";
+// import PermissionService from './service/PermissionService';
 
 function App() {
+
+ 
+
+  const [show, setShow] = useState(false);
+  const [notification, setNotification] = useState({ title: '', body: '' });
+  // const [isTokenFound, setTokenFound] = useState(false);
+
+  getToken();
+
+  // onMessageListener().then(payload => {
+  //   setShow(true);
+  //   console.log(`payload`, payload)
+  //   setNotification({ title: payload.notification.title, body: payload.notification.body })
+  //   console.log(payload);
+  // }).catch(err => console.log('failed: ', err));
+
+
+ 
+
   return (
     <KeycloakProvider keycloak={keycloak}>
       <div>

@@ -1,0 +1,9 @@
+
+
+.p-fileupload-buttonbar .p-button .p-component .p-disabled :first-of-type{
+    display: none;
+}
+
+.p-fileupload-buttonbar button.p-button.p-component.p-disabled:nth-child(2) {
+    display: none;
+}

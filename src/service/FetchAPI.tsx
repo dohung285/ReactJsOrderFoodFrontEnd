@@ -31,32 +31,42 @@ class FetchAPI extends Component {
     try {
       const result = await this.axiosInstance
         .request(configRequest)
-        .catch((response: any) => this.handleResponse(response));
+        .catch((response: any) => {
+          this.handleResponse(response)
+        });
+        // console.log("data o day", result.data);
       return result.data;
     } catch (error) {
-      console.log(JSON.stringify(error));
+      throw error;
     } finally {
     }
   }
 
-  public handleResponse(error: any) {
+  public handleResponse(error: any) { // ctr + /
     // const { keycloak } = useKeycloak();
-    const [keycloak] = useKeycloak();
-    const response = error.response;
-    console.log(error);
-    if (response === undefined) {
-      window.location.hash = "/500";
-    }
-    if (response && response.status === 401) {
-      keycloak.logout();
-      window.location.hash = "/login";
-    }
-    if (response && response.status === 403) {
-      window.location.hash = "/403";
-    }
-    if (response && response.status === 500) {
-      window.location.hash = "/500";
-    }
+    throw error;
+    
+    //const [keycloak] = useKeycloak(); //thằng này lỗi gì à a
+    // console.log(11111);
+    // const response = error.response;
+    // console.log('dfskhfkjshfsdjk')
+    // console.log(response)
+    // if (response === undefined) {
+    //   window.location.hash = "/500";
+    // }
+    // if (response && response.status === 401) {
+    //   //keycloak.logout();
+    //   window.location.hash = "/login";
+    // }
+    // if (response && response.status === 403) {
+    //   window.location.hash = "/403";
+    // }
+    // if (response && response.status === 500) {
+    //   window.location.hash = "/500";
+    // }
+    
+
+    
     throw new Error(error);
   }
 

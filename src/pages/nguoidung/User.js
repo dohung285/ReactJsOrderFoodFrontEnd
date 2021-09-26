@@ -7,7 +7,7 @@ import { InputText } from "primereact/inputtext";
 import { Paginator } from "primereact/paginator";
 import { Tag } from "primereact/tag";
 import { Toolbar } from "primereact/toolbar";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 import Moment from "react-moment";
 import { withRouter } from "react-router-dom";
@@ -23,10 +23,11 @@ import UserServices from "../../service/UserService";
 import AddUser from "./AddUser";
 import EditUser from "./EditUser";
 
-
 const User = (props) => {
   const [visibleAddUser, setVisibleAddUser] = useState(false);
   const [visibleEditUser, setVisibleEditUser] = useState(false);
+
+  // const roleOfUser = useRole();
 
   const [userObj, setUserObj] = useState({
     hoten: "",
@@ -89,10 +90,50 @@ const User = (props) => {
   const [first, setFirst] = useState(0);
   const [totalRecord, setTotalRecord] = useState();
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [listGroupRole, setListGroupRole] = useState();
 
   const [idUser, setIdUser] = useState("");
 
+
+  // const [roleOfUser, setRoleOfUser] = useState();
+
   const [loader, showLoader, hideLoader] = useFullPageLoader();
+
+
+  // const fetAllRoles = async () => {
+
+
+  //   const result = await service.getAllRoleWithPaging();
+  //   console.log('result', result)
+  //   if (result && result.status === 1000) {
+  //   //  setRoleOfUser(result)
+  //   }
+  // };
+
+  const [arrayPermissionSelected, setArrayPermissionSelected] = useState([])
+  const getAllPermissionSelected = async (id) => {
+    console.log('co chay', id)
+    let arrayPermissionSelectedsssssss = [];
+    // console.log('co chay vao day')
+    const result = await service.getAllPermissionSelected(id)
+    // console.log('result: ', result)
+    if (result.status === 1000) {
+      const array = result.list;
+      // console.log('array', array)
+      array.forEach(element => {
+        // console.log('element: ', element.key, element.label);
+        let objPer = {
+          name: element.label,
+          code: element.key
+        }
+        arrayPermissionSelectedsssssss.push(objPer)
+      });
+    }
+    console.log('arrayPermissionSelectedsssssss', arrayPermissionSelectedsssssss)
+    setArrayPermissionSelected(arrayPermissionSelectedsssssss)
+  }
+
+
 
   const fetDataUser = async () => {
     showLoader();
@@ -107,10 +148,19 @@ const User = (props) => {
     hideLoader();
   };
 
-  useEffect(() => {
-    fetDataUser();
-    // eslint-disable-next-line
-  }, [props.location.search]);
+  const getAllGroupRole = async () => {
+    const result = await service.getAllGroupRole();
+    // console.log('result', result.list)
+    setListGroupRole(result.list);
+  }
+
+  // useEffect(() => {
+  //   fetDataUser();
+  //   getAllGroupRole();
+  //   // eslint-disable-next-line
+  //   // getAllPermissionSelected();
+  // }, [props.location.search]);
+
   const onHandleChangeSearch = (e) => {
     let valueSearch = e.target.value;
     // console.log("{...search, [e.target.name]:e.target.value}", {
@@ -134,45 +184,6 @@ const User = (props) => {
     setSearch({ ...search, trangthai: e.value ? e.value.code : "" });
   };
 
-  const leftContents = (
-    <React.Fragment>
-      <InputText
-        className={"p-mr-3"}
-        // value={search.textSearch}
-        value={inputSearch}
-        onChange={onHandleChangeSearch}
-        tooltip={"Tên, Tên đăng nhập, Số điện thoại"}
-        name={"text"}
-        placeholder={"Tên, tên đăng nhập, SĐT"}
-      />
-
-      <Dropdown
-        className={"p-mr-3"}
-        style={{ height: "39px" }}
-        optionLabel="name"
-        value={selectedStatus}
-        options={[
-          { name: "Hoạt động", code: "0" },
-          { name: "Khóa", code: "1" },
-        ]}
-        onChange={onChangeStatus}
-        placeholder="Trạng thái"
-        tooltip={"Trạng thái"}
-        name={"trangthai"}
-        showClear
-      />
-
-      {/* <Calendar
-        dateFormat="dd/mm/yy"
-        value={search.created_at}
-        onChange={onHandleChangeSearch}
-        name={"created_at"}
-        showIcon
-        placeholder={"Ngày tạo"}
-        tooltip={"Ngày tạo"}
-      /> */}
-    </React.Fragment>
-  );
   const onHandleSearchClick = () => {
     const dataSearch = queryStringToJSON(props.location.search);
     console.log("dataSearch", dataSearch);
@@ -223,7 +234,7 @@ const User = (props) => {
     // console.log(event);
 
     setUserObj({
-      id:event.id,
+      id: event.id,
       hoten: event.hoten,
       diachi: event.diachi,
       sodienthoai: event.sodienthoai,
@@ -233,14 +244,40 @@ const User = (props) => {
     });
 
     setTimeout(function () {
-      setVisibleEditUser(true)
-    },2000)
-
+      setVisibleEditUser(true);
+    }, 2000);
+    getAllPermissionSelected(event.id);
     setVisibleEditUser(true);
   };
 
-  const rightContents = (
+  const leftContents = (
     <React.Fragment>
+      <InputText
+        className={"p-mr-3"}
+        // value={search.textSearch}
+        value={inputSearch}
+        onChange={onHandleChangeSearch}
+        tooltip={"Tên, Tên đăng nhập, Số điện thoại"}
+        name={"text"}
+        placeholder={"Tên, tên đăng nhập, SĐT"}
+      />
+
+      <Dropdown
+        className={"p-mr-3"}
+        style={{ height: "39px" }}
+        optionLabel="name"
+        value={selectedStatus}
+        options={[
+          { name: "Hoạt động", code: "0" },
+          { name: "Khóa", code: "1" },
+        ]}
+        onChange={onChangeStatus}
+        placeholder="Trạng thái"
+        tooltip={"Trạng thái"}
+        name={"trangthai"}
+        showClear
+      />
+
       <Button
         icon="pi pi-search"
         className="p-mr-2"
@@ -256,6 +293,36 @@ const User = (props) => {
         className="p-mr-2 p-button-success"
         onClick={onHandleShowAddUser}
       />
+
+      {/* <Calendar
+        dateFormat="dd/mm/yy"
+        value={search.created_at}
+        onChange={onHandleChangeSearch}
+        name={"created_at"}
+        showIcon
+        placeholder={"Ngày tạo"}
+        tooltip={"Ngày tạo"}
+      /> */}
+    </React.Fragment>
+  );
+
+  const rightContents = (
+    <React.Fragment>
+      {/* <Button
+        icon="pi pi-search"
+        className="p-mr-2"
+        onClick={onHandleSearchClick}
+      />
+      <Button
+        icon="pi pi-refresh"
+        className="p-mr-2 p-button-help"
+        onClick={onHandleRefresh}
+      />
+      <Button
+        icon="pi pi-plus"
+        className="p-mr-2 p-button-success"
+        onClick={onHandleShowAddUser}
+      /> */}
       {/* <Button icon="pi pi-trash" className="p-mr-2 p-button-danger" /> */}
     </React.Fragment>
   );
@@ -274,20 +341,42 @@ const User = (props) => {
     return <Tag severity="info" value={status} />;
   };
   const actionBodyTemplate = (rowData) => {
+    // console.log('rowData', rowData)
     return (
       <React.Fragment>
+        {/* {roleOfUser.includes(PERMISSION_ND_EDIT) && (
+          <i
+            className="pi pi-pencil p-mr-2 icon-medium"
+            title={"Sửa"}
+            style={{ color: "blue", cursor: "pointer" }}
+            onClick={() => onHandleEdit(rowData)}
+          />
+        )}
+        {roleOfUser.includes(PERMISSION_ND_DELETE) && (
+          <i
+            className="pi pi-trash icon-medium"
+            style={{ color: "red", cursor: "pointer" }}
+            title={"Xóa"}
+            onClick={() => onHandleDelete(rowData)}
+          />
+        )} */}
+
+
         <i
           className="pi pi-pencil p-mr-2 icon-medium"
           title={"Sửa"}
           style={{ color: "blue", cursor: "pointer" }}
           onClick={() => onHandleEdit(rowData)}
         />
+
         <i
           className="pi pi-trash icon-medium"
           style={{ color: "red", cursor: "pointer" }}
           title={"Xóa"}
           onClick={() => onHandleDelete(rowData)}
         />
+
+
       </React.Fragment>
     );
   };
@@ -440,12 +529,19 @@ const User = (props) => {
           </div>
         </div>
 
-        <AddUser visible={visibleAddUser} onHide={handleHideAddUser} fetDataUser={fetDataUser} />
+        <AddUser
+          visible={visibleAddUser}
+          // visible={false}
+          onHide={handleHideAddUser}
+          fetDataUser={fetDataUser}
+          listGroupRole={listGroupRole}
+        />
         <EditUser
           visible={visibleEditUser}
           onHide={() => setVisibleEditUser(false)}
           userObj={userObj}
           fetDataUser={fetDataUser}
+          arrayPermissionSelected={arrayPermissionSelected}
         />
       </div>
       {loader}

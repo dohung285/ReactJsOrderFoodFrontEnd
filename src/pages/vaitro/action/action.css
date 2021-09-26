@@ -1,16 +1,16 @@
-   
    .errorClass {
-    color: #bf1650;
-  }
+     color: #bf1650;
+   }
 
-  .error {
-    border: 1px solid red;
-  }
-  
-  .errorClass::before {
-    display: inline;
-    content: "⚠ ";
-  }
+   .error {
+     border: 1px solid red;
+   }
+
+   .errorClass::before {
+     display: inline;
+     content: "⚠ ";
+   }
+
    /* body {
     background: #0e101c;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",

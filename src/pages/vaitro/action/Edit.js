@@ -6,7 +6,7 @@ import { Tree } from "primereact/tree";
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { EXPRITIME_HIDER_LOADER } from "../../../constants/ConstantString";
+import { EXPRITIME_HIDER_LOADER, MESSAGE_REQUIRE, TIME_OUT_CLOSE_NOTIFY } from "../../../constants/ConstantString";
 import RoleService from "../../../service/RoleService";
 
 export const Edit = (props) => {
@@ -232,19 +232,19 @@ export const Edit = (props) => {
   const [motaErrors, setMotaErrors] = useState({});
 
   const formValidation = () => {
-    debugger
+    // debugger
     const tenNhomQuyenErrors = {};
     const motaErrors = {};
 
     let isValid = true;
 
     if (tenNhomQuyen === "") {
-      tenNhomQuyenErrors.tenNhomQuyenRequired = "Không được bỏ trống";
+      tenNhomQuyenErrors.tenNhomQuyenRequired = MESSAGE_REQUIRE;
       isValid = false;
     }
 
     if (mota === "") {
-      motaErrors.motaRequired = "Không được bỏ trống";
+      motaErrors.motaRequired = MESSAGE_REQUIRE;
       isValid = false;
     }
     //=====================
@@ -343,20 +343,20 @@ export const Edit = (props) => {
 
     console.log("dataBody", dataBody);
 
-    // const result = await roleService.updateNhomQuyen(
-    //   objRoleTranfer.id,
-    //   dataBody
-    // );
-    // if (result && result.status === 1000) {
-    //   let message = result.message;
-    //   console.log('message', message)
-    //   setTimeout(props.fetDataUser, EXPRITIME_HIDER_LOADER); // đợi 0.5s sau mới gọi hàm fetData()
-    //   notifySuccess('Sửa nhóm quyền thành công!')
-    // } else {
-    //   let message = result.message;
-    //   // showError(message);
-    //   notifyError(message)
-    // }
+    const result = await roleService.updateNhomQuyen(
+      objRoleTranfer.id,
+      dataBody
+    );
+    if (result && result.status === 1000) {
+      let message = result.message;
+      console.log('message', message)
+      setTimeout(props.fetDataUser, EXPRITIME_HIDER_LOADER); // đợi 0.5s sau mới gọi hàm fetData()
+      notifySuccess('Sửa nhóm quyền thành công!')
+    } else {
+      let message = result.message;
+      // showError(message);
+      notifyError(message)
+    }
     setActiveIndex(null);
   };
 
@@ -445,6 +445,7 @@ export const Edit = (props) => {
   }
 
   const [activeIndex, setActiveIndex] = useState(null);
+  
   function handleOnChangeAccordion(e) {
     getStateNodeSelectedKey();
     setActiveIndex(e.index);
@@ -566,7 +567,7 @@ export const Edit = (props) => {
   const notifySuccess = (message) => {
     toast.success(`🦄 ${message}`, {
       position: "top-right",
-      autoClose: 2000,
+      autoClose: TIME_OUT_CLOSE_NOTIFY,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -578,7 +579,7 @@ export const Edit = (props) => {
   const notifyError = (message) => {
     toast.error(`🦄 ${message}`, {
       position: "top-right",
-      autoClose: 2000,
+      autoClose: TIME_OUT_CLOSE_NOTIFY,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -602,7 +603,7 @@ export const Edit = (props) => {
     switch (name) {
       case "tenNhomQuyen":
         if (value.length < 0) {
-          setTenNhomQuyenErrors("Không được bỏ trống");
+          setTenNhomQuyenErrors(MESSAGE_REQUIRE);
         } else {
           setTenNhomQuyenErrors("");
         }
@@ -610,7 +611,7 @@ export const Edit = (props) => {
         break;
       default:
         if (value.length < 0) {
-          setMotaErrors("Không được bỏ trống");
+          setMotaErrors(MESSAGE_REQUIRE);
         } else {
           setMotaErrors("");
         }
@@ -622,7 +623,7 @@ export const Edit = (props) => {
     <div>
       <ToastContainer
         position="top-right"
-        autoClose={5000}
+        autoClose={TIME_OUT_CLOSE_NOTIFY}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -700,6 +701,7 @@ export const Edit = (props) => {
             </AccordionTab>
           </Accordion>
         </div>
+        
       </Dialog>
     </div>
   );

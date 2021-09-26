@@ -1,12 +1,23 @@
 import FetchAPI from "./FetchAPI";
 import { TypeMethodConstantEnum } from "../helper/MethodAPIConstant";
 const PREFIX_URL = "/taxsearch/cybertax/search-service/chungthuso";
+const CTS = "/hethong/cybertax/api";
 class ChungThuSoService extends FetchAPI {
+
     public async getList(dataSearch : any) {
         let url = `${PREFIX_URL}/search-all`;
         return await this.request(
             url,
             dataSearch,
+            TypeMethodConstantEnum.GET
+        );
+    }
+
+    public async getChungThuSoByDoanhNghiep() {
+        let url = `${CTS}/getallcts`;
+        return await this.request(
+            url,
+            {},
             TypeMethodConstantEnum.GET
         );
     }

@@ -2,18 +2,60 @@ import "primeflex/primeflex.css";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UserServices from "../../service/UserService";
-import { TIME_OUT_CLOSE_NOTIFY } from "../../constants/ConstantString";
+import {
+  EMAIL_REGEX,
+  EXPRITIME_HIDER_LOADER,
+  MESSAGE_EMAIL_FORMAT_ERROR,
+  MESSAGE_REQUIRE,
+  MESSAGE_PHONE_FORMAT_ERROR,
+  TIME_OUT_CLOSE_NOTIFY,
+} from "../../constants/ConstantString";
+
+import { Accordion, AccordionTab } from 'primereact/accordion';
+import { Tree } from "primereact/tree";
+import { MultiSelect } from 'primereact/multiselect';
 
 const AddUser = (props) => {
   // console.log("props", props);
-  const { visible, onHide } = props;
+  const { visible, onHide, listGroupRole } = props;
+  // console.log('listGroupRole', listGroupRole)
 
-  
+  const [selectedGroupRole, setSelectedGroupRole] = useState(null);
+
+  // const arrayValueHardCode = [
+  //   { name: "TestRole", code: "68a7f023-06cd-4aaa-9262-1a466223f846" },
+  //   { name: "Admin", code: "68a7f023-06cd-4aaa-9999-1a466223f846" }
+  // ]
+
+  let arrayReturn = [];
+  function processData(listGroupRole) {
+
+    // console.log("processData()")
+    // console.log('listGroupRole', listGroupRole)
+    if (listGroupRole != undefined) {
+      listGroupRole.forEach(element => {
+        // console.log('element', element.key, element.label)
+        let objTmp = {
+          name: element.label,
+          code: element.key
+        }
+        arrayReturn.push(objTmp);
+      });
+    }
+    // console.log('arrayReturn', arrayReturn)
+  }
+
+  processData(listGroupRole);
+
+  // useEffect(() => {
+  //   processData(listGroupRole);
+  // }, [listGroupRole])
+
 
   const [file, setFile] = useState(null);
 
@@ -33,7 +75,7 @@ const AddUser = (props) => {
   const [fileErros, setFileErros] = useState({});
 
   const userService = new UserServices();
-  
+
   const formValidation = () => {
     // debugger
     const hotenErrors = {};
@@ -42,45 +84,54 @@ const AddUser = (props) => {
     const tendangnhapErrors = {};
     const thudientuErrors = {};
     const loaiErrors = {};
-    const fileErrors = {};
+    // const fileErrors = {};
 
     let isValid = true;
 
     if (hoten === "") {
-      hotenErrors.hotenRequired = "Không được bỏ trống";
+      hotenErrors.hotenRequired = MESSAGE_REQUIRE;
       isValid = false;
     }
 
     if (diachi === "") {
-      diachiErrors.diachiRequired = "Không được bỏ trống";
+      diachiErrors.diachiRequired = MESSAGE_REQUIRE;
       isValid = false;
     }
     //=====================
 
     if (sodienthoai === "") {
-      sodienthoaiErrors.sodienthoaiRequired = "Không được bỏ trống";
+      sodienthoaiErrors.sodienthoaiRequired = MESSAGE_REQUIRE;
+      isValid = false;
+    } else if (
+      String(sodienthoai).length < 0 &&
+      String(sodienthoai).length > 10
+    ) {
+      sodienthoaiErrors.sodienthoaiLength = MESSAGE_PHONE_FORMAT_ERROR;
       isValid = false;
     }
 
     if (tendangnhap === "") {
-      tendangnhapErrors.tendangnhapRequired = "Không được bỏ trống";
+      tendangnhapErrors.tendangnhapRequired = MESSAGE_REQUIRE;
       isValid = false;
     }
 
     if (thudientu === "") {
-      thudientuErrors.thudientuRequired = "Không được bỏ trống";
+      thudientuErrors.thudientuRequired = MESSAGE_REQUIRE;
+      isValid = false;
+    } else if (EMAIL_REGEX.test(thudientu) === false) {
+      thudientuErrors.emailIsvalid = MESSAGE_EMAIL_FORMAT_ERROR;
       isValid = false;
     }
 
     if (loai === "") {
-      loaiErrors.loaiRequired = "Không được bỏ trống";
+      loaiErrors.loaiRequired = MESSAGE_REQUIRE;
       isValid = false;
     }
 
-    if (file === null || file === undefined) {
-      fileErrors.fileRequired = "Không được bỏ trống";
-      isValid = false;
-    }
+    // if (file === null || file === undefined) {
+    //   fileErrors.fileRequired = "Không được bỏ trống";
+    //   isValid = false;
+    // }
     // console.log('hotenErrors', hotenErrors)
     // console.log('diachiErrors', diachiErrors)
 
@@ -91,7 +142,7 @@ const AddUser = (props) => {
     setTendangnhapErrors(tendangnhapErrors);
     setThudientuErrors(thudientuErrors);
     setLoaiErrors(loaiErrors);
-    setFileErros(fileErrors);
+    // setFileErros(fileErrors);
 
     return isValid;
   };
@@ -129,14 +180,18 @@ const AddUser = (props) => {
   }
 
   const handleOnYesDialog = async (name) => {
-    // if (file === null) {
-    //   notifyError("Chưa chọn File");
-    //   return;
-    // }
+    let dsNhomQuyens = []
+    if (selectedGroupRole != undefined || selectedGroupRole != null) {
+      selectedGroupRole.forEach(e => {
+        dsNhomQuyens.push(e.code)
+      })
+    }
+    console.log('dsNhomQuyens', dsNhomQuyens)
+
     let isValid = formValidation();
     if (isValid) {
       console.log(` --SUBMITTING-- `);
-      
+
       const objUser = {
         diachi: diachi,
         hoten: hoten,
@@ -144,29 +199,41 @@ const AddUser = (props) => {
         tendangnhap: tendangnhap,
         thudientu: thudientu,
         loai: loai,
+        dsNhomQuyen: dsNhomQuyens
       };
       let jsonObj = JSON.stringify(objUser);
+      console.log('jsonObj', jsonObj)
 
       let data = new FormData();
-      data.append("file", file);
-      data.append("nguoidung", jsonObj);
-
-      // console.log('jsonObj', jsonObj)
-
-      const result = await userService.saveUser(data);
+      let result;
+      if (file != null) {
+        console.log("co file ");
+        data.append("file", file);
+        data.append("nguoidung", jsonObj);
+        result = await userService.saveUserHasFile(data);
+      } else {
+        console.log("khong co file ");
+        data.append("nguoidung", jsonObj);
+        result = await userService.saveUserDontHasFile(data);
+      }
+      console.log("jsonObj", jsonObj);
+      console.log("result: ", result);
       if (result && result.status === 1000) {
         let message = result.message;
         notifySuccess(message);
         onResetFormInput();
         onResetFormInputErrors();
-        props.fetDataUser();
+        setTimeout(function () {
+          props.fetDataUser();
+        }, EXPRITIME_HIDER_LOADER);
       } else {
         console.log("result", result);
         let message = result.message;
         notifyError(message);
+        return;
       }
     } else {
-      console.error("FORM INVALID - DISPLAY ERROR MESSAGE");
+      console.log("Error submit!");
       return;
     }
 
@@ -187,7 +254,7 @@ const AddUser = (props) => {
     setLoai("");
     setFile(null);
     setThudientu("");
-    setFile(null)
+    setFile(null);
   };
   const onResetFormInputErrors = () => {
     setHotenErrors("");
@@ -197,7 +264,7 @@ const AddUser = (props) => {
     setLoaiErrors("");
     setFile(null);
     setThudientuErrors("");
-    setFileErros("")
+    setFileErros("");
   };
 
   const onChangeFormInput = (e) => {
@@ -205,11 +272,10 @@ const AddUser = (props) => {
     const { name, value } = e.target;
     switch (name) {
       case "hoten":
-
         if (value.length > 0) {
           setHotenErrors("");
         } else {
-          setHotenErrors("Không được bỏ trống");
+          setHotenErrors(MESSAGE_REQUIRE);
         }
         setHoten(value);
 
@@ -218,7 +284,7 @@ const AddUser = (props) => {
         if (value.length > 0) {
           setDiachiErrors("");
         } else {
-          setDiachiErrors("Không được bỏ trống");
+          setDiachiErrors(MESSAGE_REQUIRE);
         }
         setDiachi(value);
         break;
@@ -226,7 +292,7 @@ const AddUser = (props) => {
         if (value.length > 0) {
           setSodienthoaiErrors("");
         } else {
-          setSodienthoaiErrors("Không được bỏ trống");
+          setSodienthoaiErrors(MESSAGE_REQUIRE);
         }
         setSodienthoai(value);
         break;
@@ -234,15 +300,17 @@ const AddUser = (props) => {
         if (value.length > 0) {
           setTendangnhapErrors("");
         } else {
-          setTendangnhapErrors("Không được bỏ trống");
+          setTendangnhapErrors(MESSAGE_REQUIRE);
         }
         setTendangnhap(value);
         break;
       case "thudientu":
         if (value.length > 0) {
           setThudientuErrors("");
+        } else if (!EMAIL_REGEX.test(value)) {
+          setThudientuErrors(MESSAGE_EMAIL_FORMAT_ERROR);
         } else {
-          setThudientuErrors("Không được bỏ trống");
+          setThudientuErrors(MESSAGE_REQUIRE);
         }
         setThudientu(value);
         break;
@@ -250,7 +318,7 @@ const AddUser = (props) => {
         if (value.length > 0) {
           setLoaiErrors("");
         } else {
-          setLoaiErrors("Không được bỏ trống");
+          setLoaiErrors(MESSAGE_REQUIRE);
         }
         setLoai(value);
         break;
@@ -282,27 +350,43 @@ const AddUser = (props) => {
     // console.log("e", e.target.files);
 
     let value = e.target.files[0];
-    if (value === null || value === undefined) {
-      setFileErros("Không được bỏ trống");
-    } else {
-      setFileErros("");
-    }
+    // if (value === null || value === undefined) {
+    //   setFileErros("Không được bỏ trống");
+    // } else {
+    //   setFileErros("");
+    // }
     let file = value === null || value === undefined ? null : value;
     setFile(file);
   };
 
-  // const convertBase64 = (file) => {
-  //   return new Promise((resolve, reject) => {
-  //     const fileReader = new FileReader();
-  //     fileReader.readAsDataURL(file);
-  //     fileReader.onload = () => {
-  //       resolve(fileReader.result);
-  //     };
-  //     fileReader.onerror = (error) => {
-  //       reject(error);
-  //     };
-  //   });
-  // };
+
+
+  const [activeIndex, setActiveIndex] = useState(null);
+
+  const [selectedKeys, setSelectedKeys] = useState([]);
+
+  function handleOnChangeSelectedKey(e) {
+    // console.log("e", e.value);
+    // console.log('selectedKeys', selectedKeys)
+    setSelectedKeys(e.value);
+  }
+  function handleOnChangeAccordion(e) {
+    setActiveIndex(e.index);
+  }
+
+
+  const handleOnChangeMultiSelect = (e) => {
+    console.log('e', e.value)
+    // console.log('Object.values(e.value)', Object.values(e.value))
+    Object.values(e.value).forEach(element => {
+      // console.log('element', element.code)
+    })
+
+    setSelectedGroupRole(e.value)
+  }
+
+  // console.log('selectedGroupRole', selectedGroupRole)
+
 
   return (
     <div>
@@ -317,10 +401,11 @@ const AddUser = (props) => {
         draggable
         pauseOnHover
       />
+
       <Dialog
         header="Thêm mới người dùng"
         visible={visible}
-        style={{ width: "50vw" }}
+        style={{ width: "50vw", heigh: "80vh" }}
         onHide={() => handleOnCloseXDialog()}
         footer={renderFooter("displayBasic")}
       >
@@ -335,7 +420,7 @@ const AddUser = (props) => {
               name="hoten"
               onChange={(e) => onChangeFormInput(e)}
             />
-            {Object.keys(hotenErrors).map((keyIndex, key) => {    
+            {Object.keys(hotenErrors).map((keyIndex, key) => {
               return (
                 <span className="errorMessage" key={key}>
                   {hotenErrors[keyIndex]}
@@ -451,21 +536,39 @@ const AddUser = (props) => {
           <div className="p-field p-col">
             <label htmlFor="base64anh">Ảnh</label>
             <InputText
-              className={Object.keys(fileErros).length > 0 ? "error" : null}
+              // className={Object.keys(fileErros).length > 0 ? "error" : null}
               id="base64anh"
               type="file"
               onChange={(e) => onHandleSelectedFile(e)}
               name="base64anh"
             />
-            {Object.keys(fileErros).map((keyIndex, key) => {
-              return (
-                <span className="errorMessage" key={key}>
-                  {fileErros[keyIndex]}
-                </span>
-              );
-            })}
           </div>
         </div>
+
+        <MultiSelect
+          value={selectedGroupRole}
+          options={arrayReturn}
+          // onChange={(e) => setSelectedGroupRole(e.value)}
+          onChange={handleOnChangeMultiSelect}
+          optionLabel="name"
+          placeholder="Chọn nhóm quyền" />
+
+
+        {/* <Accordion activeIndex={activeIndex}
+          onChange={handleOnChangeAccordion}
+        >
+          <AccordionTab header="Danh sách nhóm quyền">
+            <Tree
+              value={listGroupRole}
+              selectionMode="checkbox"
+              selectionKeys={selectedKeys}
+              onSelectionChange={handleOnChangeSelectedKey}
+            // onUnselect={handOnUnSelected}
+            />
+          </AccordionTab>
+        </Accordion> */}
+
+
       </Dialog>
     </div>
   );

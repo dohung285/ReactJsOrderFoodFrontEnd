@@ -1,10 +1,7 @@
 import React from 'react';
-import ChungThuSo from './pages/chungthuso/ChungThuSo';
-import RegisterTVAN from './pages/dang-ky-su-dung-tvan/RegisterTVAN';
 import Home from "./pages/Home";
-import InfoBusiness from './pages/InfoBusines/InfoBusiness';
-import NotFound from "./pages/NotFound";
 import User from "./pages/nguoidung/User";
+import NotFound from "./pages/NotFound";
 import Role from './pages/vaitro/Role';
 
 
@@ -24,35 +21,61 @@ const routes=[
 
     },
     {
-        path: '/nguoi-dung',
+        path: '/user',
         exact: true,
         main: () => <User />
+        // main: () =>  <PrivateRoute roles={['RealmAdmin']} path="/nguoi-dung" component={User} />
 
     },
     {
-        path: '/vai-tro',
+        path: '/role',
         exact: true,
         main: () => <Role />
 
     },
-    {
-        path: '/chung-thu-so',
-        exact: true,
-        main: () => <ChungThuSo />
 
-    },
-    {
-        path: '/qldk',
-        exact: true,
-        main: () => <RegisterTVAN />
+    // {
+    //     path: '/food',
+    //     exact: true,
+    //     main: () => <Food />
 
-    },
-    {
-        path: '/thong-tin-doanh-nghiep',
-        exact: true,
-        main: () => <InfoBusiness />
+    // },
 
-    },
+    // {
+    //     path: '/role',
+    //     exact: true,
+    //     main: () => <Role />
+
+    // },
+
+    // {
+    //     path: '/role',
+    //     exact: true,
+    //     main: () => <Role />
+
+    // },
+
+    // {
+    //     path: '/role',
+    //     exact: true,
+    //     main: () => <Role />
+
+    // },
+
+    // {
+    //     path: '/role',
+    //     exact: true,
+    //     main: () => <Role />
+
+    // },
+
+
+
+
+
+
+
+ 
     {
         path: '',
         exact: false,
