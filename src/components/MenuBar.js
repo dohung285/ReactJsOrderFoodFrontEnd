@@ -41,7 +41,7 @@ export const MenuBar = () => {
   const { notification, setNotification } = useContext(NotificationContext)
   const { menu, setMenu } = useContext(MenuContext)
 
-  const [menuLocalStorage , setmenuLocalStorage  ] = useState(null)
+  const [menuLocalStorage, setmenuLocalStorage] = useState(null)
 
   const [permissionNotification, setPermissionNotification] = useState(false)
 
@@ -486,12 +486,29 @@ export const MenuBar = () => {
   const fetchNumberNotification = async () => {
     // console.log(`username`, keycloak?.idTokenParsed?.preferred_username)
     let result = await notificationService.getCurrentNumberNotification();
+    console.log(`fetchNumberNotification`, result)
     // console.log(`number`, result)
     if (result?.status === 1000) {
-      setNotification(result?.object)
+      setNotification(result?.object?.number)
     }
 
   }
+
+
+  // const getCurrentNumberNotificationAPI = async () => {
+  //   console.log('getCurrentNumberNotificationAPI')
+
+  //   let result = await notificationService.getCurrentNumberNotification();
+  //   console.log(`getCurrentNumberNotificationAPI`, result)
+  //   if (result?.status === 1000) {
+  //     console.log('ok lấy dc')
+
+
+  //     // fetchFoodIntoCard();
+  //     // toast.current.show({ severity: 'success', summary: 'Thành công', detail: 'Thành công', life: 3000 });
+  //   }
+
+  // }
 
 
   useEffect(() => {
@@ -500,6 +517,8 @@ export const MenuBar = () => {
     setmenuLocalStorage(localStorage.getItem(MENU))
     fetchMenuBarAPI();
 
+    fetchNumberNotification();
+    // getCurrentNumberNotificationAPI()
     // addMenuItemMonAnAPI();
   }, [])
 

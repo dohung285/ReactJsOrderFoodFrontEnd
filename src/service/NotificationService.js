@@ -12,6 +12,11 @@ class NotificationService extends FetchAPI {
         return await this.request(url, cardBody, TypeMethodConstantEnum.POST);
     }
 
+    // async savetNumberNotification(number) {
+    //     let url = `${PREFIX_URL_ORDERFOOD}/notification/number`;
+    //     return await this.request(url, number, TypeMethodConstantEnum.POST);
+    // }
+
     async getCurrentNumberNotification() {
         let url = `${PREFIX_URL_ORDERFOOD}/notification/number`;
         return await this.request(url, null, TypeMethodConstantEnum.GET);
@@ -32,8 +37,8 @@ class NotificationService extends FetchAPI {
         return await this.request(url, null, TypeMethodConstantEnum.GET);
     }
 
-    async deleteNotification() {
-        let url = `${PREFIX_URL_ORDERFOOD}/notification/update-isdeleted`;
+    async deleteNotification(ids) {
+        let url = `${PREFIX_URL_ORDERFOOD}/notification/update-isdeleted?ids=${ids}`;
         return await this.request(url, null, TypeMethodConstantEnum.PUT);
     }
 

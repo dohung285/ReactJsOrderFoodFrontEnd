@@ -24,7 +24,8 @@ import UserInfor from "../pages/nguoidung/UserInfor";
 import FoodGroup from "../pages/nhommonan/FoodGroup";
 import NotFound from "../pages/NotFound";
 import ChangePassword from "../pages/thaydoimatkhau/ChangePassword";
-import { Notification } from "../pages/thongbao/Notification";
+import Notification from "../pages/thongbao/Notification";
+
 import Role from "../pages/vaitro/Role";
 import RoleNew from "../pages/vaitro/RoleNew";
 import { PrivateRoute } from "../utils/PrivateRoute";

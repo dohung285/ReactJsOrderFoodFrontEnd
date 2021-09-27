@@ -9,6 +9,7 @@ import { CardContext } from "../context/CardContext";
 import { MenuContext } from "../context/MenuContext";
 import { NotificationContext } from "../context/NotificationContext";
 import { onMessageListener } from "../firebase";
+import NotificationService from "../service/NotificationService";
 import PermissionService from "../service/PermissionService";
 import store from "../store";
 import Content from "./Content";
@@ -29,9 +30,10 @@ const Main = () => {
   const [notification, setNotification] = useState(0)
   const [menu, setMenu] = useState(null)
 
-
-
+  const notificationService = new NotificationService();
   const permissionService = new PermissionService();
+
+
   const checkPermissionGetNotificationOfUsername = async () => {
     // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
     let result = await permissionService.checkHasPermissionGetNotification('halt');
@@ -41,6 +43,18 @@ const Main = () => {
     }
   }
 
+  // const notificationService = new NotificationService();
+  const saveNumberNotificationAPI = async () => {
+    console.log('saveNumberNotificationAPI')
+ 
+    let result = await notificationService.incrementNumberNotification();
+    console.log(`saveNumberNotificationAPI`, result)
+    if (result?.status === 1000) {
+      
+    }
+
+  }
+
 
   onMessageListener().then(payload => {
     // setShow(true);
@@ -48,8 +62,14 @@ const Main = () => {
     let numberNotification = notification;
 
     setNotification((numberNotification + 1))
+
     // setNotification({ title: payload.notification.title, body: payload.notification.body })
     // console.log(payload);
+
+    //api lưu number vào db
+    saveNumberNotificationAPI();
+
+
   }).catch(err => console.log('failed: ', err));
 
   const fetchAllNameOfSystemByUsernameAPI = async (username) => {
@@ -64,52 +84,7 @@ const Main = () => {
     return null
   }
 
-  // const fetchMenuBarAPI = () => {
-  //   return axios.get(`http://localhost:8082/services/orderfood/api/menu/byWithRole`)
-  //     .then(res => {
-  //       // console.log(`res`, res?.data)
-  //       let result = res?.data
-
-  //       // console.log(`checkArray`, Array.isArray(result))
-
-  //       let arrayTmp = [];
-  //       result.forEach(element => {
-  //         // console.log(`element`, element)
-  //         if (element?.label === 'Món ăn') { // nếu là item món ăn thì duyệt các phần tử con tạo link
-  //           const arrayItems = element?.items;
-  //           let arrayTmpItems = []
-  //           // tao array item con
-  //           arrayItems.forEach(item => {
-  //             // console.log(`item`, item)
-  //             const objItems = {
-  //               icon: item.icon,
-  //               label: item.label,
-  //               command: () => history.push(`${item.command}`)
-  //             }
-  //             arrayTmpItems.push(objItems)
-  //           })
-
-  //           const objHasItems = {
-  //             icon: element.icon,
-  //             label: element.label,
-  //             items: arrayTmpItems
-  //           }
-  //           arrayTmp.push(objHasItems)
-  //         } else { // nếu ko phải là item món ăn thì tạo item link
-  //           const obj = {
-  //             icon: element.icon,
-  //             label: element.label,
-  //             command: () => history.push(`${element.command}`)
-  //           }
-  //           arrayTmp.push(obj)
-  //         }
-  //       })
-  //       setMenu(arrayTmp)
-  //     }).catch(err => {
-  //       console.log("Error fetchMenuBar()", { ...err });
-  //     })
-  // };
-
+  
   const fetchMenuBarAPI = () => {
     return axios.get(`http://localhost:8082/services/orderfood/api/menu/byWithRole`)
       .then(res => {
@@ -150,7 +125,7 @@ const Main = () => {
             arrayTmp.push(obj)
           }
         })
-        localStorage.setItem(MENU,JSON.stringify(arrayTmp))
+        localStorage.setItem(MENU, JSON.stringify(arrayTmp))
       }).catch(err => {
         console.log("Error fetchMenuBar()", { ...err });
       })
@@ -167,6 +142,19 @@ const Main = () => {
   }
 
 
+  // const notificationService = new NotificationService();
+  const getCurrentNumberNotificationAPI = async () => {
+    console.log('getCurrentNumberNotificationAPI')
+ 
+    let result = await notificationService.getCurrentNumberNotification();
+    console.log(`getCurrentNumberNotificationAPI`, result)
+    if (result?.status === 1000) {
+    
+    }
+
+  }
+
+
 
   useEffect(() => {
 
@@ -178,6 +166,8 @@ const Main = () => {
     fetchMenuBarAPI();
     // addMenuItemMonAnAPI();
     // getPermissionForUsername();
+
+    // getCurrentNumberNotificationAPI()
 
   }, [])
 
