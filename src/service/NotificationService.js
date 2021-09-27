@@ -27,6 +27,18 @@ class NotificationService extends FetchAPI {
         return await this.request(url, null, TypeMethodConstantEnum.PUT);
     }
 
+    async getAllNotification() {
+        let url = `${PREFIX_URL_ORDERFOOD}/notification`;
+        return await this.request(url, null, TypeMethodConstantEnum.GET);
+    }
+
+    async deleteNotification() {
+        let url = `${PREFIX_URL_ORDERFOOD}/notification/update-isdeleted`;
+        return await this.request(url, null, TypeMethodConstantEnum.PUT);
+    }
+
+
+
 
 }
 export default NotificationService;
