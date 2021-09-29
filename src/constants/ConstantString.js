@@ -35,6 +35,7 @@ export const ACTION_ADD = "ADD"
 export const ACTION_EDIT = "EDIT";
 export const ACTION_DELETE = "DELETE";
 export const ACTION_CREATE = "CREATE";
+export const ACTION_EDIT_CREATE = "EDIT-CREATE";
 
 
 export const NOT_PERMISSION = "Bạn không có quyền!"

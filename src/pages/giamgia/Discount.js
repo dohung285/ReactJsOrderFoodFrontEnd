@@ -18,7 +18,7 @@ import { Toast } from 'primereact/toast';
 import FoodService from '../../service/FoodService';
 
 import './Discount.css'
-import { ACTION_ADD, ACTION_CREATE, ACTION_DELETE, ACTION_EDIT, EXPRITIME_HIDER_LOADER, MESSAGE_PERCENT_ERROR_GREATER_THAN, MESSAGE_PERCENT_REQUIRE, MESSAGE_REQUIRE, MESSAGE_REQUIRE_PERCENT_LONHON_0, NOT_PERMISSION } from '../../constants/ConstantString';
+import { ACTION_ADD, ACTION_CREATE, ACTION_DELETE, ACTION_EDIT, ACTION_EDIT_CREATE, EXPRITIME_HIDER_LOADER, MESSAGE_PERCENT_ERROR_GREATER_THAN, MESSAGE_PERCENT_REQUIRE, MESSAGE_REQUIRE, MESSAGE_REQUIRE_PERCENT_LONHON_0, NOT_PERMISSION } from '../../constants/ConstantString';
 import PermissionService from '../../service/PermissionService';
 import { useKeycloak } from '@react-keycloak/web';
 import { useHistory } from 'react-router-dom';
@@ -405,19 +405,33 @@ const Discount = () => {
         // setDataOrder(array)
     }
 
-    const handleEditDiscountButton = (discount) => {
-        setEditDiscountDialog(true)
-        setDiscountEditSelected(discount)
+    const handleEditDiscountButton = async (discount) => {
+
+        try {
+            let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_EDIT_CREATE);
+            if (result?.status === 1000) {
+                setEditDiscountDialog(true)
+                setDiscountEditSelected(discount)
+            }
+        } catch (error) {
+
+            showError(error?.response?.data?.message)
+
+        }
+
     }
 
     const handleDeleteDiscount = async (rowData) => {
         console.log(`handleDeleteDiscount`)
-        let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_DELETE);
-        if (result?.status === 1000) {
-            confirmDeleteProduct(rowData)
-        } else {
-            showError(NOT_PERMISSION)
+        try {
+            let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_DELETE);
+            if (result?.status === 1000) {
+                confirmDeleteProduct(rowData)
+            }
+        } catch (error) {
+            showError(error?.response?.data?.message)
         }
+
     }
 
     const actionBodyTemplate = (rowData) => {
@@ -472,7 +486,7 @@ const Discount = () => {
 
 
     const deleteProduct = () => {
-       
+
         deleteDiscount(productDeleteSelected.id)
 
         setDeleteProductDialog(false);
@@ -497,21 +511,27 @@ const Discount = () => {
 
 
     const handleAddDiscount = async () => {
-        let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_ADD);
-        if (result?.status === 1000) {
-            seTdiscountDialog(true)
-        } else {
-            showError(NOT_PERMISSION)
+        try {
+            let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_ADD);
+            if (result?.status === 1000) {
+                seTdiscountDialog(true)
+            }
+        } catch (error) {
+            showError(error?.response?.data?.message)
         }
+
     }
 
     const handleEditDiscount = async () => {
-        let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_EDIT);
-        if (result?.status === 1000) {
-            seTupdadteDiscountDialog(true)
-        } else {
-            showError(NOT_PERMISSION)
+        try {
+            let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_EDIT);
+            if (result?.status === 1000) {
+                seTupdadteDiscountDialog(true)
+            }
+        } catch (error) {
+            showError(error?.response?.data?.message)
         }
+
     }
 
     const leftToolbarTemplate = () => {
@@ -538,12 +558,15 @@ const Discount = () => {
     }
 
     const onClickHandleOrderButton = async () => {
-        let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_CREATE);
-        if (result?.status === 1000) {
-            openNew();
-        } else {
-            showError(NOT_PERMISSION)
+        try {
+            let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_CREATE);
+            if (result?.status === 1000) {
+                openNew();
+            }
+        } catch (error) {
+            showError(error?.response?.data?.message)
         }
+
     }
 
 

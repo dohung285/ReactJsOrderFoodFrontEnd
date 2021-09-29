@@ -479,14 +479,16 @@ export const MenuBar = () => {
         // console.log(`response`, response?.data)
         setPermissionNotification(true)
       })
-      .catch(error => console.log(`error`, error))
+      .catch(error => {
+        // console.log(`error`, error)
+      })
       ;
   }
 
   const fetchNumberNotification = async () => {
     // console.log(`username`, keycloak?.idTokenParsed?.preferred_username)
     let result = await notificationService.getCurrentNumberNotification();
-    console.log(`fetchNumberNotification`, result)
+    // console.log(`fetchNumberNotification`, result)
     // console.log(`number`, result)
     if (result?.status === 1000) {
       setNotification(result?.object?.number)

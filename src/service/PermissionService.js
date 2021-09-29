@@ -34,8 +34,13 @@ class PermissionService extends FetchAPI {
 
   //checkPermission các hành động khác
   async checkPermission(username, pathName, action) {
-    let url = `${PREFIX_URL_ORDERFOOD}/permission/check?username=${username}&pathName=${pathName}&action=${action}`;
-    return await this.request(url, null, TypeMethodConstantEnum.GET);
+    try {
+      let url = `${PREFIX_URL_ORDERFOOD}/permission/check?username=${username}&pathName=${pathName}&action=${action}`;
+      return await this.request(url, null, TypeMethodConstantEnum.GET);
+    } catch (error) {
+      throw error
+    }
+
   }
 
   //checkPermission có quyền add hay không đối với chức năng quản trị vai trò

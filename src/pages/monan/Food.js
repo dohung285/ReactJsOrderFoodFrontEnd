@@ -18,7 +18,7 @@ import { Toolbar } from 'primereact/toolbar';
 import { Tooltip } from 'primereact/tooltip';
 import React, { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { ACTION_ADD, EXPRITIME_HIDER_LOADER, MESSAGE_PERCENT_REQUIRE, MESSAGE_PRICE_REQUIRE, MESSAGE_REQUIRE, NOT_NUMBER } from '../../constants/ConstantString';
+import { ACTION_ADD, ACTION_DELETE, ACTION_EDIT, EXPRITIME_HIDER_LOADER, MESSAGE_PERCENT_REQUIRE, MESSAGE_PRICE_REQUIRE, MESSAGE_REQUIRE, NOT_NUMBER, NOT_PERMISSION } from '../../constants/ConstantString';
 import { isNumber } from '../../constants/FunctionConstant';
 import useFullPageLoader from '../../hooks/useFullPageLoader';
 import FoodGroupService from '../../service/FoodGroupService';
@@ -163,8 +163,6 @@ export const Food = () => {
 
 
 
-
-
     }
 
 
@@ -176,12 +174,21 @@ export const Food = () => {
         showSuccess('Xóa thành công!')
     }
 
-    const confirmEditProduct = (product) => {
-        // setEditProductDialog(true)
+    const confirmEditProduct = async (product) => {
 
-        setProductEditSelected(product)
+        try {
+            let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_EDIT);
+            if (result?.status === 1000) {
+                setProductEditSelected(product)
+                setEditProductDialog(true)
+            }
+        } catch (error) {
+            showError(error?.response?.data?.message)
+            setSelectedProducts(null)
+            console.log(`error`, { ...error }, error?.response?.data?.message)
+        }
 
-        setEditProductDialog(true)
+
 
     }
 
@@ -225,8 +232,20 @@ export const Food = () => {
         setShowAddProductDialog(true)
     }
 
-    const confirmDeleteSelectedAllProducts = () => {
-        setDeleteAllProduct(true)
+    const confirmDeleteSelectedAllProducts = async() => {
+
+        try {
+            let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_DELETE);
+            if (result?.status === 1000) {
+                setDeleteAllProduct(true)
+            }
+        } catch (error) {
+            // showError(error)
+            showError(error?.response?.data?.message)
+            setSelectedProducts(null)
+        }
+
+
     }
 
     const header = (
@@ -242,10 +261,20 @@ export const Food = () => {
 
 
 
-    const confirmDeleteProduct = (product) => {
-        // console.log(`product`, product)
-        setProductDeleteSelected(product);
-        setDeleteProductDialog(true);
+    const confirmDeleteProduct = async (product) => {
+        try {
+            let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_DELETE);
+            if (result?.status === 1000) {
+                // console.log(`product`, product)
+                setProductDeleteSelected(product);
+                setDeleteProductDialog(true);
+            }
+        } catch (error) {
+            // showError(error)
+            showError(error?.response?.data?.message)
+            setSelectedProducts(null)
+        }
+
     }
 
 
@@ -501,7 +530,7 @@ export const Food = () => {
         // console.log(`options`, options)
         const { className, chooseButton,
             //  uploadButton,
-             cancelButton } = options;
+            cancelButton } = options;
         // const { className, chooseButton, cancelButton } = options;
         const value = totalSize / 10000;
         const formatedValue = fileUploadRef && fileUploadRef.current ? fileUploadRef.current.formatSize(totalSize) : '0 B';

@@ -1,6 +1,7 @@
 
 
 
+import { useKeycloak } from '@react-keycloak/web';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
@@ -10,9 +11,10 @@ import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { EXPRITIME_HIDER_LOADER, MESSAGE_REQUIRE } from '../../constants/ConstantString';
+import { ACTION_ADD, ACTION_DELETE, EXPRITIME_HIDER_LOADER, MESSAGE_REQUIRE } from '../../constants/ConstantString';
 import useFullPageLoader from '../../hooks/useFullPageLoader';
 import FoodGroupService from '../../service/FoodGroupService';
+import PermissionService from '../../service/PermissionService';
 // import { classNames } from 'primereact/utils';
 
 
@@ -21,7 +23,7 @@ export const FoodGroup = () => {
 
     const [loader, showLoader, hideLoader] = useFullPageLoader();
 
-    const history = useHistory()
+
 
     const toast = useRef(null);
     const dt = useRef(null);
@@ -37,6 +39,10 @@ export const FoodGroup = () => {
     const foodGroupService = new FoodGroupService();
     const [productDialog, setProductDialog] = useState(false);
     const [txtName, setTxtName] = useState(null);
+
+    const history = useHistory();
+    const permissionService = new PermissionService();
+    const [keycloak] = useKeycloak();
 
     //errors
     const [objecErrors, setObjecErrors] = useState({
@@ -95,18 +101,30 @@ export const FoodGroup = () => {
         );
     }
 
-    const deleteProduct = () => {
+    const deleteProduct = async () => {
 
-        console.log("co vao")
+        try {
+            let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_DELETE);
+            if (result?.status === 1000) {
 
-        deleteFoodGroup();
+                deleteFoodGroup();
 
-        setDeleteProductDialog(false);
-        // setProduct(emptyProduct);
-        // toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Xóa sản phẩm khỏi giỏ hàng thành công', life: 3000 });
-        showSuccess('Xóa thành công!')
-        window.location.reload();
-        // history.push('/food-group')
+                setDeleteProductDialog(false);
+                // setProduct(emptyProduct);
+                // toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Xóa sản phẩm khỏi giỏ hàng thành công', life: 3000 });
+                showSuccess('Xóa thành công!')
+                window.location.reload();
+                // history.push('/food-group')
+
+            }
+        } catch (error) {
+            // showError(error)
+            showError(error?.response?.data?.message)
+            // setSelectedProducts(null)
+        }
+
+
+
     }
 
     const hideDeleteProductDialog = () => {
@@ -141,10 +159,18 @@ export const FoodGroup = () => {
 
     }
 
-    const onClickHandleOrderButton = () => {
-        // console.log(`selectedProducts`, selectedProducts)
-        // onClick('displayBasic')
-        openNew();
+    const onClickHandleOrderButton = async () => {
+        try {
+            let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_ADD);
+            if (result?.status === 1000) {
+                openNew();
+            }
+        } catch (error) {
+            // showError(error)
+            showError(error?.response?.data?.message)
+            // setSelectedProducts(null)
+        }
+
     }
 
     const confirmDeleteProduct = (product) => {
@@ -165,7 +191,7 @@ export const FoodGroup = () => {
     }
 
     const deleteFoodGroup = async () => {
-        
+
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         console.log(`productDeleteSelected`, productDeleteSelected)
         let result = await foodGroupService.deleteFoodGroupById(productDeleteSelected?.id);
