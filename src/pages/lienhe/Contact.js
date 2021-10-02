@@ -116,7 +116,7 @@ const Contact = () => {
                         <Card style={{ width: '25rem', marginBottom: '2em' }}>
                             <p >
                                 <span><i className="pi pi-caret-down" style={{ 'fontSize': '2em' }}></i></span>
-                                <p style={{ display: 'flex', justifyContent: 'center' }}>số 59 Giải Phóng, phường Đồng Tâm , quận Hai Bà Trưng, tp Hà Nội</p>
+                                <p style={{ display: 'flex', justifyContent: 'center' }}>số 55 Giải Phóng, phường Đồng Tâm , quận Hai Bà Trưng, tp Hà Nội</p>
                             </p>
                         </Card>
 
@@ -125,7 +125,7 @@ const Contact = () => {
                         <Card style={{ width: '25rem', marginBottom: '2em' }}>
                             <p >
                                 <span><i className="pi pi-phone" style={{ 'fontSize': '2em' }}></i></span>
-                                <p style={{ display: 'flex', justifyContent: 'center' }}>số 59 Giải Phóng, phường Đồng Tâm , quận Hai Bà Trưng, tp Hà Nội</p>
+                                <p style={{ display: 'flex', justifyContent: 'center' }}>số 55 Giải Phóng, phường Đồng Tâm , quận Hai Bà Trưng, tp Hà Nội</p>
                                 <p style={{ display: 'flex', justifyContent: 'center' }}>orderfood@yahoo.com</p>
                             </p>
                         </Card>

@@ -153,6 +153,7 @@ const Notification = (props) => {
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
                         currentPageReportTemplate="Tổng {totalRecords} bản ghi"
                         globalFilter={globalFilter}
+                        emptyMessage="Không có dữ liệu"
                     >
 
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>

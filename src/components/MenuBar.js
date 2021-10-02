@@ -222,7 +222,9 @@ export const MenuBar = () => {
 
   const addMenuHeThong = async (username) => {
     showLoader()
+
     let result = await service.getAllMenuItemInSystemOfUser(username);
+    console.log(`addMenuHeThong`, result)
     // console.log(`addMenuHeThong`, result)
     if (result?.status === 1000) {
       // console.log(`addMenuHeThong`, result?.response)
@@ -476,8 +478,13 @@ export const MenuBar = () => {
     // console.log(`username`, username)
     return axios.get(`http://localhost:8082/services/orderfood/api/permission/get-notification?username=${username}`)
       .then(response => {
-        // console.log(`response`, response?.data)
-        setPermissionNotification(true)
+        console.log(`response`, response?.data)
+        if (response?.data?.status === 1000) {
+          setPermissionNotification(true)
+        }
+
+        // setPermissionNotification(true)
+
       })
       .catch(error => {
         // console.log(`error`, error)
@@ -598,11 +605,14 @@ export const MenuBar = () => {
         </Link>
       </li> */}
 
-      <li >
-        <Link to={`/card`}>
-          <i className="pi pi-shopping-cart p-mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '1.5rem' }}><Badge value={`${card}`} severity="danger" ></Badge></i>
-        </Link>
-      </li>
+      {keycloak?.authenticated &&
+
+        <li >
+          <Link to={`/card`}>
+            <i className="pi pi-shopping-cart p-mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '1.5rem' }}><Badge value={`${card}`} severity="danger" ></Badge></i>
+          </Link>
+        </li>
+      }
 
       {permissionNotification === true &&
 

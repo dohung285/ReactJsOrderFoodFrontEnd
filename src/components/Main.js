@@ -1,6 +1,7 @@
 import { useKeycloak } from "@react-keycloak/web";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { Toast } from "primereact/toast";
+import React, { useEffect, useRef, useState } from "react";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router, useHistory } from "react-router-dom";
 import { fetchMenus } from "../actions/actionCreator";
@@ -34,6 +35,18 @@ const Main = () => {
   const permissionService = new PermissionService();
 
 
+  const toast = useRef(null);
+  
+  const showSuccess = () => {
+      toast.current.show({severity:'success', summary: 'Success Message', detail:'Có một đơn hàng mới', life: 10000});
+  }
+
+  const showInfo = () => {
+    toast.current.show({severity:'info', summary: 'Info Message', detail:'Có một đơn hàng mới', life: 10000});
+}
+
+
+
   const checkPermissionGetNotificationOfUsername = async () => {
     // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
     let result = await permissionService.checkHasPermissionGetNotification('halt');
@@ -46,11 +59,11 @@ const Main = () => {
   // const notificationService = new NotificationService();
   const saveNumberNotificationAPI = async () => {
     console.log('saveNumberNotificationAPI')
- 
+
     let result = await notificationService.incrementNumberNotification();
     console.log(`saveNumberNotificationAPI`, result)
     if (result?.status === 1000) {
-      
+
     }
 
   }
@@ -59,6 +72,8 @@ const Main = () => {
   onMessageListener().then(payload => {
     // setShow(true);
     console.log(`payload`, payload)
+    // showSuccess();\
+    showInfo();
     let numberNotification = notification;
 
     setNotification((numberNotification + 1))
@@ -84,7 +99,7 @@ const Main = () => {
     return null
   }
 
-  
+
   const fetchMenuBarAPI = () => {
     return axios.get(`http://localhost:8082/services/orderfood/api/menu/byWithRole`)
       .then(res => {
@@ -145,11 +160,11 @@ const Main = () => {
   // const notificationService = new NotificationService();
   const getCurrentNumberNotificationAPI = async () => {
     console.log('getCurrentNumberNotificationAPI')
- 
+
     let result = await notificationService.getCurrentNumberNotification();
     console.log(`getCurrentNumberNotificationAPI`, result)
     if (result?.status === 1000) {
-    
+
     }
 
   }
@@ -176,6 +191,7 @@ const Main = () => {
 
   return (
     <div>
+      <Toast ref={toast} />
 
       <Provider store={store}>
 

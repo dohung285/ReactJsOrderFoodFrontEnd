@@ -28,8 +28,13 @@ class PermissionService extends FetchAPI {
 
   //save
   async save(dataBody) {
-    let url = `${PREFIX_URL_ORDERFOOD}/permission`;
-    return await this.request(url, dataBody, TypeMethodConstantEnum.POST);
+    try {
+      let url = `${PREFIX_URL_ORDERFOOD}/permission`;
+      return await this.request(url, dataBody, TypeMethodConstantEnum.POST);
+    } catch (error) {
+      throw error
+    }
+   
   }
 
   //checkPermission các hành động khác

@@ -10,13 +10,13 @@ export const Footer = () => {
                         <div className="top">
                             <div className="textFirst">
                                 <h3>Địa chỉ</h3>
-                                <p>số 59 Giải Phóng, phường Đồng Tâm, quận Hai Bà Trưng, tp Hà Nội</p>
+                                <p>số 55 Giải Phóng, phường Đồng Tâm, quận Hai Bà Trưng, tp Hà Nội</p>
                                 <span>orderfood@gmail.com</span>
                             </div>
 
                             <div className="textTwo">
                                 <h3>Cửa hàng</h3>
-                                <p>số 59 Giải Phóng, phường Đồng Tâm, quận Hai Bà Trưng, tp Hà Nội</p>
+                                <p>số 55 Giải Phóng, phường Đồng Tâm, quận Hai Bà Trưng, tp Hà Nội</p>
                                 <span>0398552599</span>
                             </div>
 

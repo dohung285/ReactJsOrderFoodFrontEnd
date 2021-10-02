@@ -163,7 +163,7 @@ const RoleNew = () => {
         }
         return (
             <React.Fragment>
-                <Button icon="pi pi-plus" className="p-button-rounded p-button-success p-mr-2 " onClick={() => confirmDeleteProduct(rowData)} disabled={rowData.hasRoleAdmin} />
+                <Button icon="pi pi-plus" className="p-button-rounded p-button-success p-mr-2 " onClick={() => confirmAddProduct(rowData)} disabled={rowData.hasRoleAdmin} />
                 <Button icon="pi pi-pencil" className="p-button-rounded p-button-warning p-mr-2 " onClick={() => editRole(rowData)} disabled={!rowData.hasRoleAdmin} />
                 <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => confirmRemoveRole(rowData)} disabled={!rowData.hasRoleAdmin} />
             </React.Fragment>
@@ -187,7 +187,7 @@ const RoleNew = () => {
         showLoader();
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
         let result = await permissionService.getAllPermissionOfUser(username);
-        console.log(`resultFetchAllPermissionOfUser`, result)
+        // console.log(`resultFetchAllPermissionOfUser`, result)
 
         if (result?.status === 1000) {
             // setSelectedKeys(result?.list)
@@ -199,9 +199,10 @@ const RoleNew = () => {
     }
 
     const addRoleMapping = async () => {
-
+        // console.log(`selectedKeys`, selectedKeys)
+        // debugger
         let result = await permissionService.checkPermissionAdd(keycloak?.idTokenParsed?.preferred_username);
-        console.log(`checkPermissionAPI`, result)
+        // console.log(`checkPermissionAPI`, result)
         if (result?.status === 1000) {
             const dataBodySave = {
                 username: productDeleteSelected.username,
@@ -209,28 +210,16 @@ const RoleNew = () => {
                 currentPermission: selectedKeys
             }
 
-            // console.log(`selectedKeys`, selectedKeys)
+            console.log(`dataBodySave`, dataBodySave)
             saveAPI(dataBodySave);
+
+
 
             // console.log(`history`, history.location.pathname)
             // console.log(`location`, location)
 
 
-            const dataBodyAddRole = [
-                {
-                    id: "f68c6039-7394-4c64-a351-c87181658272",
-                    name: "admin"
-                }
-            ]
-            // addRoleMapping;
-            addRoleMappingAPI(productDeleteSelected.id, dataBodyAddRole)
-
-
-            setSelectedKeys(null)
-            setDeleteProductDialog(false);
-            setProductDeleteSelected(null)
-            setEditRoleDialog(false)
-            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Thành công', life: 3000 });
+          
         } else {
             toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Không có quyền truy cập' });
         }
@@ -245,7 +234,7 @@ const RoleNew = () => {
     // hủy role admin và tất cả các quyền action
     const removeRoleMapping = async () => {
         let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_DELETE);
-        console.log(`checkPermissionAPI`, result)
+        // console.log(`checkPermissionAPI`, result)
         if (result?.status === 1000) {
             removeRoleMappingAPI();
         } else {
@@ -257,6 +246,8 @@ const RoleNew = () => {
         setSelectedKeys(null)
         setDeleteProductDialog(false)
         setEditRoleDialog(false)
+
+
     }
 
     const addRoleDialogFooter = (
@@ -296,7 +287,7 @@ const RoleNew = () => {
 
 
 
-    const confirmDeleteProduct = (product) => {
+    const confirmAddProduct = (product) => {
         // console.log(`product`, product)
         setProductDeleteSelected(product);
         setDeleteProductDialog(true);
@@ -424,11 +415,39 @@ const RoleNew = () => {
     const saveAPI = async (dataBody) => {
         showLoader()
 
-        let result = await permissionService.save(dataBody);
-        console.log(`result`, result)
-        if (result?.status === 1000) {
-            fetchDiscount();
+        try {
+            let result = await permissionService.save(dataBody);
+            console.log(`result`, result)
+            if (result?.status === 1000) {
+                fetchDiscount();
+
+                const dataBodyAddRole = [
+                    {
+                        id: "f68c6039-7394-4c64-a351-c87181658272",
+                        name: "admin"
+                    }
+                ]
+                // addRoleMapping;
+                addRoleMappingAPI(productDeleteSelected.id, dataBodyAddRole)
+
+                //Thêm vào user_permisson và permission_current
+
+    
+    
+                setSelectedKeys(null)
+                setDeleteProductDialog(false);
+                setProductDeleteSelected(null)
+                setEditRoleDialog(false)
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Thành công', life: 3000 });
+
+
+
+            }
+        } catch (error) {
+            toast.current.show({ severity: 'error', summary: 'Error Message', detail: error?.response?.data?.message });
         }
+
+
         setTimeout(hideLoader, EXPRITIME_HIDER_LOADER)
 
     }
@@ -454,7 +473,7 @@ const RoleNew = () => {
                 name: "admin"
             }
         ]
-        console.log(`removeRoleMappingAPI`, productDeleteSelected.username)
+        // console.log(`removeRoleMappingAPI`, productDeleteSelected.username)
         let result = await roleService.removeRoleMappingToUser(productDeleteSelected.id, dataBody, productDeleteSelected.username);
         // console.log(`result`, result)
         if (result?.status === 1000) {

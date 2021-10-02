@@ -221,7 +221,7 @@ const Discount = () => {
     }
 
     const handleOnChange = (e) => {
-        console.log(`handleOnChange`, e)
+        // console.log(`handleOnChange`, e)
         let { name, value } = e.target;
         if (name === 'name') {
 
