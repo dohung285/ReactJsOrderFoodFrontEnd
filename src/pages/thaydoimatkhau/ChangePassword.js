@@ -38,25 +38,48 @@ export const ChangePassword = () => {
 
         // console.log(`keycloak`, keycloak?.idTokenParsed)
         // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
-        let result = await accountService.changePassword(keycloak?.idTokenParsed?.sub, bodyData);
-        console.log(`result`, result)
-        if (result?.status === 1000) {
-            setData(
-                {
-                    currentPassword: '',
-                    username: keycloak?.idTokenParsed?.preferred_username,
-                    newPassword: '',
-                    renewPassword: ''
-                }
-            )
-            toastTL.current.show({ severity: 'success', summary: 'Success  Message', detail: 'Đổi mật khẩu thành công', life: 3000 });
-            history.push("");
-            keycloak.logout();
-         
-        } else {
+        try {
+
+            let result = await accountService.changePassword(keycloak?.idTokenParsed?.sub, bodyData);
+            console.log(`result`, result)
+            if (result?.status === 1000) {
+                setData(
+                    {
+                        currentPassword: '',
+                        username: keycloak?.idTokenParsed?.preferred_username,
+                        newPassword: '',
+                        renewPassword: ''
+                    }
+                )
+                toastTL.current.show({ severity: 'success', summary: 'Success  Message', detail: 'Đổi mật khẩu thành công', life: 3000 });
+                history.push("");
+                keycloak.logout();
+
+            } else {
+                toastTL.current.show({ severity: 'error', summary: 'Error Message', detail: 'Mật khẩu hiện tại không đúng', life: 3000 });
+            }
+
+
+
+        } catch (error) {
+            console.log(`error`, error)
             toastTL.current.show({ severity: 'error', summary: 'Error Message', detail: 'Mật khẩu hiện tại không đúng', life: 3000 });
         }
+
     }
+
+    useEffect(() => {
+
+        setData(
+            {
+                currentPassword: '',
+                username: keycloak?.idTokenParsed?.preferred_username,
+                newPassword: '',
+                renewPassword: ''
+            }
+        )
+
+    }, [keycloak.authenticated]);
 
 
     useEffect(() => {

@@ -25,7 +25,12 @@ class AccountService extends FetchAPI {
 
     async changePassword(userId,dataBody) {
         let url = `${PREFIX_URL_ORDERFOOD}/change-password/${userId}`;
-        return await this.request(url,dataBody , TypeMethodConstantEnum.PUT);
+        try {
+            return await this.request(url,dataBody , TypeMethodConstantEnum.PUT);
+        } catch (error) {
+            throw error;
+        }
+      
     }
 
     // async countNumber(username) {

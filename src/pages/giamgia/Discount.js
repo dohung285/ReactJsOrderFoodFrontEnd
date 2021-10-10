@@ -501,8 +501,8 @@ const Discount = () => {
 
     const deleteProductDialogFooter = (
         <React.Fragment>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteProductDialog} />
-            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={deleteProduct} />
+            <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={hideDeleteProductDialog} />
+            <Button label="Đồng ý" icon="pi pi-check" className="p-button-text" onClick={deleteProduct} />
         </React.Fragment>
     );
 
@@ -1109,7 +1109,7 @@ const Discount = () => {
 
                 {/* Thêm món ăn */}
                 <Dialog visible={productDialog} style={{ width: '1000px' }}
-                    header="Thêm nhóm món ăn" modal className="p-fluid"
+                    header="Thêm mã giảm giá" modal className="p-fluid"
                     footer={productDialogFooter} onHide={hideDialog}
                 >
                     <div className="p-field">

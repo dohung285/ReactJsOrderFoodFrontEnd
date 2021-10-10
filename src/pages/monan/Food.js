@@ -131,6 +131,7 @@ export const Food = () => {
     }
 
     const editProduct = async () => {
+        // console.log(`prod`, productEditSelected)
 
         if (formValidationEdit()) {
             showLoader()
@@ -175,7 +176,12 @@ export const Food = () => {
     }
 
     const confirmEditProduct = async (product) => {
-
+        // console.log(`product`, product)
+        setObjectEdit({
+            ...objectEdit,
+            name: product?.name,
+            price: product?.price
+        })
         try {
             let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_EDIT);
             if (result?.status === 1000) {
@@ -232,7 +238,7 @@ export const Food = () => {
         setShowAddProductDialog(true)
     }
 
-    const confirmDeleteSelectedAllProducts = async() => {
+    const confirmDeleteSelectedAllProducts = async () => {
 
         try {
             let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_DELETE);
@@ -355,6 +361,9 @@ export const Food = () => {
 
         // price
         if (objectEdit.price === 0) {
+            priceEditErrors.required = MESSAGE_PRICE_REQUIRE;
+            isValid = false;
+        }else if (objectEdit.price === null){
             priceEditErrors.required = MESSAGE_PRICE_REQUIRE;
             isValid = false;
         }
@@ -727,7 +736,8 @@ export const Food = () => {
                         price: ''
                     }
                 )
-            } else {
+            }
+            else {
                 setObjecErrors(
                     {
                         ...objecErrors,
@@ -837,7 +847,15 @@ export const Food = () => {
                         priceEdit: ''
                     }
                 )
-            } else {
+            } else if (e.value === null) {
+                setObjecErrors(
+                    {
+                        ...objecErrors,
+                        priceEdit: MESSAGE_PRICE_REQUIRE
+                    }
+                )
+            }
+            else {
                 setObjecErrors(
                     {
                         ...objecErrors,
