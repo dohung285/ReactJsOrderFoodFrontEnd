@@ -406,12 +406,22 @@ const Discount = () => {
     }
 
     const handleEditDiscountButton = async (discount) => {
+        console.log(`discount`, discount)
 
         try {
             let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_EDIT_CREATE);
             if (result?.status === 1000) {
                 setEditDiscountDialog(true)
                 setDiscountEditSelected(discount)
+
+                setObjectEdit(
+                    {
+                        ...objectEdit,
+                        name: discount?.name,
+                        percent: discount?.percent
+                    }
+                )
+                
             }
         } catch (error) {
 

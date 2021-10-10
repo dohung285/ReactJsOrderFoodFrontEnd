@@ -224,7 +224,7 @@ export const MenuBar = () => {
     showLoader()
 
     let result = await service.getAllMenuItemInSystemOfUser(username);
-    console.log(`addMenuHeThong`, result)
+    // console.log(`addMenuHeThong`, result)
     // console.log(`addMenuHeThong`, result)
     if (result?.status === 1000) {
       // console.log(`addMenuHeThong`, result?.response)
@@ -478,7 +478,7 @@ export const MenuBar = () => {
     // console.log(`username`, username)
     return axios.get(`http://localhost:8082/services/orderfood/api/permission/get-notification?username=${username}`)
       .then(response => {
-        console.log(`response`, response?.data)
+        // console.log(`response`, response?.data)
         if (response?.data?.status === 1000) {
           setPermissionNotification(true)
         }

@@ -105,15 +105,34 @@ export const FoodGroup = () => {
 
         try {
             let result = await permissionService.checkPermission(keycloak?.idTokenParsed?.preferred_username, history.location.pathname, ACTION_DELETE);
+            console.log(`resutl`, result)
             if (result?.status === 1000) {
+                // console.log(1000)
+                // alert(1000)
 
-                deleteFoodGroup();
+
+                // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
+                console.log(`productDeleteSelected`, productDeleteSelected)
+                let result = await foodGroupService.deleteFoodGroupById(productDeleteSelected?.id);
+                // console.log(`result`, result)
+                if (result?.status === 1000) {
+                    // setData(result?.response.listReturn)
+                    setProductDeleteSelected({})
+                    fetchFoodGroup();
+
+                    showSuccess('Xóa thành công!')
+                    window.location.reload();
+                }
+
+                // deleteFoodGroup();
 
                 setDeleteProductDialog(false);
                 // setProduct(emptyProduct);
                 // toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Xóa sản phẩm khỏi giỏ hàng thành công', life: 3000 });
-                showSuccess('Xóa thành công!')
-                window.location.reload();
+
+                // showSuccess('Xóa thành công!')
+                // window.location.reload();
+                
                 // history.push('/food-group')
 
             }
