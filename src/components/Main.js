@@ -76,8 +76,8 @@ const Main = () => {
     // setShow(true);
     console.log(`payload`, payload)
     // showSuccess();\
-    // { permissionGetNotification === true && showInfo() }
-    showInfo();
+    { permissionGetNotification === true && showInfo() }
+    // showInfo();
     let numberNotification = notification;
 
     setNotification((numberNotification + 1))

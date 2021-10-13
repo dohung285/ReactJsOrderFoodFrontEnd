@@ -34,7 +34,7 @@ class PermissionService extends FetchAPI {
     } catch (error) {
       throw error
     }
-   
+
   }
 
   //checkPermission các hành động khác
@@ -63,6 +63,12 @@ class PermissionService extends FetchAPI {
   //checkPermission có quyền nhận thông báo khi có đơn hàng mới không?
   async checkHasPermissionGetNotification(username) {
     let url = `${PREFIX_URL_ORDERFOOD}/permission/get-notification?username=${username}`;
+    return await this.request(url, null, TypeMethodConstantEnum.GET);
+  }
+
+  //checkPermission có quyền nhận thông báo khi có đơn hàng mới không?
+  async checkOrder(username, foodId) {
+    let url = `${PREFIX_URL_ORDERFOOD}/permission/check-order?username=${username}&foodId=${foodId}`;
     return await this.request(url, null, TypeMethodConstantEnum.GET);
   }
 

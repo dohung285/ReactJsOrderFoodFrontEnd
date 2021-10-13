@@ -22,6 +22,7 @@ import CommentService from '../../service/CommentService';
 import FoodService from '../../service/FoodService';
 import NotificationService from '../../service/NotificationService';
 import OrderService from '../../service/OrderService';
+import PermissionService from '../../service/PermissionService';
 import DetailsThumb from './DetailsThumb';
 import './FoodDetail.css';
 
@@ -36,7 +37,7 @@ export const FoodDetail = ({ match }) => {
     const orderService = new OrderService();
     const commentService = new CommentService();
     const notificationService = new NotificationService();
-
+    const permissionService = new PermissionService()
 
     const [isTokenFound, setTokenFound] = useState(false);
 
@@ -201,6 +202,18 @@ export const FoodDetail = ({ match }) => {
 
             // fetchFoodIntoCard();
             toast.current.show({ severity: 'success', summary: 'Thành công', detail: 'Thành công', life: 3000 });
+        }
+
+    }
+
+    const checkOrderAPI = async () => {
+
+
+        let result = await permissionService.checkOrder(keycloak?.idTokenParsed?.preferred_username, foodId);
+        // console.log(`saveOrderFood`, result)
+        if (result?.status === 1001) {
+            // fetchFoodIntoCard();
+            toast.current.show({ severity: 'warn', summary: 'Warn Message', detail: 'Bạn chưa mua sản phẩm này', life: 3000 });
         }
 
     }
@@ -697,11 +710,7 @@ export const FoodDetail = ({ match }) => {
     }
 
 
-    const handleOnYesDialog = (name) => {
-        // console.log("handleOnYesDialog")
-        // console.log(`orderObj`, orderObj)
-        // console.log(`orderDetailObj`, orderDetailObj)
-
+    const handleOnYesDialog = async (name) => {
         if (formValidation()) {
 
             let newArrayDetail = [];
@@ -710,61 +719,44 @@ export const FoodDetail = ({ match }) => {
             const objParam = {
                 ...orderObj,
                 orderDetails: newArrayDetail,
-                firebaseToken:localStorage.getItem(TOKEN_FIREBASE)
+                firebaseToken: localStorage.getItem(TOKEN_FIREBASE)
             }
 
             console.log(`objParam`, objParam)
             saveOrderFood(objParam)
 
-            // let newData = dataOrder.map(obj => {
-            //     // console.log(`obj`, obj.foodId)
-            //     return {
-            //         foodId: obj.foodId,
-            //         amount: obj.amount,
-            //         money: obj.money
-            //     }
-            // })
-
-            // // console.log(`newData`, newData)
-            // const objParam = {
-            //     ...objOrder,
-            //     orderDetails: newData
-            // }
-            // console.log(`objParam`, objParam)
-
-            // saveOrderFood(objParam)
-            // setSelectedProducts(null);
-
-
-            // setObjOrder(
-            //     {
-            //         username: keycloak?.idTokenParsed?.name,
-            //         address: '',
-            //         phone: '',
-            //         note: '',
-            //         dateOrder: moment().format("DD/MM/yy HH:mm:ss"),
-
-            //     }
-            // )
 
 
             // xong thì tắt dialog
             onHide(name)
         }
-
     }
 
-    const handleOnYesDialogComment = (name) => {
+    const handleOnYesDialogComment = async (name) => {
 
 
-        if (formValidationComment()) {
-
-            console.log(`objecComment`, objectComment)
-            saveCommentAPI(objectComment);
-            // getAllCommentByFoodIdAPI();
-
+        let result = await permissionService.checkOrder(keycloak?.idTokenParsed?.preferred_username, foodId);
+        console.log(`handleOnYesDialog`, result)
+        // console.log(`saveOrderFood`, result)
+        if (result?.status === 1001) {
+            // fetchFoodIntoCard();
+            toast.current.show({ severity: 'warn', summary: 'Warn Message', detail: 'Bạn chưa mua sản phẩm này', life: 3000 });
             onHide(name)
         }
+
+        if (result?.status === 1000) {
+            if (formValidationComment()) {
+
+                console.log(`objecComment`, objectComment)
+                saveCommentAPI(objectComment);
+                // getAllCommentByFoodIdAPI();
+
+                onHide(name)
+            }
+        }
+
+
+
 
     }
 
