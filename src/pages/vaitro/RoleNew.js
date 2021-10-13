@@ -199,7 +199,7 @@ const RoleNew = () => {
     }
 
     const addRoleMapping = async () => {
-        // console.log(`selectedKeys`, selectedKeys)
+        console.log(`selectedKeys`, selectedKeys)
         // debugger
         let result = await permissionService.checkPermissionAdd(keycloak?.idTokenParsed?.preferred_username);
         // console.log(`checkPermissionAPI`, result)
@@ -210,24 +210,12 @@ const RoleNew = () => {
                 currentPermission: selectedKeys
             }
 
-            console.log(`dataBodySave`, dataBodySave)
+            // console.log(`dataBodySave`, dataBodySave)
             saveAPI(dataBodySave);
 
-
-
-            // console.log(`history`, history.location.pathname)
-            // console.log(`location`, location)
-
-
-          
         } else {
             toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Không có quyền truy cập' });
         }
-
-        // console.log(`object`, selectedKeys)
-        // console.log(`Object.keys(selectedKeys)`, Object.keys(selectedKeys))
-        // console.log(`productDelete`, productDeleteSelected)
-
     }
 
 
@@ -432,8 +420,8 @@ const RoleNew = () => {
 
                 //Thêm vào user_permisson và permission_current
 
-    
-    
+
+
                 setSelectedKeys(null)
                 setDeleteProductDialog(false);
                 setProductDeleteSelected(null)
@@ -633,7 +621,9 @@ const RoleNew = () => {
                             onToggle={e => setExpandedKeys(e.value)}
                             selectionMode="checkbox"
                             selectionKeys={selectedKeys}
-                            onSelectionChange={e => setSelectedKeys(e.value)}
+                            onSelectionChange={e =>
+                                setSelectedKeys(e.value)
+                            }
                         />
                     </div>
                 </Dialog>

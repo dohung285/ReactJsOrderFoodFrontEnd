@@ -20,6 +20,7 @@ import { MenuBar } from "./MenuBar";
 const Main = () => {
 
   const [keycloak] = useKeycloak();
+  
 
   let history = useHistory();
 
@@ -30,6 +31,8 @@ const Main = () => {
   const [card, setCard] = useState(0)
   const [notification, setNotification] = useState(0)
   const [menu, setMenu] = useState(null)
+
+  const [permissionGetNotification, setPermissionGetNotification] = useState(false);
 
   const notificationService = new NotificationService();
   const permissionService = new PermissionService();
@@ -47,12 +50,12 @@ const Main = () => {
 
 
 
-  const checkPermissionGetNotificationOfUsername = async () => {
+  const checkPermissionGetNotificationOfUsername = async (username) => {
     // console.log(`keycloak && keycloak.authenticated`, keycloak && keycloak.authenticated)
-    let result = await permissionService.checkHasPermissionGetNotification('halt');
+    let result = await permissionService.checkHasPermissionGetNotification(username);
     console.log(`checkPermissionGetNotificationOfUsername`, result)
     if (result?.status === 1000) {
-
+      setPermissionGetNotification(true)
     }
   }
 
@@ -73,6 +76,7 @@ const Main = () => {
     // setShow(true);
     console.log(`payload`, payload)
     // showSuccess();\
+    // { permissionGetNotification === true && showInfo() }
     showInfo();
     let numberNotification = notification;
 
@@ -185,6 +189,14 @@ const Main = () => {
     // getCurrentNumberNotificationAPI()
 
   }, [])
+
+
+  useEffect(() => {
+
+    const username = keycloak?.idTokenParsed?.preferred_username;
+    checkPermissionGetNotificationOfUsername(username);
+
+  }, [keycloak.authenticated])
 
 
 

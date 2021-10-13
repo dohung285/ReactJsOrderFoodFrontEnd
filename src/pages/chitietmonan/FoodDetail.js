@@ -78,6 +78,7 @@ export const FoodDetail = ({ match }) => {
             username: keycloak?.idTokenParsed?.preferred_username,
             dateOrder: moment().format("DD/MM/yy HH:mm:ss"),
             note: '',
+            firebaseToken: localStorage.getItem(TOKEN_FIREBASE)
         }
     )
 
@@ -432,6 +433,7 @@ export const FoodDetail = ({ match }) => {
                 ...orderObj,
                 username: keycloak?.idTokenParsed?.preferred_username,
                 dateOrder: moment().format("DD/MM/yy HH:mm:ss"),
+                firebaseToken: localStorage.getItem(TOKEN_FIREBASE)
             }
         )
 
@@ -707,7 +709,8 @@ export const FoodDetail = ({ match }) => {
 
             const objParam = {
                 ...orderObj,
-                orderDetails: newArrayDetail
+                orderDetails: newArrayDetail,
+                firebaseToken:localStorage.getItem(TOKEN_FIREBASE)
             }
 
             console.log(`objParam`, objParam)
