@@ -280,7 +280,7 @@ export const MenuBar = () => {
 
   }
 
-  
+
   const fetchMenuBarAPI = () => {
     return axios.get(`http://localhost:8082/services/orderfood/api/menu/byWithRole`)
       .then(res => {
@@ -508,14 +508,20 @@ export const MenuBar = () => {
         </Link>
       </li> */}
 
-      {keycloak?.authenticated &&
+      {/* {keycloak?.authenticated &&
 
         <li >
           <Link to={`/card`}>
             <i className="pi pi-shopping-cart p-mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '1.5rem' }}><Badge value={`${card}`} severity="danger" ></Badge></i>
           </Link>
         </li>
-      }
+      } */}
+
+      <li >
+        <Link to={`/card`}>
+          <i className="pi pi-shopping-cart p-mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '1.5rem' }}><Badge value={`${card}`} severity="danger" ></Badge></i>
+        </Link>
+      </li>
 
       {permissionNotification === true &&
 
